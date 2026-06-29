@@ -1,22 +1,10 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import type { PsychologistDetail } from '@/features/psychologist/queries'
+import { SPECIALTY_LABELS } from '@/lib/specialties'
 
 interface PsychologistProfileProps {
   psychologist: PsychologistDetail
-}
-
-const SPECIALTY_LABELS: Record<string, string> = {
-  duelo: 'Duelo',
-  ansiedad: 'Ansiedad',
-  crisis_panico: 'Crisis de pánico',
-  trauma: 'Trauma',
-  apoyo_ninos: 'Apoyo niños',
-  apoyo_adolescentes: 'Apoyo adolescentes',
-  depresion: 'Depresión',
-  estres: 'Estrés',
-  violencia: 'Violencia',
-  adicciones: 'Adicciones',
 }
 
 function formatAvailability(availability: Record<string, unknown> | null): string | null {

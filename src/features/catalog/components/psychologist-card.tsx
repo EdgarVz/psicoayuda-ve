@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import type { PsychologistCardData } from '@/features/catalog/types'
+import { SPECIALTY_LABELS } from '@/lib/specialties'
 
 export function PsychologistCard({ psychologist }: { psychologist: PsychologistCardData }) {
   return (
@@ -22,7 +23,7 @@ export function PsychologistCard({ psychologist }: { psychologist: PsychologistC
       <div className="flex flex-wrap gap-1.5 mt-2 justify-center">
         {psychologist.specialties.map((s) => (
           <span key={s} className="text-xs bg-background-alt text-muted-foreground px-2 py-0.5 rounded-full">
-            {s}
+            {SPECIALTY_LABELS[s] ?? s}
           </span>
         ))}
       </div>
