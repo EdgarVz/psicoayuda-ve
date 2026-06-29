@@ -76,5 +76,18 @@ Plataforma de apoyo psicológico en crisis para Venezuela. Conexión paciente-ps
 
 ### Notas
 - ⚠️ Next.js 16 deprecó `middleware` en favor de `proxy` — migrar en futura iteración
-- Pendiente Vercel deploy (Task 0.4)
-- Pendiente migrations DB (Phase 2)
+
+## 2026-06-29 — Phase 2 completada (Database + RLS) + Vercel deploy
+
+### Migrations ejecutadas vía Supabase Management API
+- **Task 2.1:** Enums (`user_role`, `request_status`, `specialty`) + 4 tablas (`profiles`, `psychologist_profiles`, `appointment_requests`, `admin_roles`)
+- **Task 2.2:** 11 RLS policies (lectura pública, escritura propia, WhatsApp en accepted, admin, etc.)
+- **Task 2.3:** Trigger `update_timestamp()` en 3 tablas
+- **Task 2.4:** Trigger `on_auth_user_created` para auto-crear profile al registrarse
+- Tipos de DB regenerados
+
+### Vercel
+- Proyecto vinculado: `EdgarVz/psicoayuda-ve`
+- `main` → producción
+- `develop` → preview
+- ⬜ Pendiente: definir `NEXT_PUBLIC_SITE_URL` con URL de preview

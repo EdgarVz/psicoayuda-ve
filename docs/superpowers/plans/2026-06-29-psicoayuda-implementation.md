@@ -198,13 +198,15 @@ Expected: remote `origin` con ramas `main` y `develop`.
 
 **Action:** Manual via Vercel dashboard.
 
-1. Ir a https://vercel.com/new
-2. Importar repositorio `psicoayuda-ve`
-3. Framework preset: Next.js (detectado automático)
-4. Environment variables: copiar todas de `.env.local`
-5. Deploy — `main` queda vinculado como producción
-6. Project Settings → Git: agregar `develop` como Preview Branch
-7. Copiar `NEXT_PUBLIC_SITE_URL` = URL de preview de develop
+✅ Completado.
+
+1. ✅ Ir a https://vercel.com/new
+2. ✅ Importar repositorio `psicoayuda-ve`
+3. ✅ Framework preset: Next.js (detectado automático)
+4. ✅ Environment variables: copiar todas de `.env.local`
+5. ✅ Deploy — `main` queda vinculado como producción
+6. ✅ Project Settings → Git: agregar `develop` como Preview Branch
+7. ⬜ Copiar `NEXT_PUBLIC_SITE_URL` = URL de preview de develop
 
 Expected: `main` deploya a producción, `develop` deploya a preview automático. Build pasa en ambos.
 
