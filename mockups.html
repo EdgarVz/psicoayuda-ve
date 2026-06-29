@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PsicoAyuda VE — Mockups</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: #F7F1EA; padding: 32px; color: #2D3436;
+  }
+  .header {
+    text-align: center; margin-bottom: 32px;
+  }
+  .header h1 { font-size: 28px; color: #2B7A6E; }
+  .header p { color: #8B7E72; margin-top: 4px; }
+
+  .view-toggle {
+    display: flex; gap: 8px; justify-content: center; margin-bottom: 32px;
+  }
+  .view-toggle button {
+    padding: 8px 24px; border: 2px solid #2B7A6E; border-radius: 12px;
+    background: white; color: #2B7A6E; font-weight: 600; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .view-toggle button.active { background: #2B7A6E; color: white; }
+
+  .screen-grid { display: flex; flex-direction: column; gap: 48px; max-width: 1400px; margin: 0 auto; }
+  .screen-section h2 {
+    font-size: 20px; color: #2B7A6E; margin-bottom: 16px;
+    padding-bottom: 8px; border-bottom: 2px solid #E6DED4;
+  }
+  .screen-row { display: flex; gap: 32px; align-items: flex-start; flex-wrap: wrap; }
+
+  /* Desktop frame */
+  .frame-desktop {
+    flex: 1; min-width: 500px; max-width: 780px;
+    border: 2px solid #D6CCC2; border-radius: 16px;
+    overflow: hidden; background: white; box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  }
+  .frame-desktop .browser-bar {
+    background: #FAF6F1; padding: 10px 16px; border-bottom: 1px solid #E6DED4;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .frame-desktop .browser-bar .dot { width: 12px; height: 12px; border-radius: 50%; }
+  .frame-desktop .browser-bar .dot:nth-child(1) { background: #E86A6A; }
+  .frame-desktop .browser-bar .dot:nth-child(2) { background: #E8C36A; }
+  .frame-desktop .browser-bar .dot:nth-child(3) { background: #6ABF6A; }
+  .frame-desktop .browser-bar .url {
+    flex: 1; margin-left: 12px; padding: 4px 12px; background: white;
+    border: 1px solid #E6DED4; border-radius: 8px; font-size: 13px; color: #8B7E72;
+  }
+
+  /* Mobile frame */
+  .frame-mobile {
+    width: 390px; min-width: 390px;
+    border: 3px solid #B8ACA0; border-radius: 40px;
+    overflow: hidden; background: white; box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  }
+  .frame-mobile .notch {
+    background: #B8ACA0; height: 28px; display: flex; align-items: center; justify-content: center;
+  }
+  .frame-mobile .notch .island { width: 120px; height: 6px; background: #8B7E72; border-radius: 99px; }
+  .frame-mobile .mock-content { padding: 0; }
+  .frame-mobile .status-bar {
+    display: flex; justify-content: space-between; padding: 8px 16px 4px;
+    font-size: 12px; font-weight: 600; color: #2D3436;
+  }
+
+  .mock-content { font-family: system-ui, sans-serif; }
+
+  /* Hide mobile frames when desktop view is active */
+  body.desktop .frame-mobile { display: none; }
+  body.mobile .frame-desktop { display: none; }
+
+  /* ==================== MOCK INTERNAL STYLES ==================== */
+  .mock-content { color: #2D3436; }
+  .mock-content .navbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 24px; border-bottom: 1px solid #E6DED4; background: white;
+  }
+  .mock-content .navbar .logo { font-weight: 700; font-size: 18px; color: #2B7A6E; }
+  .mock-content .navbar .logo span { color: #D4A574; }
+  .mock-content .navbar .nav-links { display: flex; gap: 24px; font-size: 14px; color: #6B5E54; }
+  .mock-content .navbar .nav-cta {
+    background: #2B7A6E; color: white; padding: 8px 20px; border-radius: 12px;
+    font-size: 14px; font-weight: 500;
+  }
+  .mock-content .navbar-mobile {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 16px; border-bottom: 1px solid #E6DED4; background: white;
+  }
+  .mock-content .navbar-mobile .logo { font-weight: 700; font-size: 16px; color: #2B7A6E; }
+  .mock-content .navbar-mobile .logo span { color: #D4A574; }
+  .mock-content .navbar-mobile .hamburger { width: 24px; height: 20px; display: flex; flex-direction: column; justify-content: space-between; }
+  .mock-content .navbar-mobile .hamburger span { height: 2px; background: #6B5E54; border-radius: 2px; }
+
+  .mock-content .hero {
+    background: linear-gradient(145deg, #E8F4F0 0%, #FDF8F3 100%);
+    color: #2D3436; padding: 72px 32px; text-align: center; border-bottom: 1px solid #E6DED4;
+  }
+  .mock-content .hero .illustration {
+    width: 120px; height: 120px; margin: 0 auto 24px;
+    background: #D4EDE6; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 56px;
+  }
+  .mock-content .hero h1 { font-size: 36px; font-weight: 700; margin-bottom: 12px; line-height: 1.2; color: #1D5B4F; }
+  .mock-content .hero p { font-size: 16px; color: #6B5E54; max-width: 520px; margin: 0 auto 28px; line-height: 1.6; }
+  .mock-content .hero .cta-group { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .mock-content .hero .cta-primary {
+    background: #2B7A6E; color: white; padding: 14px 32px; border-radius: 14px;
+    font-weight: 600; font-size: 15px;
+  }
+  .mock-content .hero .cta-secondary {
+    background: white; color: #2B7A6E; padding: 14px 32px; border-radius: 14px;
+    font-weight: 500; font-size: 15px; border: 1.5px solid #D6CCC2;
+  }
+
+  .mock-content .hero-mobile {
+    background: linear-gradient(145deg, #E8F4F0 0%, #FDF8F3 100%);
+    padding: 40px 20px; text-align: center;
+  }
+  .mock-content .hero-mobile .illustration {
+    width: 80px; height: 80px; margin: 0 auto 16px;
+    background: #D4EDE6; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 36px;
+  }
+  .mock-content .hero-mobile h1 { font-size: 22px; font-weight: 700; color: #1D5B4F; margin-bottom: 8px; }
+  .mock-content .hero-mobile p { font-size: 14px; color: #6B5E54; margin-bottom: 20px; line-height: 1.5; }
+  .mock-content .hero-mobile .cta-primary {
+    background: #2B7A6E; color: white; padding: 14px; border-radius: 14px;
+    font-weight: 600; font-size: 15px; display: block; margin-bottom: 8px;
+  }
+  .mock-content .hero-mobile .cta-secondary {
+    background: white; color: #2B7A6E; padding: 14px; border-radius: 14px;
+    font-weight: 500; font-size: 15px; border: 1.5px solid #D6CCC2; display: block;
+  }
+
+  .mock-content .section-title { font-size: 20px; font-weight: 600; margin-bottom: 16px; color: #1D5B4F; }
+  .mock-content .section-title-mobile { font-size: 18px; font-weight: 600; margin-bottom: 12px; color: #1D5B4F; }
+
+  .mock-content .psychologist-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 24px;
+  }
+  .mock-content .psychologist-grid-mobile { padding: 16px; display: flex; flex-direction: column; gap: 16px; }
+
+  .mock-content .psych-card {
+    border: 1px solid #E6DED4; border-radius: 16px; padding: 20px; background: white;
+    display: flex; flex-direction: column; gap: 14px; transition: box-shadow 0.2s;
+  }
+  .mock-content .psych-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+  .mock-content .psych-card .top { display: flex; gap: 14px; }
+  .mock-content .psych-card .avatar {
+    width: 56px; height: 56px; border-radius: 50%; background: #E8F4F0; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 20px;
+  }
+  .mock-content .psych-card .info { flex: 1; }
+  .mock-content .psych-card .info h3 { font-size: 15px; font-weight: 600; color: #2D3436; }
+  .mock-content .psych-card .info p { font-size: 13px; color: #8B7E72; margin-top: 2px; }
+  .mock-content .psych-card .specialties { display: flex; gap: 4px; flex-wrap: wrap; }
+  .mock-content .psych-card .specialty {
+    background: #F5F0EA; color: #6B5E54; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 500;
+  }
+  .mock-content .psych-card .status-row { display: flex; justify-content: space-between; align-items: center; }
+  .mock-content .psych-card .available {
+    display: flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 500; color: #4CAF50;
+  }
+  .mock-content .psych-card .available .dot { width: 8px; height: 8px; border-radius: 50%; background: #4CAF50; }
+  .mock-content .psych-card .unavailable {
+    display: flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 500; color: #B0A89C;
+  }
+  .mock-content .psych-card .unavailable .dot { width: 8px; height: 8px; border-radius: 50%; background: #B0A89C; }
+  .mock-content .psych-card .btn-solicitar {
+    background: #2B7A6E; color: white; padding: 10px 16px; border-radius: 12px;
+    font-size: 13px; font-weight: 500; text-align: center; width: 100%; cursor: pointer;
+    transition: background 0.2s;
+  }
+  .mock-content .psych-card .btn-solicitar:hover { background: #1D6B5F; }
+  .mock-content .psych-card .btn-disabled {
+    background: #F5F0EA; color: #B0A89C; padding: 10px 16px; border-radius: 12px;
+    font-size: 12px; font-weight: 500; text-align: center; width: 100%;
+  }
+
+  .mock-content .filters { padding: 16px 24px; display: flex; gap: 8px; flex-wrap: wrap; border-bottom: 1px solid #E6DED4; }
+  .mock-content .filters-mobile { padding: 12px 16px; display: flex; gap: 6px; flex-wrap: wrap; border-bottom: 1px solid #E6DED4; }
+  .mock-content .filter-chip {
+    padding: 6px 14px; border: 1px solid #E6DED4; border-radius: 20px;
+    font-size: 13px; color: #6B5E54; background: white; cursor: pointer;
+  }
+  .mock-content .filter-chip.active { background: #2B7A6E; color: white; border-color: #2B7A6E; }
+
+  /* Detail page */
+  .mock-content .detail { padding: 32px; max-width: 680px; margin: 0 auto; }
+  .mock-content .detail-mobile { padding: 20px; }
+  .mock-content .detail .header { display: flex; gap: 24px; align-items: flex-start; text-align: left; }
+  .mock-content .detail .avatar-lg {
+    width: 100px; height: 100px; border-radius: 50%; background: #E8F4F0; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 40px;
+  }
+  .mock-content .detail .info h1 { font-size: 24px; font-weight: 700; color: #1D5B4F; }
+  .mock-content .detail .info .badge {
+    background: #D4EDE6; color: #2B7A6E; padding: 3px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; display: inline-block; margin-top: 6px;
+  }
+  .mock-content .detail .bio { margin-top: 20px; font-size: 14px; line-height: 1.7; color: #6B5E54; }
+  .mock-content .detail .specialties-detail { margin-top: 16px; display: flex; gap: 6px; flex-wrap: wrap; }
+  .mock-content .detail .info-row {
+    display: flex; gap: 6px; font-size: 13px; color: #6B5E54; margin-top: 12px; align-items: center;
+  }
+  .mock-content .detail .btn-solicitar-lg {
+    display: block; background: #25d366; color: white; text-align: center;
+    padding: 16px; border-radius: 14px; font-size: 16px; font-weight: 600; margin-top: 28px;
+    cursor: pointer; width: 100%;
+  }
+  .mock-content .detail .notice-box {
+    margin-top: 20px; padding: 16px 20px; background: #F7F1EA; border-radius: 14px;
+    font-size: 13px; color: #6B5E54; line-height: 1.5; border: 1px solid #E6DED4;
+  }
+
+  /* Login */
+  .mock-content .login-form {
+    max-width: 400px; margin: 0 auto; padding: 60px 24px; text-align: center;
+  }
+  .mock-content .login-form .icon {
+    width: 72px; height: 72px; background: #E8F4F0; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 32px;
+  }
+  .mock-content .login-form h2 { font-size: 22px; font-weight: 700; color: #1D5B4F; margin-bottom: 6px; }
+  .mock-content .login-form p { font-size: 14px; color: #8B7E72; margin-bottom: 28px; }
+  .mock-content .login-form input {
+    width: 100%; padding: 14px 18px; border: 1.5px solid #E6DED4; border-radius: 12px;
+    font-size: 15px; margin-bottom: 14px; outline: none; transition: border-color 0.2s;
+  }
+  .mock-content .login-form input:focus { border-color: #2B7A6E; }
+  .mock-content .login-form .btn-magic {
+    width: 100%; background: #2B7A6E; color: white; padding: 14px; border-radius: 12px;
+    font-size: 15px; font-weight: 600; cursor: pointer;
+  }
+  .mock-content .login-form .btn-magic:hover { background: #1D6B5F; }
+  .mock-content .login-form .footer { margin-top: 20px; font-size: 13px; color: #8B7E72; }
+  .mock-content .login-form .footer a { color: #2B7A6E; font-weight: 500; cursor: pointer; }
+
+  /* Request form */
+  .mock-content .request-form { max-width: 520px; margin: 0 auto; padding: 28px 24px; }
+  .mock-content .request-form h2 { font-size: 20px; font-weight: 600; color: #1D5B4F; margin-bottom: 4px; }
+  .mock-content .request-form .sub { font-size: 14px; color: #8B7E72; margin-bottom: 24px; }
+  .mock-content .request-form label { font-size: 14px; font-weight: 500; display: block; margin-bottom: 8px; margin-top: 20px; color: #2D3436; }
+  .mock-content .request-form .checkbox-group { display: flex; flex-wrap: wrap; gap: 8px; }
+  .mock-content .request-form .checkbox-item {
+    padding: 10px 16px; border: 1.5px solid #E6DED4; border-radius: 12px; font-size: 13px; color: #6B5E54; cursor: pointer; background: white;
+    transition: all 0.15s;
+  }
+  .mock-content .request-form .checkbox-item:hover { border-color: #2B7A6E; }
+  .mock-content .request-form .checkbox-item.checked { background: #E8F4F0; color: #2B7A6E; border-color: #2B7A6E; font-weight: 500; }
+  .mock-content .request-form input[type="number"] {
+    width: 120px; padding: 12px 14px; border: 1.5px solid #E6DED4; border-radius: 12px; font-size: 14px; outline: none;
+  }
+  .mock-content .request-form input[type="number"]:focus { border-color: #2B7A6E; }
+  .mock-content .request-form textarea {
+    width: 100%; padding: 12px 14px; border: 1.5px solid #E6DED4; border-radius: 12px;
+    font-size: 14px; min-height: 64px; resize: vertical; outline: none;
+  }
+  .mock-content .request-form textarea:focus { border-color: #2B7A6E; }
+  .mock-content .request-form .consent {
+    display: flex; gap: 10px; align-items: flex-start; margin-top: 24px;
+    padding: 14px 16px; background: #FAF6F1; border-radius: 12px; font-size: 13px; color: #6B5E54; line-height: 1.5;
+  }
+  .mock-content .request-form .consent input { margin-top: 3px; accent-color: #2B7A6E; }
+  .mock-content .request-form .btn-submit {
+    width: 100%; background: #2B7A6E; color: white; padding: 14px; border-radius: 12px;
+    font-size: 15px; font-weight: 600; margin-top: 24px; cursor: pointer; border: none;
+  }
+  .mock-content .request-form .btn-submit:hover { background: #1D6B5F; }
+  .mock-content .request-form .success-box {
+    text-align: center; padding: 40px 24px;
+  }
+  .mock-content .request-form .success-box .icon-circle {
+    width: 72px; height: 72px; background: #E8F4F0; border-radius: 50%; display: flex;
+    align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 32px;
+  }
+  .mock-content .request-form .success-box h3 { font-size: 20px; font-weight: 600; color: #1D5B4F; margin-bottom: 8px; }
+  .mock-content .request-form .success-box p { font-size: 14px; color: #8B7E72; margin-bottom: 20px; line-height: 1.5; }
+  .mock-content .request-form .success-box .info-card {
+    padding: 16px; background: #FAF6F1; border-radius: 12px; font-size: 13px; text-align: left; margin-top: 16px;
+  }
+  .mock-content .request-form .success-box .info-card .row { display: flex; justify-content: space-between; margin-bottom: 4px; }
+
+  /* Dashboard */
+  .mock-content .dash-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 20px 24px; border-bottom: 1px solid #E6DED4;
+  }
+  .mock-content .dash-header-mobile {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 16px; border-bottom: 1px solid #E6DED4;
+  }
+  .mock-content .dash-header h2, .mock-content .dash-header-mobile h2 { font-size: 18px; font-weight: 600; color: #1D5B4F; }
+  .mock-content .dash-tabs {
+    display: flex; gap: 0; border-bottom: 1px solid #E6DED4; padding: 0 24px;
+  }
+  .mock-content .dash-tabs-mobile { display: flex; gap: 0; border-bottom: 1px solid #E6DED4; padding: 0 16px; }
+  .mock-content .dash-tab {
+    padding: 12px 20px; font-size: 14px; color: #8B7E72; border-bottom: 2px solid transparent; cursor: pointer;
+  }
+  .mock-content .dash-tab.active { color: #2B7A6E; border-bottom-color: #2B7A6E; font-weight: 500; }
+
+  .mock-content .request-card {
+    padding: 16px 24px; border-bottom: 1px solid #F5F0EA; display: flex;
+    justify-content: space-between; align-items: center;
+  }
+  .mock-content .request-card:last-child { border-bottom: none; }
+  .mock-content .request-card-mobile {
+    padding: 14px 16px; border-bottom: 1px solid #F5F0EA;
+  }
+  .mock-content .request-card .left { display: flex; gap: 14px; align-items: center; }
+  .mock-content .request-card .left .avatar-sm {
+    width: 40px; height: 40px; border-radius: 50%; background: #E8F4F0; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 14px;
+  }
+  .mock-content .request-card .left .req-info h4 { font-size: 14px; font-weight: 600; color: #2D3436; }
+  .mock-content .request-card .left .req-info p { font-size: 13px; color: #8B7E72; margin-top: 2px; }
+  .mock-content .badge-pending {
+    background: #FDF6E3; color: #8B6E00; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500;
+  }
+  .mock-content .badge-accepted {
+    background: #E8F4F0; color: #1D6B5F; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;
+  }
+  .mock-content .badge-rejected {
+    background: #FDF0F0; color: #A04040; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;
+  }
+  .mock-content .btn-accept {
+    background: #2B7A6E; color: white; padding: 8px 22px; border-radius: 10px;
+    font-size: 13px; font-weight: 500; cursor: pointer; border: none;
+  }
+  .mock-content .btn-accept:hover { background: #1D6B5F; }
+  .mock-content .btn-reject {
+    border: 1.5px solid #E6DED4; color: #6B5E54; padding: 8px 22px; border-radius: 10px;
+    font-size: 13px; font-weight: 500; cursor: pointer; background: white;
+  }
+  .mock-content .btn-whatsapp {
+    background: #25d366; color: white; padding: 8px 20px; border-radius: 10px;
+    font-size: 13px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; border: none;
+  }
+  .mock-content .btn-whatsapp-lg {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    background: #25d366; color: white; padding: 16px; border-radius: 14px;
+    font-size: 17px; font-weight: 600; cursor: pointer; border: none; width: 100%;
+  }
+
+  .mock-content .empty-state {
+    text-align: center; padding: 48px 24px; color: #B0A89C;
+  }
+  .mock-content .empty-state .icon { font-size: 48px; margin-bottom: 12px; }
+  .mock-content .empty-state h3 { font-size: 16px; font-weight: 600; color: #8B7E72; margin-bottom: 4px; }
+  .mock-content .empty-state p { font-size: 14px; }
+
+  /* Admin */
+  .mock-content .admin-layout { display: flex; min-height: 400px; }
+  .mock-content .admin-sidebar {
+    width: 220px; background: #3D3834; color: #EDE8E2; padding: 24px; flex-shrink: 0;
+  }
+  .mock-content .admin-sidebar h3 {
+    font-size: 12px; font-weight: 600; margin-bottom: 20px; color: #A09888; text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .mock-content .admin-sidebar .item { padding: 10px 12px; border-radius: 10px; font-size: 14px; color: #CDC4B8; margin-bottom: 4px; cursor: pointer; }
+  .mock-content .admin-sidebar .item.active { background: #4D4642; color: #F5F0EA; font-weight: 500; }
+  .mock-content .admin-main { flex: 1; padding: 28px; background: #FDF8F3; }
+  .mock-content .admin-main h2 { font-size: 20px; font-weight: 600; color: #1D5B4F; margin-bottom: 4px; }
+  .mock-content .admin-main .count { font-size: 14px; color: #8B7E72; margin-bottom: 20px; }
+  .mock-content .admin-table { width: 100%; border-collapse: collapse; }
+  .mock-content .admin-table th {
+    text-align: left; padding: 12px 14px; font-size: 12px; text-transform: uppercase;
+    color: #8B7E72; font-weight: 600; border-bottom: 2px solid #E6DED4;
+  }
+  .mock-content .admin-table td {
+    padding: 14px; font-size: 14px; border-bottom: 1px solid #F5F0EA;
+  }
+  .mock-content .admin-table .actions { display: flex; gap: 8px; }
+  .mock-content .admin-table .btn-verify {
+    background: #2B7A6E; color: white; padding: 6px 16px; border-radius: 8px; font-size: 12px; font-weight: 500; cursor: pointer; border: none;
+  }
+  .mock-content .admin-table .btn-reject {
+    border: 1px solid #E6DED4; color: #6B5E54; padding: 6px 16px; border-radius: 8px; font-size: 12px; font-weight: 500; cursor: pointer; background: white;
+  }
+  .mock-content .admin-card {
+    padding: 14px; border: 1px solid #E6DED4; border-radius: 14px; margin-bottom: 10px; background: white;
+  }
+
+  /* Accepted state */
+  .mock-content .accepted-screen {
+    padding: 40px 24px; text-align: center; max-width: 520px; margin: 0 auto;
+  }
+  .mock-content .accepted-screen .big-icon { font-size: 56px; margin-bottom: 12px; }
+  .mock-content .accepted-screen h2 { font-size: 24px; font-weight: 700; color: #1D5B4F; margin-bottom: 8px; }
+  .mock-content .accepted-screen p { font-size: 15px; color: #6B5E54; line-height: 1.6; margin-bottom: 24px; }
+  .mock-content .accepted-screen .msg-preview {
+    background: #E8F4F0; border: 1.5px solid #C8E0D6; border-radius: 14px; padding: 20px; margin-bottom: 24px;
+  }
+  .mock-content .accepted-screen .msg-preview .label { font-size: 13px; font-weight: 500; color: #2B7A6E; margin-bottom: 8px; }
+  .mock-content .accepted-screen .msg-preview .bubble {
+    background: white; border-radius: 12px; padding: 12px 16px; font-size: 14px; color: #2D3436; text-align: left; border: 1px solid #C8E0D6;
+  }
+  .mock-content .accepted-screen .disclaimer {
+    margin-top: 12px; font-size: 12px; color: #B0A89C;
+  }
+
+  /* Pulse animation for WhatsApp button */
+  @keyframes wa-pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.4); } 50% { box-shadow: 0 0 0 10px rgba(37, 211, 102, 0); } }
+  .pulse-wa { animation: wa-pulse 3.5s infinite; }
+
+  @media (max-width: 900px) {
+    body { padding: 16px; }
+    .frame-desktop { min-width: unset; max-width: 100%; }
+    body.desktop .frame-desktop { display: block; }
+    body.mobile .frame-mobile { display: block; }
+    .screen-row { flex-direction: column; }
+    .frame-mobile { width: 100%; min-width: unset; border-radius: 24px; }
+  }
+</style>
+</head>
+<body class="desktop">
+
+<div class="header">
+  <h1>🧠 PsicoAyuda VE — Mockups</h1>
+  <p>Paleta cálida · Formas suaves · Tono humano</p>
+</div>
+
+<div class="view-toggle">
+  <button class="active" onclick="document.body.className='desktop'">🖥️ Desktop</button>
+  <button onclick="document.body.className='mobile'">📱 Mobile</button>
+  <button onclick="document.body.className=''">🔄 Ambos</button>
+</div>
+
+<div class="screen-grid">
+
+  <!-- ==================== 1: LANDING ==================== -->
+  <div class="screen-section">
+    <h2>1. Inicio — /</h2>
+    <div class="screen-row">
+      <div class="frame-desktop">
+        <div class="browser-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">psicoayuda.org.ve</span></div>
+        <div class="mock-content">
+          <div class="navbar">
+            <div class="logo">Psico<span>Ayuda</span> VE</div>
+            <div class="nav-links">
+              <span>Psicólogos</span>
+              <span>Soy Psicólogo</span>
+              <span>Ingresar</span>
+            </div>
+            <div class="nav-cta">Buscar espacio</div>
+          </div>
+          <div class="hero">
+            <div class="illustration">🌿</div>
+            <h1>Un espacio para hablar<br>cuando más lo necesitas</h1>
+            <p>Te conectamos con psicólogos voluntarios verificados en Venezuela. Gratuito, confidencial y sin complicaciones. No estás solo.</p>
+            <div class="cta-group">
+              <div class="cta-primary">Encontrar un psicólogo</div>
+              <div class="cta-secondary">Soy psicólogo · Quiero ayudar</div>
+            </div>
+          </div>
+          <div style="padding: 24px;">
+            <div class="section-title">Psicólogos disponibles ahora</div>
+            <div class="psychologist-grid">
+              <div class="psych-card">
+                <div class="top"><div class="avatar">👩</div><div class="info"><h3>María Fernanda R.</h3><p>Acompañante emocional</p></div></div>
+                <div class="specialties"><span class="specialty">Ansiedad</span><span class="specialty">Duelo</span><span class="specialty">Trauma</span></div>
+                <div class="status-row">
+                  <div class="available"><span class="dot"></span> Disponible ahora</div>
+                  <span style="font-size:12px;color:#B0A89C;">🇻🇪</span>
+                </div>
+                <div class="btn-solicitar">Conectar con María</div>
+              </div>
+              <div class="psych-card">
+                <div class="top"><div class="avatar">👨</div><div class="info"><h3>Carlos J. Mendoza</h3><p>Acompañante emocional</p></div></div>
+                <div class="specialties"><span class="specialty">Depresión</span><span class="specialty">Estrés</span><span class="specialty">Ansiedad</span></div>
+                <div class="status-row">
+                  <div class="available"><span class="dot"></span> Disponible ahora</div>
+                  <span style="font-size:12px;color:#B0A89C;">🇻🇪</span>
+                </div>
+                <div class="btn-solicitar">Conectar con Carlos</div>
+              </div>
+              <div class="psych-card">
+                <div class="top"><div class="avatar">👩</div><div class="info"><h3>Ana Lucía P.</h3><p>Acompañante emocional</p></div></div>
+                <div class="specialties"><span class="specialty">Apoyo niños</span><span class="specialty">Adolescentes</span></div>
+                <div class="status-row">
+                  <div class="unavailable"><span class="dot"></span> No disponible</div>
+                  <span style="font-size:12px;color:#B0A89C;">🇻🇪</span>
+                </div>
+                <div class="btn-disabled">Vuelve pronto · Horario: Lun–Vie</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="frame-mobile">
+        <div class="notch"><div class="island"></div></div>
+        <div class="status-bar"><span>9:41</span><span>🔋 📶</span></div>
+        <div class="mock-content">
+          <div class="navbar-mobile">
+            <div class="logo">Psico<span>Ayuda</span></div>
+            <div class="hamburger"><span></span><span></span><span></span></div>
+          </div>
+          <div class="hero-mobile">
+            <div class="illustration">🌿</div>
+            <h1>Un espacio para hablar</h1>
+            <p>Psicólogos voluntarios verificados en Venezuela. Gratuito y confidencial.</p>
+            <div class="cta-primary">Encontrar psicólogo</div>
+            <div class="cta-secondary">Soy psicólogo</div>
+          </div>
+          <div style="padding: 16px;">
+            <div class="section-title-mobile">Disponibles ahora</div>
+            <div class="psychologist-grid-mobile">
+              <div class="psych-card"><div class="top"><div class="avatar">👩</div><div class="info"><h3>María Fernanda R.</h3><p>Ansiedad · Duelo · Trauma</p></div></div><div class="status-row"><div class="available"><span class="dot"></span> Disponible ahora</div></div><div class="btn-solicitar">Conectar</div></div>
+              <div class="psych-card"><div class="top"><div class="avatar">👨</div><div class="info"><h3>Carlos J. Mendoza</h3><p>Depresión · Estrés · Ansiedad</p></div></div><div class="status-row"><div class="available"><span class="dot"></span> Disponible ahora</div></div><div class="btn-solicitar">Conectar</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 2: CATALOG ==================== -->
+  <div class="screen-section">
+    <h2>2. Psicólogos — /psicologos</h2>
+    <div class="screen-row">
+      <div class="frame-desktop">
+        <div class="browser-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">psicoayuda.org.ve/psicologos</span></div>
+        <div class="mock-content">
+          <div class="navbar"><div class="logo">Psico<span>Ayuda</span> VE</div><div class="nav-links"><span>Psicólogos</span><span>Soy Psicólogo</span><span>Ingresar</span></div><div class="nav-cta">Buscar espacio</div></div>
+          <div class="filters">
+            <span class="filter-chip active">Todas</span>
+            <span class="filter-chip">Ansiedad</span>
+            <span class="filter-chip">Duelo</span>
+            <span class="filter-chip">Depresión</span>
+            <span class="filter-chip">Trauma</span>
+            <span class="filter-chip">Apoyo niños</span>
+            <span class="filter-chip">Adolescentes</span>
+            <span class="filter-chip">Estrés</span>
+          </div>
+          <div class="psychologist-grid">
+            <div class="psych-card"><div class="top"><div class="avatar">👩</div><div class="info"><h3>María Fernanda R.</h3><p>Acompañante emocional</p></div></div><div class="specialties"><span class="specialty">Ansiedad</span><span class="specialty">Duelo</span><span class="specialty">Trauma</span></div><div class="status-row"><div class="available"><span class="dot"></span> Disponible ahora</div><span style="font-size:12px;color:#B0A89C;">🇻🇪</span></div><div class="btn-solicitar">Conectar</div></div>
+            <div class="psych-card"><div class="top"><div class="avatar">👨</div><div class="info"><h3>Carlos J. Mendoza</h3><p>Acompañante emocional</p></div></div><div class="specialties"><span class="specialty">Depresión</span><span class="specialty">Estrés</span></div><div class="status-row"><div class="available"><span class="dot"></span> Disponible ahora</div><span style="font-size:12px;color:#B0A89C;">🇻🇪</span></div><div class="btn-solicitar">Conectar</div></div>
+            <div class="psych-card"><div class="top"><div class="avatar">👩</div><div class="info"><h3>Ana Lucía P.</h3><p>Acompañante emocional</p></div></div><div class="specialties"><span class="specialty">Apoyo niños</span><span class="specialty">Adolescentes</span></div><div class="status-row"><div class="available"><span class="dot"></span> Disponible ahora</div><span style="font-size:12px;color:#B0A89C;">🇻🇪</span></div><div class="btn-solicitar">Conectar</div></div>
+            <div class="psych-card"><div class="top"><div class="avatar">👨</div><div class="info"><h3>Pedro E. García</h3><p>Acompañante emocional</p></div></div><div class="specialties"><span class="specialty">Violencia</span><span class="specialty">Trauma</span><span class="specialty">Crisis</span></div><div class="status-row"><div class="unavailable"><span class="dot"></span> Vuelve mañana</div><span style="font-size:12px;color:#B0A89C;">🇻🇪</span></div><div class="btn-disabled">Horario: Lun–Vie 9:00–17:00</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="frame-mobile">
+        <div class="notch"><div class="island"></div></div>
+        <div class="status-bar"><span>9:41</span><span>🔋 📶</span></div>
+        <div class="mock-content">
+          <div class="navbar-mobile"><div class="logo">Psico<span>Ayuda</span></div><div class="hamburger"><span></span><span></span><span></span></div></div>
+          <div class="filters-mobile"><span class="filter-chip active">Todas</span><span class="filter-chip">Ansiedad</span><span class="filter-chip">Duelo</span><span class="filter-chip">Depresión</span><span class="filter-chip">Trauma</span></div>
+          <div class="psychologist-grid-mobile">
+            <div class="psych-card"><div class="top"><div class="avatar">👩</div><div class="info"><h3>María Fernanda R.</h3><p>Ansiedad · Duelo · Trauma</p></div></div><div class="status-row"><div class="available"><span class="dot"></span> Disponible ahora</div></div><div class="btn-solicitar">Conectar</div></div>
+            <div class="psych-card"><div class="top"><div class="avatar">👨</div><div class="info"><h3>Carlos J. Mendoza</h3><p>Depresión · Estrés</p></div></div><div class="status-row"><div class="available"><span class="dot"></span> Disponible ahora</div></div><div class="btn-solicitar">Conectar</div></div>
+            <div class="psych-card"><div class="top"><div class="avatar">👩</div><div class="info"><h3>Ana Lucía P.</h3><p>Apoyo niños · Adolescentes</p></div></div><div class="status-row"><div class="available"><span class="dot"></span> Disponible ahora</div></div><div class="btn-solicitar">Conectar</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 3: PSYCHOLOGIST DETAIL ==================== -->
+  <div class="screen-section">
+    <h2>3. Perfil — /psicologo/[id]</h2>
+    <div class="screen-row">
+      <div class="frame-desktop">
+        <div class="browser-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">psicoayuda.org.ve/psicologo/maria-fernanda</span></div>
+        <div class="mock-content">
+          <div class="navbar" style="position:static;"><div class="logo">Psico<span>Ayuda</span> VE</div><div class="nav-links"><span>Psicólogos</span><span>Ingresar</span></div><div class="nav-cta">Buscar espacio</div></div>
+          <div class="detail">
+            <div class="header">
+              <div class="avatar-lg">👩</div>
+              <div class="info">
+                <h1>María Fernanda Rodríguez</h1>
+                <span class="badge">✅ Verificada</span>
+                <div class="info-row">📜 Colegiatura 12.345 · 8 años de experiencia</div>
+                <div class="info-row">🗓️ Lun–Vie 9:00–17:00 · Sáb 9:00–12:00</div>
+                <div class="info-row">🌐 Español</div>
+              </div>
+            </div>
+            <div class="bio">
+              Psicóloga clínica egresada de la Universidad Central de Venezuela.
+              Especialista en terapia cognitivo-conductual con enfoque en manejo de crisis,
+              trastornos de ansiedad y procesos de duelo. Voluntaria en primeros auxilios
+              psicológicos desde 2020, creyente del poder de la escucha activa.
+            </div>
+            <div class="specialties-detail">
+              <span class="specialty">Ansiedad</span>
+              <span class="specialty">Duelo</span>
+              <span class="specialty">Trauma</span>
+              <span class="specialty">Crisis de pánico</span>
+              <span class="specialty">Estrés</span>
+            </div>
+            <div class="notice-box">
+              🌱 <strong>¿Cómo funciona?</strong> Al enviar tu solicitud, María recibirá una notificación.
+              Ella aceptará desde su panel y te llegará su enlace de WhatsApp para iniciar la conversación.
+              La atención ocurre fuera de esta plataforma.
+            </div>
+            <div class="btn-solicitar-lg pulse-wa">📱 Solicitar contacto con María</div>
+          </div>
+        </div>
+      </div>
+      <div class="frame-mobile">
+        <div class="notch"><div class="island"></div></div>
+        <div class="status-bar"><span>9:41</span><span>🔋 📶</span></div>
+        <div class="mock-content">
+          <div class="navbar-mobile"><div class="logo">Psico<span>Ayuda</span></div><div class="hamburger"><span></span><span></span><span></span></div></div>
+          <div class="detail-mobile" style="text-align:center;">
+            <div class="avatar-lg" style="margin: 20px auto 12px;">👩</div>
+            <h1 style="font-size:20px;font-weight:700;color:#1D5B4F;">María Fernanda R.</h1>
+            <span class="badge">✅ Verificada</span>
+            <div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:12px 0;">
+              <span class="specialty">Ansiedad</span><span class="specialty">Duelo</span><span class="specialty">Trauma</span>
+            </div>
+            <p style="font-size:13px;color:#6B5E54;text-align:left;line-height:1.6;">
+              Psicóloga clínica UCV. Terapia cognitivo-conductual, manejo de crisis y duelo.
+            </p>
+            <div style="font-size:13px;color:#6B5E54;text-align:left;margin-top:12px;">🗓️ Lun–Vie 9:00–17:00</div>
+            <div class="btn-solicitar-lg pulse-wa" style="margin:20px 0;">📱 Solicitar contacto</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 4: LOGIN ==================== -->
+  <div class="screen-section">
+    <h2>4. Ingreso — /login</h2>
+    <div class="screen-row">
+      <div class="frame-desktop">
+        <div class="browser-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">psicoayuda.org.ve/login</span></div>
+        <div class="mock-content">
+          <div class="navbar"><div class="logo">Psico<span>Ayuda</span> VE</div><div class="nav-links"><span>Psicólogos</span><span>Soy Psicólogo</span></div></div>
+          <div class="login-form">
+            <div class="icon">🔑</div>
+            <h2>Bienvenido de nuevo</h2>
+            <p>Ingresa tu correo y te enviaremos un enlace mágico. Sin contraseñas que recordar.</p>
+            <input type="email" placeholder="tu@correo.com" value="maria@ejemplo.com">
+            <div class="btn-magic">Enviar enlace mágico</div>
+            <div class="footer">
+              ¿Eres psicólogo? <a>Regístrate aquí</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="frame-mobile">
+        <div class="notch"><div class="island"></div></div>
+        <div class="status-bar"><span>9:41</span><span>🔋 📶</span></div>
+        <div class="mock-content">
+          <div class="navbar-mobile"><div class="logo">Psico<span>Ayuda</span></div><div class="hamburger"><span></span><span></span><span></span></div></div>
+          <div class="login-form" style="padding:40px 16px;">
+            <div class="icon" style="width:64px;height:64px;margin:0 auto 16px;font-size:28px;">🔑</div>
+            <h2>Bienvenido</h2>
+            <p>Ingresa tu correo para recibir tu enlace.</p>
+            <input type="email" placeholder="tu@correo.com">
+            <div class="btn-magic">Enviar enlace</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 5: REQUEST FORM ==================== -->
+  <div class="screen-section">
+    <h2>5. Solicitar apoyo — /solicitar/[id]</h2>
+    <div class="screen-row">
+      <div class="frame-desktop">
+        <div class="browser-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">psicoayuda.org.ve/solicitar/maria-fernanda</span></div>
+        <div class="mock-content">
+          <div class="navbar"><div class="logo">Psico<span>Ayuda</span> VE</div><div class="nav-links"><span>Dashboard</span><span>Cerrar sesión</span></div></div>
+          <div class="request-form">
+            <h2>Cuéntanos un poco</h2>
+            <p class="sub">Conectando con: <strong>María Fernanda Rodríguez</strong></p>
+            <label>¿Qué te gustaría hablar?</label>
+            <div class="checkbox-group">
+              <span class="checkbox-item">Ansiedad</span>
+              <span class="checkbox-item checked">Duelo</span>
+              <span class="checkbox-item">Crisis de pánico</span>
+              <span class="checkbox-item">Trauma</span>
+              <span class="checkbox-item">Depresión</span>
+              <span class="checkbox-item">Estrés</span>
+              <span class="checkbox-item">Apoyo niños/adolescentes</span>
+              <span class="checkbox-item">Violencia</span>
+            </div>
+            <label>Tu edad</label>
+            <input type="number" placeholder="28" value="28">
+            <label>¿Cuándo prefieres hablar? (opcional)</label>
+            <textarea placeholder="Ej: Preferiblemente en las mañanas después de las 10am">Preferiblemente en las mañanas</textarea>
+            <div class="consent">
+              <input type="checkbox" checked>
+              <span>Entiendo que esta plataforma es solo un medio de contacto y la atención ocurre fuera de ella, a través de WhatsApp.</span>
+            </div>
+            <div class="btn-submit">Enviar solicitud</div>
+          </div>
+        </div>
+      </div>
+      <div class="frame-mobile">
+        <div class="notch"><div class="island"></div></div>
+        <div class="status-bar"><span>9:41</span><span>🔋 📶</span></div>
+        <div class="mock-content">
+          <div class="navbar-mobile"><div class="logo">Psico<span>Ayuda</span></div><div class="hamburger"><span></span><span></span><span></span></div></div>
+          <div class="request-form" style="padding:16px;">
+            <h2>Cuéntanos</h2>
+            <p class="sub">Con: <strong>María Fernanda R.</strong></p>
+            <label>¿Qué te gustaría hablar?</label>
+            <div class="checkbox-group"><span class="checkbox-item">Ansiedad</span><span class="checkbox-item checked">Duelo</span><span class="checkbox-item">Trauma</span></div>
+            <label>Edad</label>
+            <input type="number" placeholder="28">
+            <label>Horario</label>
+            <textarea placeholder="¿Cuándo prefieres?"></textarea>
+            <div class="consent" style="font-size:12px;"><input type="checkbox" checked><span>Acepto que esta plataforma es solo un medio de contacto.</span></div>
+            <div class="btn-submit">Enviar</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 6: SUCCESS ==================== -->
+  <div class="screen-section">
+    <h2>6. Solicitud enviada — /solicitud/[id]</h2>
+    <div class="screen-row">
+      <div class="frame-desktop">
+        <div class="browser-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">psicoayuda.org.ve/solicitud/abc-123</span></div>
+        <div class="mock-content">
+          <div class="navbar"><div class="logo">Psico<span>Ayuda</span> VE</div><div class="nav-links"><span>Dashboard</span><span>Cerrar sesión</span></div></div>
+          <div class="request-form">
+            <div class="success-box">
+              <div class="icon-circle">🌱</div>
+              <h3>Tu solicitud fue enviada</h3>
+              <p>María recibió tu solicitud y te notificaremos por correo cuando la acepte. Mientras tanto, respira hondo: ya diste el paso más importante.</p>
+              <div class="info-card">
+                <div class="row"><span>Psicólogo:</span><strong>María Fernanda Rodríguez</strong></div>
+                <div class="row"><span>Estado:</span><span class="badge-pending">Esperando respuesta</span></div>
+                <div class="row" style="margin-bottom:0;"><span>ID:</span><span style="color:#B0A89C;">#abc-123</span></div>
+              </div>
+              <div style="margin-top:20px;font-size:14px;color:#2B7A6E;font-weight:500;cursor:pointer;">← Ir a mi dashboard</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="frame-mobile">
+        <div class="notch"><div class="island"></div></div>
+        <div class="status-bar"><span>9:41</span><span>🔋 📶</span></div>
+        <div class="mock-content">
+          <div class="navbar-mobile"><div class="logo">Psico<span>Ayuda</span></div><div class="hamburger"><span></span><span></span><span></span></div></div>
+          <div style="padding:32px 16px;text-align:center;">
+            <div style="font-size:48px;margin-bottom:12px;">🌱</div>
+            <h3 style="font-size:18px;font-weight:600;color:#1D5B4F;">Solicitud enviada</h3>
+            <p style="font-size:14px;color:#6B5E54;margin:8px 0 16px;">Te avisaremos por correo cuando te acepten.</p>
+            <span class="badge-pending">Esperando respuesta</span>
+            <div style="margin-top:16px;font-size:13px;color:#2B7A6E;">← Dashboard</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 7: PATIENT DASHBOARD ==================== -->
+  <div class="screen-section">
+    <h2>7. Mis espacios — /dashboard (paciente)</h2>
+    <div class="screen-row">
+      <div class="frame-desktop">
+        <div class="browser-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">psicoayuda.org.ve/dashboard</span></div>
+        <div class="mock-content">
+          <div class="navbar"><div class="logo">Psico<span>Ayuda</span> VE</div><div class="nav-links"><span>Psicólogos</span><span>Mis espacios</span><span>Cerrar sesión</span></div></div>
+          <div class="dash-header">
+            <h2>Mis espacios de conversación</h2>
+            <div class="btn-solicitar" style="width:auto;padding:10px 20px;border-radius:12px;">Buscar psicólogo</div>
+          </div>
+          <div class="dash-tabs">
+            <span class="dash-tab active">Todas (3)</span>
+            <span class="dash-tab">Esperando (2)</span>
+            <span class="dash-tab">Aceptadas (1)</span>
+          </div>
+          <div class="request-card">
+            <div class="left">
+              <div class="avatar-sm">👩</div>
+              <div class="req-info"><h4>María Fernanda Rodríguez</h4><p>Motivo: Duelo · Enviada: 28/06/2026</p></div>
+            </div>
+            <div style="display:flex;gap:12px;align-items:center;">
+              <span class="badge-accepted">Aceptada ✅</span>
+              <div class="btn-whatsapp pulse-wa">💬 Conversar</div>
+            </div>
+          </div>
+          <div class="request-card">
+            <div class="left">
+              <div class="avatar-sm">👨</div>
+              <div class="req-info"><h4>Carlos J. Mendoza</h4><p>Motivo: Ansiedad · Enviada: 27/06/2026</p></div>
+            </div>
+            <span class="badge-pending">⏳ Esperando respuesta</span>
+          </div>
+          <div class="request-card">
+            <div class="left">
+              <div class="avatar-sm">👩</div>
+              <div class="req-info"><h4>Ana Lucía P.</h4><p>Motivo: Apoyo adolescentes · Enviada: 25/06/2026</p></div>
+            </div>
+            <span class="badge-rejected">No disponible</span>
+          </div>
+        </div>
+      </div>
+      <div class="frame-mobile">
+        <div class="notch"><div class="island"></div></div>
+        <div class="status-bar"><span>9:41</span><span>🔋 📶</span></div>
+        <div class="mock-content">
+          <div class="navbar-mobile"><div class="logo">Psico<span>Ayuda</span></div><div class="hamburger"><span></span><span></span><span></span></div></div>
+          <div class="dash-header-mobile"><h2>Mis espacios</h2><div class="btn-solicitar" style="width:auto;padding:6px 14px;font-size:13px;border-radius:10px;">+ Nuevo</div></div>
+          <div class="dash-tabs-mobile"><span class="dash-tab active">Todas</span><span class="dash-tab">Esperando</span><span class="dash-tab">Aceptadas</span></div>
+          <div class="request-card-mobile">
+            <div style="display:flex;gap:12px;align-items:center;">
+              <div class="avatar-sm">👩</div>
+              <div><h4 style="font-size:14px;font-weight:600;">María Fernanda R.</h4><p style="font-size:13px;color:#8B7E72;">Duelo · 28/06</p></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;">
+              <span class="badge-accepted">Aceptada ✅</span>
+              <div class="btn-whatsapp" style="padding:6px 14px;font-size:12px;">💬 Conversar</div>
+            </div>
+          </div>
+          <div class="request-card-mobile">
+            <div style="display:flex;gap:12px;align-items:center;">
+              <div class="avatar-sm">👨</div>
+              <div><h4 style="font-size:14px;font-weight:600;">Carlos J. Mendoza</h4><p style="font-size:13px;color:#8B7E72;">Ansiedad · 27/06</p></div>
+            </div>
+            <span class="badge-pending" style="display:inline-block;margin-top:8px;">⏳ Esperando</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 8: PSYCHOLOGIST DASHBOARD ==================== -->
+  <div class="screen-section">
+    <h2>8. Solicitudes recibidas — /dashboard (psicólogo)</h2>
+    <div class="screen-row">
+      <div class="frame-desktop">
+        <div class="browser-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">psicoayuda.org.ve/dashboard</span></div>
+        <div class="mock-content">
+          <div class="navbar"><div class="logo">Psico<span>Ayuda</span> VE</div><div class="nav-links"><span>Solicitudes</span><span>Mi perfil</span><span>Cerrar sesión</span></div></div>
+          <div class="dash-header">
+            <h2>Solicitudes recibidas</h2>
+            <div style="display:flex;gap:14px;font-size:13px;">
+              <span style="color:#4CAF50;font-weight:500;">🟢 Disponible</span>
+              <span style="color:#2B7A6E;cursor:pointer;font-weight:500;">Editar perfil</span>
+            </div>
+          </div>
+          <div class="dash-tabs">
+            <span class="dash-tab active">Nuevas (2)</span>
+            <span class="dash-tab">Aceptadas (3)</span>
+          </div>
+          <div class="request-card">
+            <div class="left">
+              <div class="avatar-sm" style="background:#FDF6E3;">😔</div>
+              <div class="req-info"><h4>Persona #3842</h4><p>28 años · Duelo · Prefiere mañanas</p></div>
+            </div>
+            <div>
+              <span style="margin-right:12px;font-size:13px;color:#B0A89C;">Hace 10 min</span>
+              <span class="btn-accept">Aceptar</span>
+              <span class="btn-reject">Rechazar</span>
+            </div>
+          </div>
+          <div class="request-card">
+            <div class="left">
+              <div class="avatar-sm" style="background:#FDF6E3;">😟</div>
+              <div class="req-info"><h4>Persona #3841</h4><p>35 años · Ansiedad · Violencia · Prefiere tardes</p></div>
+            </div>
+            <div>
+              <span style="margin-right:12px;font-size:13px;color:#B0A89C;">Hace 1 hora</span>
+              <span class="btn-accept">Aceptar</span>
+              <span class="btn-reject">Rechazar</span>
+            </div>
+          </div>
+          <div class="empty-state" style="padding:24px;">
+            <h3>📋 Has procesado todas las solicitudes</h3>
+            <p>Vuelve pronto para revisar nuevas.</p>
+          </div>
+        </div>
+      </div>
+      <div class="frame-mobile">
+        <div class="notch"><div class="island"></div></div>
+        <div class="status-bar"><span>9:41</span><span>🔋 📶</span></div>
+        <div class="mock-content">
+          <div class="navbar-mobile"><div class="logo">Psico<span>Ayuda</span></div><div class="hamburger"><span></span><span></span><span></span></div></div>
+          <div class="dash-header-mobile"><h2>Solicitudes</h2><span style="font-size:12px;color:#4CAF50;font-weight:500;">🟢 Disponible</span></div>
+          <div class="request-card-mobile">
+            <div style="display:flex;gap:12px;align-items:center;"><div class="avatar-sm" style="background:#FDF6E3;">😔</div><div><h4 style="font-size:14px;font-weight:600;">Persona #3842</h4><p style="font-size:13px;color:#8B7E72;">28 años · Duelo · Mañanas</p></div></div>
+            <div style="display:flex;gap:8px;margin-top:10px;"><span class="btn-accept" style="flex:1;text-align:center;border-radius:10px;">Aceptar</span><span class="btn-reject" style="flex:1;text-align:center;border-radius:10px;">Rechazar</span></div>
+          </div>
+          <div class="request-card-mobile">
+            <div style="display:flex;gap:12px;align-items:center;"><div class="avatar-sm" style="background:#FDF6E3;">😟</div><div><h4 style="font-size:14px;font-weight:600;">Persona #3841</h4><p style="font-size:13px;color:#8B7E72;">35 años · Ansiedad · Tardes</p></div></div>
+            <div style="display:flex;gap:8px;margin-top:10px;"><span class="btn-accept" style="flex:1;text-align:center;border-radius:10px;">Aceptar</span><span class="btn-reject" style="flex:1;text-align:center;border-radius:10px;">Rechazar</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 9: ADMIN ==================== -->
+  <div class="screen-section">
+    <h2>9. Admin — /admin</h2>
+    <div class="screen-row">
+      <div class="frame-desktop">
+        <div class="browser-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">psicoayuda.org.ve/admin</span></div>
+        <div class="mock-content">
+          <div class="admin-layout">
+            <div class="admin-sidebar">
+              <h3>Panel</h3>
+              <div class="item active">📋 Verificaciones</div>
+              <div class="item">📊 Estadísticas</div>
+              <div class="item">⚙️ Configuración</div>
+            </div>
+            <div class="admin-main">
+              <h2>Verificación de psicólogos</h2>
+              <div class="count">3 perfiles pendientes de revisión</div>
+              <table class="admin-table">
+                <thead><tr><th>Nombre</th><th>Colegiatura</th><th>Documento</th><th>Registro</th><th>Acción</th></tr></thead>
+                <tbody>
+                  <tr><td>María Fernanda Rodríguez</td><td>12.345</td><td><span style="color:#2B7A6E;cursor:pointer;">📎 Ver documento</span></td><td>28/06/2026</td><td><div class="actions"><span class="btn-verify">Verificar</span><span class="btn-reject">Rechazar</span></div></td></tr>
+                  <tr><td>Carlos J. Mendoza</td><td>23.456</td><td><span style="color:#2B7A6E;cursor:pointer;">📎 Ver documento</span></td><td>27/06/2026</td><td><div class="actions"><span class="btn-verify">Verificar</span><span class="btn-reject">Rechazar</span></div></td></tr>
+                  <tr><td>Ana Lucía P.</td><td>34.567</td><td><span style="color:#2B7A6E;cursor:pointer;">📎 Ver documento</span></td><td>26/06/2026</td><td><div class="actions"><span class="btn-verify">Verificar</span><span class="btn-reject">Rechazar</span></div></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="frame-mobile">
+        <div class="notch"><div class="island"></div></div>
+        <div class="status-bar"><span>9:41</span><span>🔋 📶</span></div>
+        <div class="mock-content">
+          <div class="navbar-mobile"><div class="logo">Admin</div><div class="hamburger"><span></span><span></span><span></span></div></div>
+          <div style="padding:16px;">
+            <h2 style="font-size:18px;font-weight:600;color:#1D5B4F;">Verificaciones</h2>
+            <p style="font-size:13px;color:#8B7E72;margin-bottom:16px;">3 pendientes</p>
+            <div class="admin-card">
+              <div style="display:flex;justify-content:space-between;align-items:center;"><div><strong style="font-size:14px;">María Fernanda R.</strong><br><span style="font-size:12px;color:#8B7E72;">Col. 12.345</span></div><span style="font-size:12px;color:#2B7A6E;">📎 PDF</span></div>
+              <div style="display:flex;gap:8px;margin-top:10px;"><span class="btn-verify" style="flex:1;text-align:center;border-radius:8px;">Verificar</span><span class="btn-reject" style="flex:1;text-align:center;border-radius:8px;">Rechazar</span></div>
+            </div>
+            <div class="admin-card">
+              <div style="display:flex;justify-content:space-between;align-items:center;"><div><strong style="font-size:14px;">Carlos J. Mendoza</strong><br><span style="font-size:12px;color:#8B7E72;">Col. 23.456</span></div><span style="font-size:12px;color:#2B7A6E;">📎 PDF</span></div>
+              <div style="display:flex;gap:8px;margin-top:10px;"><span class="btn-verify" style="flex:1;text-align:center;border-radius:8px;">Verificar</span><span class="btn-reject" style="flex:1;text-align:center;border-radius:8px;">Rechazar</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 10: ACCEPTED ==================== -->
+  <div class="screen-section">
+    <h2>10. ¡Aceptada! — WhatsApp listo</h2>
+    <div class="screen-row">
+      <div class="frame-desktop">
+        <div class="browser-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">psicoayuda.org.ve/dashboard</span></div>
+        <div class="mock-content">
+          <div class="navbar"><div class="logo">Psico<span>Ayuda</span> VE</div><div class="nav-links"><span>Psicólogos</span><span>Mis espacios</span><span>Cerrar sesión</span></div></div>
+          <div class="accepted-screen">
+            <div class="big-icon">🌸</div>
+            <h2>¡María Fernanda te espera!</h2>
+            <p>Ella aceptó tu solicitud y está lista para conversar contigo. Solo haz clic en el botón para empezar.</p>
+            <div class="msg-preview">
+              <div class="label">📝 Mensaje que se abrirá en WhatsApp:</div>
+              <div class="bubble">"Hola, vengo de PsicoAyuda VE. Me gustaría conversar contigo."</div>
+            </div>
+            <div class="btn-whatsapp-lg pulse-wa">💬 Conversar con María Fernanda</div>
+            <div class="disclaimer">Al hacer clic, saldrás de la plataforma y abrirás WhatsApp. La conversación es privada entre tú y el psicólogo.</div>
+          </div>
+        </div>
+      </div>
+      <div class="frame-mobile">
+        <div class="notch"><div class="island"></div></div>
+        <div class="status-bar"><span>9:41</span><span>🔋 📶</span></div>
+        <div class="mock-content">
+          <div class="navbar-mobile"><div class="logo">Psico<span>Ayuda</span></div><div class="hamburger"><span></span><span></span><span></span></div></div>
+          <div style="padding:24px 16px;text-align:center;">
+            <div style="font-size:40px;margin-bottom:8px;">🌸</div>
+            <h2 style="font-size:20px;font-weight:700;color:#1D5B4F;margin-bottom:8px;">¡María te espera!</h2>
+            <p style="font-size:14px;color:#6B5E54;margin-bottom:16px;">Aceptó tu solicitud. Conversa con ella ahora.</p>
+            <div style="background:#E8F4F0;border-radius:12px;padding:12px;margin-bottom:16px;font-size:12px;color:#2B7A6E;text-align:left;">
+              "Hola, vengo de PsicoAyuda VE. Me gustaría conversar contigo."
+            </div>
+            <div class="btn-whatsapp-lg pulse-wa" style="margin:0;">💬 Conversar</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  document.querySelectorAll('.view-toggle button').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.view-toggle button').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>
