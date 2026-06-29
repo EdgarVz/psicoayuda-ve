@@ -6,6 +6,6 @@ export function getResendClient() {
     return null
   }
 
-  const { Resend } = require('resend')
+  const { Resend } = await import('resend')
   return new Resend(env.RESEND_API_KEY)
 }
