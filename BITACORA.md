@@ -120,3 +120,36 @@ Plataforma de apoyo psicológico en crisis para Venezuela. Conexión paciente-ps
 - **Task 4.3:** `src/app/page.tsx` — Hero + lista de disponibles
 - **Task 4.4:** `/psicologos` — catálogo completo con filtros via searchParams + CatalogClient
 - Build verificado: `npm run build` exitoso
+
+## 2026-06-29 — Phase 5 completada: Psychologist Detail
+
+### Cambios
+- **Task 5.1:** `src/features/psychologist/queries.ts` — `getPsychologistById` con join profiles + psychologist_profiles
+- **Task 5.2:** `src/features/psychologist/components/psychologist-profile.tsx` — avatar, specialties tags, disponibilidad, badge verificado, "¿Cómo funciona?" card, CTA WhatsApp
+- **Task 5.3:** `src/app/(public)/psicologo/[id]/page.tsx` — Server Component con metadata dinámica, UUID param
+- Implementado por subagente Paseo en paralelo con Phase 6
+- tsc PASS, build PASS
+
+## 2026-06-29 — Phase 6 completada: Appointments
+
+### Cambios
+- **Task 6.1:** `src/features/appointments/schemas.ts` + `types.ts` — Zod schemas con 10 especialidades, 7 tests PASS
+- **Task 6.2:** `src/features/appointments/actions.ts` — Server Actions: submitRequest, acceptRequest, rejectRequest
+- **Task 6.3:** `src/features/appointments/components/request-form.tsx` — Formulario con edad, motivos checkboxes, horario, consentimiento
+- **Task 6.4:** `src/app/(auth)/solicitar/[id]/page.tsx` — Página de solicitud con verificación de disponibilidad + licencia
+- **Task 6.5:** `request-status.tsx` (pending/accepted/rejected) + `src/app/(auth)/solicitud/[id]/page.tsx`
+- Implementado por subagente Paseo en paralelo con Phase 5
+- tsc PASS, tests 7/7 PASS, build PASS
+
+## 2026-06-29 — Fix: Vercel build /solicitar/[id] (env validation)
+
+### Problema
+Build fallaba en Vercel con `Invalid environment variables` al compilar `/solicitar/[id]`.
+
+### Root cause
+`SUPABASE_SERVICE_ROLE_KEY` era obligatorio (`z.string().min(1)`) en `src/lib/env.ts`, pero no está configurado en Vercel. `@t3-oss/env-nextjs` valida todas las server vars al importar `env.ts`, matando el build en cualquier página que importara Supabase (server/client).
+
+### Fix
+- `src/lib/env.ts`: `SUPABASE_SERVICE_ROLE_KEY` → `.optional()` (consistente con `RESEND_API_KEY`, `SENTRY_DSN`)
+- `src/lib/supabase/admin.ts`: runtime null check + `logger.warn` si falta la key
+- Build local verificado: PASS
