@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { GeistSans } from 'geist/font/sans'
 import './globals.css'
-import { Toaster } from 'sonner'
+import { Toaster } from '@/components/ui/sonner'
 
 export const metadata: Metadata = {
   title: { template: '%s · PsicoAyuda VE', default: 'PsicoAyuda VE — Apoyo psicológico en Venezuela' },

@@ -221,3 +221,14 @@ El catálogo de psicólogos no mostraba resultados pese a haber datos en DB. Cau
 ### Checks
 - lint PASS, tsc PASS
 - Commit: `2b99fc7`
+
+## 2026-06-29 — Tech debt N1+N2 + doc alignment
+
+### Cambios
+- `package.json`: movido `shadcn` de `dependencies` a `devDependencies`
+- `src/app/layout.tsx`: Toaster import desde `@/components/ui/sonner` (iconos custom Lucide)
+- `docs/superpowers/plans/2026-06-29-psicoayuda-implementation.md`: estructura actualizada (home en `(public)/`, `catalog-client.tsx`, `specialties.ts`, `utils.ts`); checkboxes Phases 5-6 marcados como `[x]`
+
+### Checks
+- lint PASS, tsc PASS, build PASS, tests 12/12 PASS
+- Branch: `fix/tech-debt`
