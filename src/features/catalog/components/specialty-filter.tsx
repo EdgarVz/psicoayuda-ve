@@ -29,6 +29,16 @@ export function SpecialtyFilter({ selected, onChange }: SpecialtyFilterProps) {
 
   return (
     <div className="flex flex-wrap gap-2">
+      <button
+        onClick={() => onChange([])}
+        className={`px-3 py-1.5 text-sm rounded-full border transition-colors ${
+          selected.length === 0
+            ? 'bg-primary text-white border-primary'
+            : 'bg-white text-muted-foreground border-border hover:border-primary hover:text-primary'
+        }`}
+      >
+        Todas
+      </button>
       {SPECIALTIES.map(({ value, label }) => (
         <button
           key={value}

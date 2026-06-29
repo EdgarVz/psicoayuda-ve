@@ -155,10 +155,11 @@ app/fonts/
 - Radius: 16px
 - Shadow: `sm`
 - Padding: 20px
-- Layout: avatar circular (56px) left, info right
+- Layout: vertical — avatar 56px centrado arriba, info debajo, botón al fondo
+- Avatar fallback: emoji 👩‍⚕️ en vez de inicial del nombre
 - Especialidades como chips en `#F5F0EA`, texto `#6B5E54`, border-radius 20px
 - Estado de disponibilidad: indicador verde/gris con texto descriptivo
-- Botón "Conectar" o "Vuelve pronto · Horario: Lun–Vie"
+- Botón "Conectar con [nombre completo]" o "Vuelve pronto · Horario: Lun–Vie"
 
 ### Inputs
 - Background: white

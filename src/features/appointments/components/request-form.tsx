@@ -98,24 +98,20 @@ export function RequestForm({ psychologistId, psychologistName }: RequestFormPro
         <legend className="text-sm font-medium mb-2">
           ¿Cuál es el motivo de tu solicitud?
         </legend>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <div className="flex flex-wrap gap-2">
           {Object.entries(specialtyLabels).map(([value, label]) => (
-            <label
+            <button
               key={value}
-              className={`flex items-center gap-2 px-3 py-2 border rounded-radius-input text-sm cursor-pointer transition-colors ${
+              type="button"
+              onClick={() => toggleReason(value)}
+              className={`px-4 py-2 rounded-full text-sm border transition-colors ${
                 reasons.includes(value)
-                  ? 'border-primary bg-primary/5'
-                  : 'border-border hover:border-primary/50'
+                  ? 'bg-primary/10 border-primary text-primary'
+                  : 'bg-white border-border hover:border-primary/50 text-muted'
               }`}
             >
-              <input
-                type="checkbox"
-                checked={reasons.includes(value)}
-                onChange={() => toggleReason(value)}
-                className="accent-primary"
-              />
               {label}
-            </label>
+            </button>
           ))}
         </div>
       </fieldset>
@@ -134,19 +130,19 @@ export function RequestForm({ psychologistId, psychologistName }: RequestFormPro
         />
       </div>
 
-      <label className="flex items-start gap-3 cursor-pointer">
-        <input
-          type="checkbox"
-          checked={consent}
-          onChange={(e) => setConsent(e.target.checked)}
-          className="mt-0.5 accent-primary"
-        />
-        <span className="text-sm text-muted">
-          Acepto que mi información sea compartida con el psicólogo para procesar
-          esta solicitud de cita. Entiendo que mis datos serán tratados de forma
-          confidencial.
-        </span>
-      </label>
+      <div className="bg-[#FAF6F1] rounded-radius-card p-6">
+        <label className="flex items-start gap-3 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={consent}
+            onChange={(e) => setConsent(e.target.checked)}
+            className="mt-0.5 accent-primary"
+          />
+          <span className="text-sm text-muted">
+            Entiendo que esta plataforma es solo un medio de contacto y la atención ocurre fuera de ella, a través de WhatsApp.
+          </span>
+        </label>
+      </div>
 
       {state === 'error' && (
         <div className="bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-radius-input">

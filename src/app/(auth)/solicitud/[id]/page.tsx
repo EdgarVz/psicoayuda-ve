@@ -54,6 +54,7 @@ export default async function SolicitudPage({ params }: PageProps) {
         status={requestData.status as AppointmentRequestStatus}
         whatsappLink={whatsappLink}
         psychologistName={displayName}
+        requestId={id}
       />
     </div>
   )

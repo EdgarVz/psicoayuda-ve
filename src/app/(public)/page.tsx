@@ -12,7 +12,7 @@ export default async function HomePage() {
 
   return (
     <div>
-      <section className="bg-gradient-to-b from-primary/10 via-background to-background text-center px-4 py-20 md:py-28">
+      <section className="bg-gradient-to-br from-[#E8F4F0] via-[#FDF8F3] to-[#FDF8F3] text-center px-4 py-20 md:py-28">
         <div className="max-w-4xl mx-auto">
           <div className="w-28 h-28 md:w-32 md:h-32 mx-auto mb-6 rounded-full bg-primary/20 flex items-center justify-center text-5xl md:text-6xl">
             🌿

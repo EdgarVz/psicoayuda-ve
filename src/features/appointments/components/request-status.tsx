@@ -7,23 +7,28 @@ interface RequestStatusProps {
   status: AppointmentRequestStatus
   whatsappLink?: string | null
   psychologistName: string
+  requestId?: string
 }
 
-export function RequestStatus({ status, whatsappLink, psychologistName }: RequestStatusProps) {
+export function RequestStatus({ status, whatsappLink, psychologistName, requestId }: RequestStatusProps) {
   if (status === 'pending') {
     return (
       <div className="text-center py-12 space-y-4">
         <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-amber-100 text-amber-600">
-          <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6l4 2" />
-            <circle cx="12" cy="12" r="10" />
-          </svg>
+          <span className="text-2xl">🌱</span>
         </div>
         <h2 className="text-xl font-semibold">Solicitud enviada</h2>
         <p className="text-muted max-w-sm mx-auto">
           Tu solicitud de cita con <strong>{psychologistName}</strong> ha sido enviada.
           Recibirás una notificación cuando sea aceptada.
         </p>
+        <div className="bg-[#FAF6F1] rounded-radius-card p-4 text-sm text-left max-w-sm mx-auto">
+          <p className="font-medium text-muted mb-1">Psicólogo asignado</p>
+          <p className="text-foreground">{psychologistName}</p>
+          {requestId && (
+            <p className="text-muted mt-2 text-xs">Solicitud #{requestId.slice(0, 7).toUpperCase()}</p>
+          )}
+        </div>
       </div>
     )
   }
@@ -41,6 +46,10 @@ export function RequestStatus({ status, whatsappLink, psychologistName }: Reques
           <strong>{psychologistName}</strong> ha aceptado tu solicitud.
           Puedes contactarlo por WhatsApp para coordinar los detalles.
         </p>
+        <div className="bg-green-50 border border-green-200 rounded-radius-card p-4 text-sm text-left mb-4">
+          <p className="font-medium text-green-800 mb-1">Mensaje predeterminado:</p>
+          <p className="text-green-700">&ldquo;Hola, vengo de PsicoAyuda VE. Solicito apoyo psicológico.&rdquo;</p>
+        </div>
         {whatsappLink && (
           <a
             href={whatsappLink}
