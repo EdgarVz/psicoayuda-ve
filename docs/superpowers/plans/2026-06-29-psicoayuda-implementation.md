@@ -108,7 +108,7 @@ After creation, user shares: project ref, URL, anon key, service_role_key.
 **Files:**
 - Create: (entire project scaffold)
 
-- [ ] **Step 1: Create Next.js project**
+- [x] **Step 1: Create Next.js project**
 
 ```bash
 npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias "@/*" --use-npm
@@ -116,7 +116,7 @@ npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --
 
 Expected: project scaffolded with `src/`, `app/`, `tsconfig.json` etc.
 
-- [ ] **Step 2: Install dependencies**
+- [x] **Step 2: Install dependencies**
 
 ```bash
 npm install @supabase/supabase-js zustand zod resend
@@ -127,11 +127,11 @@ npx shadcn@latest add button card input label checkbox select toast
 
 Expected: all deps installed, shadcn initialized with default config.
 
-- [ ] **Step 3: Verify tsconfig alias**
+- [x] **Step 3: Verify tsconfig alias**
 
 Read `tsconfig.json` to confirm `"@/*": ["./src/*"]` exists.
 
-- [ ] **Step 4: Create opencode.json**
+- [x] **Step 4: Create opencode.json**
 
 ```json
 {
@@ -146,7 +146,7 @@ Read `tsconfig.json` to confirm `"@/*": ["./src/*"]` exists.
 
 Replace `<NEW_PROJECT_REF>` with the actual project ref from Task 0.1.
 
-- [ ] **Step 5: Create .env.local**
+- [x] **Step 5: Create .env.local**
 
 ```
 NEXT_PUBLIC_SUPABASE_URL=https://<ref>.supabase.co
@@ -161,7 +161,7 @@ SENTRY_DSN=
 
 #### Task 0.3 — Initialize git & create branches
 
-- [ ] **Step 1: Initialize git & first commit**
+- [x] **Step 1: Initialize git & first commit**
 
 ```bash
 git init
@@ -171,7 +171,7 @@ git commit -m "chore: initial scaffold"
 
 Expected: git initialized, first commit created.
 
-- [ ] **Step 2: Create GitHub repository**
+- [x] **Step 2: Create GitHub repository**
 
 Puede ser manual (https://github.com/new) o via CLI:
 
@@ -181,7 +181,7 @@ gh repo create psicoayuda-ve --public --push --source=.
 
 Expected: repositorio remoto creado, commit pusheado a `main`.
 
-- [ ] **Step 3: Create develop branch**
+- [x] **Step 3: Create develop branch**
 
 ```bash
 git branch develop
