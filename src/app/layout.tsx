@@ -1,16 +1,8 @@
 import type { Metadata } from 'next'
-import localFont from 'next/font/local'
+import { GeistSans } from 'geist/font/sans'
 import { headers } from 'next/headers'
 import './globals.css'
 import { Toaster } from 'sonner'
-
-const geist = localFont({
-  src: [
-    { path: '../../node_modules/geist/dist/fonts/geist-sans/Geist-Variable.woff2', style: 'normal' },
-  ],
-  variable: '--font-geist',
-  display: 'swap',
-})
 
 export const metadata: Metadata = {
   title: { template: '%s · PsicoAyuda VE', default: 'PsicoAyuda VE — Apoyo psicológico en Venezuela' },
@@ -22,7 +14,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const nonce = headersList.get('x-nonce') ?? ''
 
   return (
-    <html lang="es" className={geist.variable}>
+    <html lang="es" className={GeistSans.variable}>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>

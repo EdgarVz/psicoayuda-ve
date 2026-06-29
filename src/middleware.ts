@@ -1,5 +1,4 @@
 import { type NextRequest, NextResponse } from 'next/server'
-import { createServerSupabase } from '@/lib/supabase/server'
 
 const publicPaths = ['/', '/psicologos', '/psicologo/', '/login']
 
@@ -13,11 +12,11 @@ export async function middleware(request: NextRequest) {
   const nonce = crypto.randomUUID()
   const csp = [
     `default-src 'self'`,
-    `script-src 'self' 'nonce-${nonce}' https://js.sentry-cdn.com`,
+    `script-src 'self' 'nonce-${nonce}'`,
     `style-src 'self' 'unsafe-inline'`,
     `img-src 'self' data: blob: https://*.supabase.co`,
     `font-src 'self'`,
-    `connect-src 'self' https://*.supabase.co https://sentry.io https://o*.ingest.sentry.io`,
+    `connect-src 'self' https://*.supabase.co`,
     `frame-ancestors 'none'`,
   ].join('; ')
 
@@ -37,7 +36,8 @@ export async function middleware(request: NextRequest) {
   }
 
   if (pathname.startsWith('/admin')) {
-    const supabase = await createServerSupabase()
+    const mod = await import('@/lib/supabase/server')
+    const supabase = await mod.createServerSupabase()
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) {
       return NextResponse.redirect(new URL('/login', request.url))

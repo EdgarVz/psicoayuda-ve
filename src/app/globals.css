@@ -27,6 +27,6 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
-    font-family: 'Geist', system-ui, sans-serif;
+    font-family: var(--font-geist-sans), system-ui, sans-serif;
   }
 }
