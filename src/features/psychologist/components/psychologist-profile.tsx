@@ -19,8 +19,25 @@ const SPECIALTY_LABELS: Record<string, string> = {
   adicciones: 'Adicciones',
 }
 
+function formatAvailability(availability: Record<string, unknown> | null): string | null {
+  if (!availability) return null
+  const days = availability.days as string[] | undefined
+  const hours = availability.hours as string | undefined
+  if (!days || !hours) return null
+  const dayMap: Record<string, string> = {
+    monday: 'Lun', tuesday: 'Mar', wednesday: 'Mié', thursday: 'Jue',
+    friday: 'Vie', saturday: 'Sáb', sunday: 'Dom',
+  }
+  const shortDays = days.map((d) => dayMap[d] ?? d)
+  if (shortDays.length > 2) {
+    return `${shortDays[0]}–${shortDays[shortDays.length - 1]} ${hours}`
+  }
+  return `${shortDays.join(', ')} ${hours}`
+}
+
 export function PsychologistProfile({ psychologist }: PsychologistProfileProps) {
   const initial = psychologist.fullName.charAt(0).toUpperCase()
+  const schedule = formatAvailability(psychologist.availability as Record<string, unknown> | null)
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
@@ -47,8 +64,8 @@ export function PsychologistProfile({ psychologist }: PsychologistProfileProps) 
               <div className="flex items-center gap-3 flex-wrap">
                 <h1 className="text-2xl font-semibold">{psychologist.fullName}</h1>
                 {psychologist.licenseVerified && (
-                  <span className="text-xs bg-available/10 text-available px-2.5 py-0.5 rounded-full font-medium">
-                    Verificado
+                  <span className="text-xs bg-success text-success-text px-2.5 py-0.5 rounded-full font-medium">
+                    Verificada
                   </span>
                 )}
               </div>
@@ -80,6 +97,18 @@ export function PsychologistProfile({ psychologist }: PsychologistProfileProps) 
             </div>
           </div>
 
+          <div className="mt-4 space-y-1.5 text-sm text-muted-foreground">
+            {psychologist.licenseNumber && (
+              <p>📜 Colegiatura {psychologist.licenseNumber}</p>
+            )}
+            {schedule && (
+              <p>🗓️ {schedule}</p>
+            )}
+            {psychologist.languages.length > 0 && (
+              <p>🌐 {psychologist.languages.join(' · ')}</p>
+            )}
+          </div>
+
           {psychologist.biography && (
             <section className="mt-8">
               <h2 className="text-lg font-semibold mb-2">Sobre mí</h2>
@@ -91,7 +120,7 @@ export function PsychologistProfile({ psychologist }: PsychologistProfileProps) 
         </div>
 
         <aside className="w-full md:w-80 flex-shrink-0">
-          <div className="bg-white rounded-radius-card border border-border p-6 space-y-4">
+          <div className="bg-white rounded-radius-card border border-border p-6 space-y-4 shadow-sm">
             <h2 className="font-semibold text-lg">¿Cómo funciona?</h2>
 
             <ol className="space-y-3 text-sm text-muted-foreground">
@@ -126,14 +155,16 @@ export function PsychologistProfile({ psychologist }: PsychologistProfileProps) 
             {psychologist.isAvailable ? (
               <Link
                 href={`/solicitar/${psychologist.id}`}
-                className="block w-full text-center px-6 py-3 rounded-radius-button font-semibold text-white transition-colors"
+                className="block w-full text-center px-6 py-3.5 rounded-radius-button font-semibold text-white transition-all"
                 style={{ backgroundColor: '#25d366' }}
               >
-                Solicitar cita por WhatsApp
+                <span className="inline-flex items-center gap-2">
+                  Solicitar contacto con {psychologist.displayName}
+                </span>
               </Link>
             ) : (
-              <div className="w-full text-center px-6 py-3 rounded-radius-button font-semibold bg-unavailable/20 text-muted cursor-not-allowed">
-                Vuelve pronto
+              <div className="w-full text-center px-6 py-3.5 rounded-radius-button font-semibold bg-unavailable/20 text-muted cursor-not-allowed">
+                Vuelve pronto · {schedule ?? 'Horario: próximamente'}
               </div>
             )}
           </div>

@@ -9,15 +9,24 @@
   --color-foreground: #2D3436;
   --color-muted: #8B7E72;
   --color-muted-light: #B0A89C;
+  --color-muted-foreground: #6B5E54;
   --color-border: #E6DED4;
   --color-whatsapp: #25d366;
   --color-available: #4CAF50;
   --color-unavailable: #B0A89C;
   --color-danger: #E74C3C;
-  --color-warning: #F39C12;
+  --color-danger-text: #C06060;
+  --color-warning: #FDF6E3;
+  --color-warning-text: #8B6E00;
+  --color-success: #E8F4F0;
+  --color-success-text: #2B7A6E;
 
   --radius-button: 12px;
   --radius-card: 16px;
+
+  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.04);
+  --shadow-md: 0 4px 12px 0 rgb(0 0 0 / 0.06);
+  --shadow-lg: 0 8px 24px 0 rgb(0 0 0 / 0.08);
 }
 
 @layer base {

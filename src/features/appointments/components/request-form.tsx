@@ -157,8 +157,8 @@ export function RequestForm({ psychologistId, psychologistName }: RequestFormPro
       <button
         type="submit"
         disabled={!isValid || state === 'submitting'}
-        className="w-full py-3 rounded-radius-button font-medium text-white transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
-        style={{ backgroundColor: '#25d366' }}
+        className="w-full py-3 rounded-radius-button font-medium text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+        style={{ backgroundColor: '#2B7A6E' }}
       >
         {state === 'submitting' ? 'Enviando...' : 'Enviar solicitud'}
       </button>
