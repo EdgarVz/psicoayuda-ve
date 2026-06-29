@@ -1077,79 +1077,13 @@ npx supabase gen types typescript --project-id <ref> > src/types/database.ts
 **Files:**
 - Create: `src/features/auth/schemas.ts`
 
-- [ ] **Step 1: Write schemas**
+- [x] **Step 1: Write schemas**
 
-```typescript
-import { z } from 'zod'
+- [x] **Step 2: Write test for schemas**
 
-export const magicLinkSchema = z.object({
-  email: z
-    .string()
-    .email('Ingresa un correo electrónico válido'),
-})
+- [x] **Step 3: Run test**
 
-export type MagicLinkInput = z.infer<typeof magicLinkSchema>
-
-export const psychologistSignupSchema = z.object({
-  email: z.string().email('Ingresa un correo electrónico válido'),
-  display_name: z.string().min(2, 'Mínimo 2 caracteres').max(50, 'Máximo 50 caracteres'),
-  full_name: z.string().min(3, 'Ingresa tu nombre completo').max(100, 'Máximo 100 caracteres'),
-  license_number: z.string().min(3, 'Ingresa tu número de colegiado'),
-})
-
-export type PsychologistSignupInput = z.infer<typeof psychologistSignupSchema>
-```
-
-- [ ] **Step 2: Write test for schemas**
-
-```typescript
-import { describe, it, expect } from 'vitest'
-import { magicLinkSchema, psychologistSignupSchema } from './schemas'
-
-describe('magicLinkSchema', () => {
-  it('accepts valid email', () => {
-    expect(magicLinkSchema.safeParse({ email: 'test@example.com' }).success).toBe(true)
-  })
-
-  it('rejects invalid email', () => {
-    expect(magicLinkSchema.safeParse({ email: 'not-an-email' }).success).toBe(false)
-  })
-
-  it('rejects empty email', () => {
-    expect(magicLinkSchema.safeParse({ email: '' }).success).toBe(false)
-  })
-})
-
-describe('psychologistSignupSchema', () => {
-  it('accepts valid data', () => {
-    const result = psychologistSignupSchema.safeParse({
-      email: 'psych@example.com',
-      display_name: 'Dr. Pérez',
-      full_name: 'Juan Pérez',
-      license_number: 'VEN-12345',
-    })
-    expect(result.success).toBe(true)
-  })
-
-  it('rejects short display_name', () => {
-    const result = psychologistSignupSchema.safeParse({
-      email: 'psych@example.com',
-      display_name: 'A',
-      full_name: 'Juan Pérez',
-      license_number: 'VEN-12345',
-    })
-    expect(result.success).toBe(false)
-  })
-})
-```
-
-- [ ] **Step 3: Run test**
-
-```bash
-npx vitest run src/features/auth/schemas.test.ts
-```
-
-Expected: PASS
+Expected: PASS ✅ (5/5 tests passed)
 
 ---
 
@@ -1158,64 +1092,8 @@ Expected: PASS
 **Files:**
 - Create: `src/features/auth/actions.ts`
 
-- [ ] **Step 1: Write auth actions**
-
-```typescript
-'use server'
-
-import { headers } from 'next/headers'
-import { createServerSupabase } from '@/lib/supabase/server'
-import { magicLinkSchema, type MagicLinkInput } from './schemas'
-import { env } from '@/lib/env'
-
-export async function sendMagicLink(input: MagicLinkInput): Promise<{ success?: true; error?: string }> {
-  const parsed = magicLinkSchema.safeParse(input)
-  if (!parsed.success) {
-    return { error: parsed.error.errors[0].message }
-  }
-
-  const supabase = await createServerSupabase()
-  const headersList = await headers()
-  const origin = headersList.get('origin') ?? env.NEXT_PUBLIC_SITE_URL
-
-  const { error } = await supabase.auth.signInWithOtp({
-    email: parsed.data.email,
-    options: {
-      emailRedirectTo: `${origin}/dashboard`,
-    },
-  })
-
-  if (error) {
-    return { error: 'Error al enviar el enlace. Intenta de nuevo.' }
-  }
-
-  return { success: true }
-}
-
-export async function signOut(): Promise<void> {
-  const supabase = await createServerSupabase()
-  await supabase.auth.signOut()
-}
-```
-
-- [ ] **Step 2: Write test for auth actions**
-
-```typescript
-import { describe, it, expect } from 'vitest'
-import { magicLinkSchema } from './schemas'
-
-describe('sendMagicLink validation', () => {
-  it('rejects empty email via schema', () => {
-    const result = magicLinkSchema.safeParse({ email: '' })
-    expect(result.success).toBe(false)
-  })
-
-  it('accepts valid email via schema', () => {
-    const result = magicLinkSchema.safeParse({ email: 'user@example.com' })
-    expect(result.success).toBe(true)
-  })
-})
-```
+- [x] **Step 1: Write auth actions**
+- [x] **Step 2: Write test for auth actions**
 
 ---
 
@@ -1225,117 +1103,11 @@ describe('sendMagicLink validation', () => {
 - Create: `src/features/auth/components/magic-link-form.tsx`
 - Create: `src/app/(public)/login/page.tsx`
 
-- [ ] **Step 1: Write MagicLinkForm component**
+- [x] **Step 1: Write MagicLinkForm component**
+- [x] **Step 2: Write login page**
+- [x] **Step 3: Build check**
 
-```typescript
-'use client'
-
-import { useState } from 'react'
-import { sendMagicLink } from '@/features/auth/actions'
-
-type FormState = 'idle' | 'sending' | 'sent' | 'error'
-
-export function MagicLinkForm() {
-  const [email, setEmail] = useState('')
-  const [state, setState] = useState<FormState>('idle')
-  const [error, setError] = useState('')
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    setState('sending')
-    setError('')
-
-    const result = await sendMagicLink({ email })
-
-    if (result.error) {
-      setError(result.error)
-      setState('error')
-      return
-    }
-
-    setState('sent')
-  }
-
-  if (state === 'sent') {
-    return (
-      <div className="text-center p-8 bg-background-alt rounded-radius-card">
-        <p className="text-lg font-medium mb-2">Revisa tu correo</p>
-        <p className="text-muted">Te enviamos un enlace mágico para iniciar sesión.</p>
-      </div>
-    )
-  }
-
-  return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <label htmlFor="email" className="block text-sm font-medium mb-1">
-          Correo electrónico
-        </label>
-        <input
-          id="email"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="tucorreo@ejemplo.com"
-          required
-          disabled={state === 'sending'}
-          className="w-full px-4 py-3 rounded-radius-button border border-border bg-white focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50"
-        />
-      </div>
-
-      {error && <p className="text-sm text-danger">{error}</p>}
-
-      <button
-        type="submit"
-        disabled={state === 'sending'}
-        className="w-full bg-primary text-white py-3 rounded-radius-button font-medium hover:bg-primary-light transition-colors disabled:opacity-50"
-      >
-        {state === 'sending' ? 'Enviando...' : 'Enviar enlace mágico'}
-      </button>
-    </form>
-  )
-}
-```
-
-- [ ] **Step 2: Write login page**
-
-```typescript
-import type { Metadata } from 'next'
-import { MagicLinkForm } from '@/features/auth/components/magic-link-form'
-
-export const metadata: Metadata = {
-  title: 'Iniciar sesión',
-  description: 'Accede a PsicoAyuda VE con tu correo electrónico',
-}
-
-export default function LoginPage() {
-  return (
-    <div className="max-w-md mx-auto px-4 py-16">
-      <div className="text-center mb-8">
-        <h1 className="text-2xl font-semibold mb-2">Bienvenido de vuelta</h1>
-        <p className="text-muted">Ingresa tu correo para recibir un enlace mágico</p>
-      </div>
-
-      <MagicLinkForm />
-
-      <p className="text-center text-sm text-muted mt-8">
-        ¿Eres psicólogo?{' '}
-        <a href="/registro-psicologo" className="text-primary hover:underline">
-          Regístrate aquí
-        </a>
-      </p>
-    </div>
-  )
-}
-```
-
-- [ ] **Step 3: Build check**
-
-```bash
-npm run build
-```
-
-Expected: PASS
+Expected: PASS ✅
 
 ---
 

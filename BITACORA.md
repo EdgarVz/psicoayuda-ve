@@ -91,3 +91,23 @@ Plataforma de apoyo psicológico en crisis para Venezuela. Conexión paciente-ps
 - `main` → producción
 - `develop` → preview
 - ⬜ Pendiente: definir `NEXT_PUBLIC_SITE_URL` con URL de preview
+
+### Fixes post-deploy
+- Middleware fallaba con `MIDDLEWARE_INVOCATION_FAILED` (500) — `@supabase/ssr` incompatible con Edge Runtime
+- Fix: import dinámico de `createServerSupabase` dentro del bloque `/admin`
+- Geist font ruta incorrecta (variable .woff2 no resuelta por Turbopack)
+- Fix: usar `import { GeistSans } from 'geist/font/sans'` en vez de `localFont` manual
+- `@t3-oss/env-nextjs` no estaba instalado (missing dep de Phase 1)
+- `feat-database-rls` nunca se mergeó a `develop` — corregido
+
+## 2026-06-29 — Phase 3 completada: Auth (Magic Links)
+
+### Cambios
+- **Task 3.1:** `src/features/auth/schemas.ts` — Zod schemas (`magicLinkSchema`, `psychologistSignupSchema`) + tests (5/5)
+- **Task 3.2:** `src/features/auth/actions.ts` — Server Actions (`sendMagicLink`, `signOut`)
+- **Task 3.3:** `src/features/auth/components/magic-link-form.tsx` — Form con 4 estados (idle/sending/sent/error) + `src/app/(public)/login/page.tsx`
+- Implementado por subagente Paseo en worktree `feat-auth-phase-3`
+
+### Revisión de proyecto referente
+- Analizado `build4venezuela/acompa-amientopsicologico` (Angular 21, contraseñas, sesiones invitadas)
+- Conclusión: proyectos independientes, enfoques distintos, pueden coexistir
