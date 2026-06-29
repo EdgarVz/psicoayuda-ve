@@ -1169,7 +1169,7 @@ Expected: PASS ✅
 **Files:**
 - Create: `src/features/psychologist/queries.ts`
 
-- [x] **Step 1: Write queries**
+- [ ] **Step 1: Write queries**
 
 ```typescript
 import { createServerSupabase } from '@/lib/supabase/server'
@@ -1242,7 +1242,7 @@ export async function getPsychologistById(id: string): Promise<PsychologistDetai
 **Files:**
 - Create: `src/features/psychologist/components/psychologist-profile.tsx`
 
-- [x] **Step 1: Write component**
+- [ ] **Step 1: Write component**
 
 ```typescript
 import Image from 'next/image'
@@ -1340,7 +1340,7 @@ export function PsychologistProfile({ psychologist }: PsychologistProfileProps) 
 **Files:**
 - Create: `src/app/(public)/psicologo/[id]/page.tsx`
 
-- [x] **Step 1: Write page**
+- [ ] **Step 1: Write page**
 
 ```typescript
 import type { Metadata } from 'next'
@@ -1372,7 +1372,7 @@ export default async function PsychologistPage({ params }: PageProps) {
 }
 ```
 
-- [x] **Step 2: Build check**
+- [ ] **Step 2: Build check**
 
 ```bash
 npm run build
@@ -1390,7 +1390,7 @@ Expected: PASS
 - Create: `src/features/appointments/types.ts`
 - Create: `src/features/appointments/schemas.ts`
 
-- [x] **Step 1: Write schemas**
+- [ ] **Step 1: Write schemas**
 
 ```typescript
 import { z } from 'zod'
@@ -1419,7 +1419,7 @@ export const appointmentRequestSchema = z.object({
 export type AppointmentRequestInput = z.infer<typeof appointmentRequestSchema>
 ```
 
-- [x] **Step 2: Write types**
+- [ ] **Step 2: Write types**
 
 ```typescript
 import type { Database } from '@/types/database'
@@ -1428,7 +1428,7 @@ export type AppointmentRequest = Database['public']['Tables']['appointment_reque
 export type AppointmentRequestStatus = Database['public']['Tables']['appointment_requests']['Row']['status']
 ```
 
-- [x] **Step 3: Schema tests**
+- [ ] **Step 3: Schema tests**
 
 ```typescript
 import { describe, it, expect } from 'vitest'
@@ -1472,7 +1472,7 @@ describe('appointmentRequestSchema', () => {
 })
 ```
 
-- [x] **Step 4: Run tests**
+- [ ] **Step 4: Run tests**
 
 ```bash
 npx vitest run src/features/appointments/schemas.test.ts
@@ -1487,7 +1487,7 @@ Expected: PASS
 **Files:**
 - Create: `src/features/appointments/actions.ts`
 
-- [x] **Step 1: Write actions**
+- [ ] **Step 1: Write actions**
 
 ```typescript
 'use server'
@@ -1569,7 +1569,7 @@ export async function rejectRequest(requestId: string): Promise<{ error?: string
 }
 ```
 
-- [x] **Step 2: Build check**
+- [ ] **Step 2: Build check**
 
 ```bash
 npm run build
@@ -1584,7 +1584,7 @@ Expected: PASS
 **Files:**
 - Create: `src/features/appointments/components/request-form.tsx`
 
-- [x] **Step 1: Write form**
+- [ ] **Step 1: Write form**
 
 ```typescript
 'use client'
@@ -1749,7 +1749,7 @@ export function RequestForm({ psychologistId, psychologistName }: RequestFormPro
 **Files:**
 - Create: `src/app/(auth)/solicitar/[id]/page.tsx`
 
-- [x] **Step 1: Write page**
+- [ ] **Step 1: Write page**
 
 ```typescript
 import type { Metadata } from 'next'
@@ -1819,7 +1819,7 @@ export default async function SolicitarPage({ params }: PageProps) {
 - Create: `src/features/appointments/components/request-status.tsx`
 - Create: `src/app/(auth)/solicitud/[id]/page.tsx`
 
-- [x] **Step 1: Write status component**
+- [ ] **Step 1: Write status component**
 
 ```typescript
 'use client'
@@ -1897,7 +1897,7 @@ export function RequestStatusView({ status, whatsappLink, psychologistName }: Re
 }
 ```
 
-- [x] **Step 2: Write status page**
+- [ ] **Step 2: Write status page**
 
 ```typescript
 import type { Metadata } from 'next'
@@ -1950,7 +1950,7 @@ export default async function SolicitudPage({ params }: PageProps) {
 }
 ```
 
-- [x] **Step 3: Build check**
+- [ ] **Step 3: Build check**
 
 ```bash
 npm run build
