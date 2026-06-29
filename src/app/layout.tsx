@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import { GeistSans } from 'geist/font/sans'
-import { headers } from 'next/headers'
 import './globals.css'
 import { Toaster } from 'sonner'
 
@@ -10,9 +9,6 @@ export const metadata: Metadata = {
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const headersList = await headers()
-  const nonce = headersList.get('x-nonce') ?? ''
-
   return (
     <html lang="es" className={GeistSans.variable}>
       <head>

@@ -1,8 +1,3 @@
-import type { Database } from '@/types/database'
-
-type ProfileRow = Database['public']['Tables']['profiles']['Row']
-type PsychologistRow = Database['public']['Tables']['psychologist_profiles']['Row']
-
 export interface PsychologistCardData {
   id: string
   displayName: string
