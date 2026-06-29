@@ -111,3 +111,12 @@ Plataforma de apoyo psicológico en crisis para Venezuela. Conexión paciente-ps
 ### Revisión de proyecto referente
 - Analizado `build4venezuela/acompa-amientopsicologico` (Angular 21, contraseñas, sesiones invitadas)
 - Conclusión: proyectos independientes, enfoques distintos, pueden coexistir
+
+## 2026-06-29 — Phase 4 completada: Catalog
+
+### Cambios
+- **Task 4.1:** `src/features/catalog/types.ts` + `queries.ts` — tipos y consultas Supabase
+- **Task 4.2:** `psychologist-card.tsx` (con skeleton), `psychologist-list.tsx` (grid + empty state), `specialty-filter.tsx` (toggle 10 especialidades)
+- **Task 4.3:** `src/app/page.tsx` — Hero + lista de disponibles
+- **Task 4.4:** `/psicologos` — catálogo completo con filtros via searchParams + CatalogClient
+- Build verificado: `npm run build` exitoso
