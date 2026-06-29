@@ -837,7 +837,7 @@ Expected: PASS
 **Files:**
 - Execute via Supabase MCP: `execute_sql`
 
-- [ ] **Step 1: Create enums**
+- [x] **Step 1: Create enums**
 
 ```sql
 CREATE TYPE user_role AS ENUM ('psychologist', 'patient');
@@ -849,7 +849,7 @@ CREATE TYPE specialty AS ENUM (
 );
 ```
 
-- [ ] **Step 2: Create profiles table**
+- [x] **Step 2: Create profiles table**
 
 ```sql
 CREATE TABLE profiles (
@@ -865,7 +865,7 @@ CREATE TABLE profiles (
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 ```
 
-- [ ] **Step 3: Create psychologist_profiles table**
+- [x] **Step 3: Create psychologist_profiles table**
 
 ```sql
 CREATE TABLE psychologist_profiles (
@@ -887,7 +887,7 @@ CREATE TABLE psychologist_profiles (
 ALTER TABLE psychologist_profiles ENABLE ROW LEVEL SECURITY;
 ```
 
-- [ ] **Step 4: Create appointment_requests table**
+- [x] **Step 4: Create appointment_requests table**
 
 ```sql
 CREATE TABLE appointment_requests (
@@ -906,7 +906,7 @@ CREATE TABLE appointment_requests (
 ALTER TABLE appointment_requests ENABLE ROW LEVEL SECURITY;
 ```
 
-- [ ] **Step 5: Create admin_roles table**
+- [x] **Step 5: Create admin_roles table**
 
 ```sql
 CREATE TABLE admin_roles (
@@ -918,7 +918,7 @@ CREATE TABLE admin_roles (
 ALTER TABLE admin_roles ENABLE ROW LEVEL SECURITY;
 ```
 
-- [ ] **Step 6: Verify tables exist**
+- [x] **Step 6: Verify tables exist**
 
 ```sql
 SELECT table_name FROM information_schema.tables WHERE table_schema = 'public';
@@ -930,7 +930,7 @@ Expected: 4 tables returned
 
 #### Task 2.2 — Migration: RLS policies
 
-- [ ] **Step 1: Create all RLS policies**
+- [x] **Step 1: Create all RLS policies**
 
 ```sql
 -- Profiles: public read verified psychologists
@@ -993,7 +993,7 @@ CREATE POLICY "admin_read_own" ON admin_roles
   FOR SELECT USING (auth.uid() = user_id);
 ```
 
-- [ ] **Step 2: Verify RLS is enabled on all tables**
+- [x] **Step 2: Verify RLS is enabled on all tables**
 
 ```sql
 SELECT tablename, rowsecurity FROM pg_tables WHERE schemaname = 'public' AND tablename IN ('profiles', 'psychologist_profiles', 'appointment_requests', 'admin_roles');
@@ -1005,7 +1005,7 @@ Expected: all 4 tables have `rowsecurity = true`
 
 #### Task 2.3 — Trigger: auto updated_at
 
-- [ ] **Step 1: Create trigger function and apply to tables**
+- [x] **Step 1: Create trigger function and apply to tables**
 
 ```sql
 CREATE OR REPLACE FUNCTION update_timestamp()
@@ -1033,7 +1033,7 @@ CREATE TRIGGER set_timestamp
 
 #### Task 2.4 — Trigger: auto profile on signup
 
-- [ ] **Step 1: Create trigger**
+- [x] **Step 1: Create trigger**
 
 ```sql
 CREATE OR REPLACE FUNCTION handle_new_user()
@@ -1054,7 +1054,7 @@ CREATE TRIGGER on_auth_user_created
   FOR EACH ROW EXECUTE FUNCTION handle_new_user();
 ```
 
-- [ ] **Step 2: Verify trigger exists**
+- [x] **Step 2: Verify trigger exists**
 
 ```sql
 SELECT tgname FROM pg_trigger WHERE tgname = 'on_auth_user_created';
@@ -1062,7 +1062,7 @@ SELECT tgname FROM pg_trigger WHERE tgname = 'on_auth_user_created';
 
 Expected: trigger found
 
-- [ ] **Step 3: Regenerate types**
+- [x] **Step 3: Regenerate types**
 
 ```bash
 npx supabase gen types typescript --project-id <ref> > src/types/database.ts
