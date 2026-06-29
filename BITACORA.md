@@ -140,3 +140,16 @@ Plataforma de apoyo psicológico en crisis para Venezuela. Conexión paciente-ps
 - **Task 6.5:** `request-status.tsx` (pending/accepted/rejected) + `src/app/(auth)/solicitud/[id]/page.tsx`
 - Implementado por subagente Paseo en paralelo con Phase 5
 - tsc PASS, tests 7/7 PASS, build PASS
+
+## 2026-06-29 — UI alignment con mockups + seed data
+
+### Cambios
+- `src/app/page.tsx` — Hero rediseñado para alinear con mockups
+- `src/features/layout/components/navbar.tsx` — Navbar adaptado a diseño aprobado
+- `src/features/psychologist/components/psychologist-profile.tsx` — Detalle pulido
+- `src/features/appointments/components/request-form.tsx` — Formulario ajustado
+- `src/app/globals.css` — Tokens visuales refinados
+- Seed de psicólogos de prueba insertado en la base de datos
+
+### Archivos modificados
+- 5 archivos, +112/-38 líneas
