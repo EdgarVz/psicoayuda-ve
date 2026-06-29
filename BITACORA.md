@@ -184,3 +184,20 @@ Plataforma de apoyo psicológico en crisis para Venezuela. Conexión paciente-ps
 
 ### Checks
 - lint PASS, tsc PASS, build PASS, tests 12/12 PASS
+
+## 2026-06-29 — Fix catálogo vacío + docs SMTP
+
+### Problema
+El catálogo de psicólogos no mostraba resultados pese a haber datos en DB. Causa: `.order('psychologist_profiles.is_available')` con notación de punto — el cliente JS de Supabase v2 requiere `{ foreignTable }` para ordenar por columnas de tablas anidadas.
+
+### Fix
+- `src/features/catalog/queries.ts`: `.order('is_available', { foreignTable: 'psychologist_profiles', ascending: false })`
+- Agregado `logger.error()` para visibilidad de errores Supabase
+
+### Documentación
+- `ARCHITECTURE.md`: sección Auth (Magic Links) con guía de configuración SMTP
+- `ARCHITECTURE.md`: columna `years_experience` agregada a tabla `psychologist_profiles`
+
+### Checks
+- lint PASS, tsc PASS, build PASS, tests 12/12 PASS
+- Commit: `f22d3a4`
