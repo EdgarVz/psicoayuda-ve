@@ -38,6 +38,24 @@
 | created_at | timestamptz | |
 | updated_at | timestamptz | |
 
+### Auth (Magic Links)
+
+- **Método**: `supabase.auth.signInWithOtp()` con `emailRedirectTo`
+- **SMTP requerido**: Supabase Auth necesita un SMTP configurado para enviar los correos.
+- **Proveedor**: Resend u otro SMTP (SendGrid, Brevo, Mailersend)
+- **Configuración del SMTP** (en Supabase Dashboard → Authentication → Settings → SMTP Settings):
+
+  | Campo | Ejemplo (Resend) |
+  |-------|-----------------|
+  | SMTP Host | `smtp.resend.com` |
+  | SMTP Port | `587` |
+  | Username | `resend` |
+  | Password | `re_...` (API key de Resend) |
+  | Sender | `noreply@tudominio.com` |
+
+- `NEXT_PUBLIC_SITE_URL` debe coincidir con una URL permitida en Supabase Auth → URL Configuration → Redirect URLs
+- La URL de redirección post-login se construye como `${origin}/dashboard`
+
 #### `psychologist_profiles`
 | Columna | Tipo | Descripción |
 |---------|------|-------------|
@@ -52,6 +70,7 @@
 | whatsapp_link | text | wa.me/enlace (oculto hasta aprobación) |
 | availability | jsonb | Horarios disponibles |
 | is_available | boolean | Disponible para solicitudes |
+| years_experience | int | Años de experiencia profesional |
 | created_at | timestamptz | |
 | updated_at | timestamptz | |
 

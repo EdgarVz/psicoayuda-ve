@@ -1,4 +1,5 @@
 import { createServerSupabase } from '@/lib/supabase/server'
+import { logger } from '@/lib/logger'
 import type { PsychologistCardData, PsychologistFilters } from './types'
 
 interface PsychologistProfileRow {
@@ -33,9 +34,10 @@ export async function getPsychologists(filters?: PsychologistFilters): Promise<P
     query = query.overlaps('psychologist_profiles.specialties', filters.specialties)
   }
 
-  const { data, error } = await query.order('psychologist_profiles.is_available', { ascending: false })
+  const { data, error } = await query.order('is_available', { foreignTable: 'psychologist_profiles', ascending: false })
 
   if (error) {
+    logger.error('Error fetching psychologists', error)
     return []
   }
 
