@@ -212,3 +212,12 @@ El catálogo de psicólogos no mostraba resultados pese a haber datos en DB. Cau
 ### Checks
 - lint PASS, tsc PASS
 - Commit: `aec2e94`
+
+## 2026-06-29 — Fix etiquetas especialidades
+
+### Cambios
+- `src/lib/specialties.ts`: `apoyo_ninos` → "Apoyo a niños", `apoyo_adolescentes` → "Apoyo a adolescentes"
+
+### Checks
+- lint PASS, tsc PASS
+- Commit: `2b99fc7`
