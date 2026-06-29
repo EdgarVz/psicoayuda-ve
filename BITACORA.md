@@ -201,3 +201,14 @@ El catálogo de psicólogos no mostraba resultados pese a haber datos en DB. Cau
 ### Checks
 - lint PASS, tsc PASS, build PASS, tests 12/12 PASS
 - Commit: `f22d3a4`
+
+## 2026-06-29 — SPECIALTY_LABELS compartido + fix encoding
+
+### Cambios
+- `src/lib/specialties.ts` creado con mapping `SPECIALTY_LABELS` compartido
+- `psychologist-card.tsx`: usa `SPECIALTY_LABELS[s]` en vez de mostrar `crisis_panico` crudo
+- `psychologist-profile.tsx`: importa desde `@/lib/specialties` en vez de constante local
+
+### Checks
+- lint PASS, tsc PASS
+- Commit: `aec2e94`
