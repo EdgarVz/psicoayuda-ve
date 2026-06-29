@@ -153,3 +153,34 @@ Plataforma de apoyo psicológico en crisis para Venezuela. Conexión paciente-ps
 
 ### Archivos modificados
 - 5 archivos, +112/-38 líneas
+
+## 2026-06-29 — Sprint UI alignment + tech debt (feat-ui-alignment-tech-debt)
+
+### Tech debt (Phase 1-2)
+- `resend.ts`: `require()` → `import()` dinámico
+- `database.ts` añadido a ESLint ignore
+- `eslint.config.mjs`: `varsIgnorePattern "^_"` + limpieza de variables no usadas
+- `vitest.config.ts` creado para test runner
+- `DESIGN.md`: card layout horizontal → vertical (alineado con mockups)
+
+### UI alignment (Phase 4)
+- Landing page movida a `(public)/` route group
+- Hero con gradiente + cards verticales con emoji + chip "Todas" en filtro
+- Root `page.tsx` eliminado (ruta duplicada)
+- Login: icono decorativo 🔑
+- RequestForm: pill toggles, caja de consentimiento estilizada
+- RequestStatus: ID formateado + preview mensaje WhatsApp
+
+### Psychologist profile (Phase 3 — uncommitted hasta ahora)
+- `queries.ts`: `PsychologistDetail` con `yearsExperience`
+- `psychologist-profile.tsx`: layout columna única centrada, 4 pasos numerados, pulse animation CTA, badge años experiencia
+- `database.ts`: regenerado con `years_experience` en `psychologist_profiles`
+
+### Migration SQL ejecutada manualmente en Supabase Dashboard
+- `ALTER TABLE psychologist_profiles ADD COLUMN years_experience INT;`
+
+### Fixes finales
+- `request-status.tsx`: `requestId` faltante en destructuring
+
+### Checks
+- lint PASS, tsc PASS, build PASS, tests 12/12 PASS

@@ -10,7 +10,7 @@ interface RequestStatusProps {
   requestId?: string
 }
 
-export function RequestStatus({ status, whatsappLink, psychologistName }: RequestStatusProps) {
+export function RequestStatus({ status, whatsappLink, psychologistName, requestId }: RequestStatusProps) {
   if (status === 'pending') {
     return (
       <div className="text-center py-12 space-y-4">

@@ -13,6 +13,7 @@ export interface PsychologistDetail {
   availability: Record<string, unknown> | null
   licenseVerified: boolean
   licenseNumber: string
+  yearsExperience: number | null
 }
 
 interface PsychologistProfileRow {
@@ -24,6 +25,7 @@ interface PsychologistProfileRow {
   availability: Record<string, unknown> | null
   license_verified: boolean
   license_number: string
+  years_experience: number | null
 }
 
 export async function getPsychologistById(id: string): Promise<PsychologistDetail> {
@@ -43,7 +45,8 @@ export async function getPsychologistById(id: string): Promise<PsychologistDetai
         is_available,
         availability,
         license_verified,
-        license_number
+        license_number,
+        years_experience
       )
     `)
     .eq('id', id)
@@ -68,5 +71,6 @@ export async function getPsychologistById(id: string): Promise<PsychologistDetai
     availability: profile.availability,
     licenseVerified: profile.license_verified ?? false,
     licenseNumber: profile.license_number,
+    yearsExperience: profile.years_experience ?? null,
   }
 }
