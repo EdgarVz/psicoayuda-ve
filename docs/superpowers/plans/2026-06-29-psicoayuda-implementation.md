@@ -1,6 +1,6 @@
 # PsicoAyuda VE — Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Build PsicoAyuda VE, a psychological crisis support platform for Venezuela connecting patients with verified volunteer psychologists exclusively via WhatsApp.
 
@@ -217,7 +217,7 @@ Expected: `main` deploya a producción, `develop` deploya a preview automático.
 **Files:**
 - Create: `src/types/database.ts`
 
-- [ ] **Step 1: Run Supabase typegen**
+- [x] **Step 1: Run Supabase typegen**
 
 ```bash
 npx supabase gen types typescript --project-id <ref> > src/types/database.ts
@@ -234,7 +234,7 @@ Expected: `src/types/database.ts` created with table types.
 **Files:**
 - Create: `src/lib/env.ts`
 
-- [ ] **Step 1: Write env validation schema**
+- [x] **Step 1: Write env validation schema**
 
 ```typescript
 import { createEnv } from '@t3-oss/env-nextjs'
@@ -262,7 +262,7 @@ export const env = createEnv({
 })
 ```
 
-- [ ] **Step 2: Run typecheck**
+- [x] **Step 2: Run typecheck**
 
 ```bash
 npx tsc --noEmit
@@ -278,7 +278,7 @@ Expected: PASS (env types inferred correctly)
 - Create: `src/lib/supabase/client.ts`
 - Create: `src/lib/supabase/server.ts`
 
-- [ ] **Step 1: Write browser client**
+- [x] **Step 1: Write browser client**
 
 ```typescript
 import { createBrowserClient } from '@supabase/ssr'
@@ -292,7 +292,7 @@ export function createClient() {
 }
 ```
 
-- [ ] **Step 2: Write server client**
+- [x] **Step 2: Write server client**
 
 ```typescript
 import { createServerClient } from '@supabase/ssr'
@@ -321,7 +321,7 @@ export async function createServerSupabase() {
 }
 ```
 
-- [ ] **Step 3: Typecheck**
+- [x] **Step 3: Typecheck**
 
 ```bash
 npx tsc --noEmit
@@ -336,7 +336,7 @@ Expected: PASS
 **Files:**
 - Create: `src/lib/supabase/admin.ts`
 
-- [ ] **Step 1: Write admin client**
+- [x] **Step 1: Write admin client**
 
 ```typescript
 import { createClient } from '@supabase/supabase-js'
@@ -354,7 +354,7 @@ export function createAdminSupabase() {
 }
 ```
 
-- [ ] **Step 2: Typecheck**
+- [x] **Step 2: Typecheck**
 
 ```bash
 npx tsc --noEmit
@@ -370,7 +370,7 @@ Expected: PASS
 - Create: `src/lib/logger.ts`
 - Create: `src/lib/rate-limit.ts`
 
-- [ ] **Step 1: Write logger**
+- [x] **Step 1: Write logger**
 
 ```typescript
 import { env } from '@/lib/env'
@@ -403,7 +403,7 @@ export const logger = {
 }
 ```
 
-- [ ] **Step 2: Write rate-limiter**
+- [x] **Step 2: Write rate-limiter**
 
 ```typescript
 const store = new Map<string, { count: number; resetAt: number }>()
@@ -434,7 +434,7 @@ setInterval(() => {
 }, 60_000)
 ```
 
-- [ ] **Step 3: Typecheck**
+- [x] **Step 3: Typecheck**
 
 ```bash
 npx tsc --noEmit
@@ -449,7 +449,7 @@ Expected: PASS
 **Files:**
 - Create: `src/middleware.ts`
 
-- [ ] **Step 1: Write middleware**
+- [x] **Step 1: Write middleware**
 
 ```typescript
 import { type NextRequest, NextResponse } from 'next/server'
@@ -526,7 +526,7 @@ export const config = {
 }
 ```
 
-- [ ] **Step 2: Typecheck**
+- [x] **Step 2: Typecheck**
 
 ```bash
 npx tsc --noEmit
@@ -547,7 +547,7 @@ Expected: PASS
 - Create: `src/app/(auth)/layout.tsx`
 - Create: `src/app/admin/layout.tsx`
 
-- [ ] **Step 1: Write globals.css**
+- [x] **Step 1: Write globals.css**
 
 ```css
 @import "tailwindcss";
@@ -584,7 +584,7 @@ Expected: PASS
 }
 ```
 
-- [ ] **Step 2: Write root layout**
+- [x] **Step 2: Write root layout**
 
 ```typescript
 import type { Metadata } from 'next'
@@ -624,7 +624,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 }
 ```
 
-- [ ] **Step 3: Write error.tsx**
+- [x] **Step 3: Write error.tsx**
 
 ```typescript
 'use client'
@@ -642,7 +642,7 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
 }
 ```
 
-- [ ] **Step 4: Write not-found.tsx**
+- [x] **Step 4: Write not-found.tsx**
 
 ```typescript
 import Link from 'next/link'
@@ -660,7 +660,7 @@ export default function NotFound() {
 }
 ```
 
-- [ ] **Step 5: Write public layout**
+- [x] **Step 5: Write public layout**
 
 ```typescript
 import { Navbar } from '@/features/layout/components/navbar'
@@ -675,7 +675,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
 }
 ```
 
-- [ ] **Step 6: Write auth layout**
+- [x] **Step 6: Write auth layout**
 
 ```typescript
 import { redirect } from 'next/navigation'
@@ -693,7 +693,7 @@ export default async function AuthLayout({ children }: { children: React.ReactNo
 }
 ```
 
-- [ ] **Step 7: Write admin layout**
+- [x] **Step 7: Write admin layout**
 
 ```typescript
 import type { Metadata } from 'next'
@@ -720,7 +720,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 }
 ```
 
-- [ ] **Step 8: Build check**
+- [x] **Step 8: Build check**
 
 ```bash
 npm run build
@@ -736,7 +736,7 @@ Expected: PASS (may need to stub Navbar import — will be created in Task 1.7)
 - Create: `src/features/layout/components/navbar.tsx`
 - Create: `src/features/layout/components/footer.tsx`
 
-- [ ] **Step 1: Write Navbar**
+- [x] **Step 1: Write Navbar**
 
 ```typescript
 'use client'
@@ -786,7 +786,7 @@ export function Navbar({ isLoggedIn = false }: NavbarProps) {
 }
 ```
 
-- [ ] **Step 2: Write Footer**
+- [x] **Step 2: Write Footer**
 
 ```typescript
 export function Footer() {
@@ -801,7 +801,7 @@ export function Footer() {
 }
 ```
 
-- [ ] **Step 3: Update public layout to include Footer**
+- [x] **Step 3: Update public layout to include Footer**
 
 ```typescript
 import { Navbar } from '@/features/layout/components/navbar'
@@ -818,7 +818,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
 }
 ```
 
-- [ ] **Step 4: Build check**
+- [x] **Step 4: Build check**
 
 ```bash
 npm run build
