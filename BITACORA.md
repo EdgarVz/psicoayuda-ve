@@ -256,3 +256,16 @@ El catálogo de psicólogos no mostraba resultados pese a haber datos en DB. Cau
 - lint PASS, tsc PASS, build PASS, tests 32/32 PASS
 - Branch: `feat/dashboard-phase-7`
 - Commit: `763d8b4`
+
+## 2026-06-30 — Tech debt + doc realignment (fix/tech-debt-realign)
+
+### Cambios
+- `npm install` — reparados `@testing-library/react` y `jsdom` faltantes en node_modules
+- `requests-list.test.tsx` + `psychologist-dashboard.test.tsx`: tipados callbacks (fix TS7006)
+- `docs/superpowers/plans/2026-06-29-psicoayuda-implementation.md`: actualizado root layout (Geist vía `geist/font/sans`, Toaster vía `sonner`)
+- `ARCHITECTURE.md`: nota que `features/admin/` (Phase 8) no está implementado
+
+### Checks
+- lint PASS, tsc PASS (0 errores), build PASS
+- Branch: `fix/tech-debt-realign`
+- Commit: `c68be40`
