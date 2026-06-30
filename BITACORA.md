@@ -255,3 +255,4 @@ El catálogo de psicólogos no mostraba resultados pese a haber datos en DB. Cau
 ### Checks
 - lint PASS, tsc PASS, build PASS, tests 32/32 PASS
 - Branch: `feat/dashboard-phase-7`
+- Commit: `763d8b4`
