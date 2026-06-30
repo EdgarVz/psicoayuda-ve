@@ -16,7 +16,7 @@ export interface PsychologistDetail {
   yearsExperience: number | null
 }
 
-interface PsychologistProfileRow {
+interface NestedPsychologistProfile {
   full_name: string
   biography: string | null
   specialties: string[]
@@ -57,7 +57,7 @@ export async function getPsychologistById(id: string): Promise<PsychologistDetai
     notFound()
   }
 
-  const profile = data.psychologist_profiles as unknown as PsychologistProfileRow
+  const profile = data.psychologist_profiles as unknown as NestedPsychologistProfile
 
   return {
     id: data.id,
