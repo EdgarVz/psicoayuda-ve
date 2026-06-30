@@ -331,3 +331,21 @@ El catálogo de psicólogos no mostraba resultados pese a haber datos en DB. Cau
 
 ### Checks
 - lint PASS, tsc PASS, build PASS
+
+## 2026-06-30 — Tech debt sprint Wave 2: CSS tokens + type safety + accesibilidad + migration
+
+### Cambios
+- **Block A (CSS tokens):** `globals.css` alineado con DESIGN.md — muted bg/text corregido, muted-light eliminado, secondary/card/popover/ring/input añadidos
+- **Block C (Type safety):** 5 archivos con `as unknown as` reemplazados por interfaces nombradas (`NestedPsychologistProfile`, `CatalogPsychologistProfile`, `NestedPatientProfile`, etc.)
+- **Block F (Accesibilidad):** checkbox de consentimiento con `id` + `htmlFor`; test-setup.ts para matchers jsdom
+- **Block I (Migration SQL):** `supabase/migrations/20260630000001_add_years_experience.sql` formalizado
+
+### PRs
+- [#12](https://github.com/EdgarVz/psicoayuda-ve/pull/12) — fix: align CSS tokens with DESIGN.md
+- [#13](https://github.com/EdgarVz/psicoayuda-ve/pull/13) — fix: replace as unknown as casts with named interfaces
+- [#14](https://github.com/EdgarVz/psicoayuda-ve/pull/14) — fix: add id + htmlFor to consent checkbox for accessibility
+- [#15](https://github.com/EdgarVz/psicoayuda-ve/pull/15) — feat: add migration SQL for years_experience column
+
+### Checks
+- lint PASS, tsc PASS, tests 81/81 PASS (18 suites)
+- 11 archivos modificados/nuevos, +95/-20 líneas
