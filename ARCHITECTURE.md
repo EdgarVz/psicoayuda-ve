@@ -18,10 +18,10 @@
 | CSS | Tailwind CSS + shadcn/ui | 4 | Open source |
 | CI/CD | GitHub Actions | — | Free para repos públicos |
 | Hosting | Vercel | — | Free tier (serverless) |
-| Font files | Geist | — | Self-hosted via `next/font/local` |
+| Font files | Geist | — | Self-hosted via `geist/font/sans` (paquete npm `geist`) |
 
 ## Tipografía
-- Body/UI: **Geist** (Variable, self-hosted via `next/font/local`)
+- Body/UI: **Geist** (Variable, via `geist/font/sans`)
 
 ## Modelo de datos
 
@@ -98,6 +98,7 @@
 ### Enums
 - `user_role`: 'psychologist', 'patient'
 - `request_status`: 'pending', 'accepted', 'rejected'
+- `specialty`: 'duelo', 'ansiedad', 'crisis_panico', 'trauma', 'apoyo_ninos', 'apoyo_adolescentes', 'depresion', 'estres', 'violencia', 'adicciones'
 
 ## Flujo de conexión WhatsApp
 

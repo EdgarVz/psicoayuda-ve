@@ -283,3 +283,28 @@ El catálogo de psicólogos no mostraba resultados pese a haber datos en DB. Cau
 - lint PASS, tsc PASS (0 errores), build PASS
 - Branch: `fix/tech-debt-realign`
 - Commit: `c68be40`
+
+## 2026-06-30 — Tech debt sprint + Registro psicólogo (fix/tech-debt-registration)
+
+### Cambios
+- **ARCHITECTURE.md**: font loading (`geist/font/sans`), `database.ts` path, enum `specialty` documentado
+- **globals.css**: +7 tokens alineados con DESIGN.md, `--color-muted` corregido
+- **specialty-filter.tsx + request-form.tsx**: especialidades unificadas via `SPECIALTY_LABELS`
+- **database.ts + 5 archivos**: nested joins tipados con interfaces con nombre (reemplaza `as unknown as` inline)
+- **middleware.ts**: CSP incluye Sentry domains
+- **catalog-client.tsx**: movido a `features/catalog/components/`
+- **request-status.tsx**: eliminado `'use client'` innecesario
+- **resend.ts**: `console.warn` → `logger.warn`
+- **vitest.config.ts**: environment `node` → `jsdom`
+
+### Registro de psicólogo (Bloque I)
+- `src/features/psychologist-registration/schemas.ts` + tests (5)
+- `src/features/psychologist-registration/actions.ts` + tests (5)
+- `src/features/psychologist-registration/components/registration-form.tsx` + tests (5)
+- `src/app/(auth)/registro-psicologo/page.tsx`
+- Flujo: Magic Link → formulario → admin service_role insert → redirect a dashboard
+
+### Checks
+- lint PASS, tsc 0 errores, tests 83/83 PASS, build PASS
+- Branch: `fix/tech-debt-registration`
+- 15 archivos modificados, 7 nuevos

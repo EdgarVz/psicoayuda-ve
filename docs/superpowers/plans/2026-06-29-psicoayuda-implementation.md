@@ -26,12 +26,13 @@ src/
 │   │   ├── page.tsx                          → Hero + 6 psicólogos destacados
 │   │   ├── psicologos/
 │   │   │   ├── page.tsx                      → Catálogo completo con filtros
-│   │   │   └── catalog-client.tsx            → Client wrapper
+│   │   │   └── catalog-client.tsx            → Client wrapper (features/)
 │   │   ├── psicologo/[id]/page.tsx           → Detalle del psicólogo
 │   │   └── login/page.tsx                    → Magic Link form
 │   ├── (auth)/
 │   │   ├── layout.tsx                        → Auth check wrapper
 │   │   ├── dashboard/page.tsx                → Dashboard role-based
+│   │   ├── registro-psicologo/page.tsx       → Registro de psicólogo
 │   │   ├── solicitar/[id]/page.tsx           → Formulario de solicitud
 │   │   └── solicitud/[id]/page.tsx           → Estado de la solicitud
 │   └── admin/
@@ -44,6 +45,7 @@ src/
 │   │   └── schemas.ts
 │   ├── catalog/
 │   │   ├── components/
+│   │   │   ├── catalog-client.tsx
 │   │   │   ├── psychologist-card.tsx
 │   │   │   ├── psychologist-list.tsx
 │   │   │   └── specialty-filter.tsx
@@ -74,6 +76,10 @@ src/
 │       │   └── verification-detail.tsx
 │       ├── actions.ts
 │       └── types.ts
+│   └── psychologist-registration/
+│       ├── components/registration-form.tsx
+│       ├── actions.ts
+│       └── schemas.ts
 ├── lib/
 │   ├── supabase/
 │   │   ├── client.ts
@@ -2957,17 +2963,96 @@ Expected: All tests pass
 
 ---
 
+### Phase 9: Psychologist Onboarding
+
+#### Task 9.1 — Registration schema + tests
+
+**Files:**
+- Create: `src/features/psychologist-registration/schemas.ts`
+- Create: `src/features/psychologist-registration/schemas.test.ts`
+
+- [x] **Step 1: Write schema**
+
+```typescript
+import { z } from 'zod'
+
+export const psychologistRegistrationSchema = z.object({
+  full_name: z.string().min(3).max(100),
+  license_number: z.string().min(3),
+  specialties: z.array(z.string()).min(1),
+  consent_verified: z.literal(true),
+})
+```
+
+- [x] **Step 2: Write tests** (5 tests: valid data, short name, empty specialties, consent false, empty license)
+
+- [x] **Step 3: Run tests**
+
+Expected: PASS
+
+---
+
+#### Task 9.2 — Registration action + tests
+
+**Files:**
+- Create: `src/features/psychologist-registration/actions.ts`
+- Create: `src/features/psychologist-registration/actions.test.ts`
+
+- [x] **Step 1: Write action** — `registerPsychologist()`: verifica sesión, valida schema, actualiza `profiles.role` a `'psychologist'`, inserta `psychologist_profiles` via admin client, rollback on error.
+
+- [x] **Step 2: Write tests** (5 tests: sin auth, auth exitoso, error inserción, validación falla)
+
+- [x] **Step 3: Run tests**
+
+Expected: PASS
+
+---
+
+#### Task 9.3 — Registration form + page
+
+**Files:**
+- Create: `src/features/psychologist-registration/components/registration-form.tsx`
+- Create: `src/features/psychologist-registration/components/registration-form.test.tsx`
+- Create: `src/app/(auth)/registro-psicologo/page.tsx`
+
+- [x] **Step 1: Write form** — Client component con pill toggles (SPECIALTY_LABELS), estados idle/submitting/success/error, consent checkbox.
+
+- [x] **Step 2: Write tests** (5 tests: render, toggle specialty, submit, success state, error state)
+
+- [x] **Step 3: Write page** — Server component con metadata, protegida por (auth) layout
+
+- [x] **Step 4: Build check**
+
+Expected: PASS
+
+---
+
+### Technical Debt + Docs (interleaved)
+
+- [x] `ARCHITECTURE.md`: font loading, database.ts path, enum specialty
+- [x] `globals.css`: +7 tokens alineados con DESIGN.md
+- [x] `specialty-filter.tsx` + `request-form.tsx`: especialidades via SPECIALTY_LABELS
+- [x] `database.ts` + 5 archivos: nested joins tipados con interfaces con nombre
+- [x] `middleware.ts`: CSP Sentry domains
+- [x] `catalog-client.tsx`: movido a `features/catalog/components/`
+- [x] `request-status.tsx`: eliminado `'use client'`
+- [x] `resend.ts`: `console.warn` → `logger.warn`
+- [x] `vitest.config.ts`: `node` → `jsdom`
+
+---
+
 ## Checklist post-plan
 
 **1. Spec coverage:**
 - ✅ Stack (Next.js 16, Supabase, Zod, Zustand, Tailwind 4, shadcn/ui) — Task 0.2
 - ✅ Data model (enums, 4 tables, RLS) — Tasks 2.1–2.4
 - ✅ RLS policies (whatsapp_on_accepted, all policies) — Task 2.2
-- ✅ Page architecture (all routes) — Tasks 3.3, 4.3–4.4, 5.3, 6.4–6.5, 7.3, 8.3
+- ✅ Page architecture (all routes) — Tasks 3.3, 4.3–4.4, 5.3, 6.4–6.5, 7.3, 8.3, 9.3
 - ✅ Auth (Magic Links only, no passwords) — Tasks 3.1–3.3
 - ✅ Component critical states (loading, available, unavailable, idle, submitting, success, error) — Tasks 4.2, 6.3, 6.5
 - ✅ WhatsApp button #25d366 + pulse — Task 6.5
 - ✅ Resend notifications (fallback) — Task 9.1
+- ✅ Psychologist registration (magic link + form + admin client) — Tasks 9.1–9.3
 - ✅ CSP nonce — Task 1.5
 - ✅ Rate limiting — Task 1.4
 - ✅ Admin sidebar #3D3834 — Task 1.6

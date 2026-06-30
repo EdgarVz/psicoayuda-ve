@@ -4,19 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { submitRequest } from '@/features/appointments/actions'
 import type { AppointmentRequestInput } from '@/features/appointments/schemas'
-
-const specialtyLabels: Record<string, string> = {
-  duelo: 'Duelo',
-  ansiedad: 'Ansiedad',
-  crisis_panico: 'Crisis de pánico',
-  trauma: 'Trauma',
-  apoyo_ninos: 'Apoyo para niños',
-  apoyo_adolescentes: 'Apoyo para adolescentes',
-  depresion: 'Depresión',
-  estres: 'Estrés',
-  violencia: 'Violencia',
-  adicciones: 'Adicciones',
-}
+import { SPECIALTY_LABELS } from '@/lib/specialties'
 
 interface RequestFormProps {
   psychologistId: string
@@ -99,7 +87,7 @@ export function RequestForm({ psychologistId, psychologistName }: RequestFormPro
           ¿Cuál es el motivo de tu solicitud?
         </legend>
           <div className="flex flex-wrap gap-2">
-          {Object.entries(specialtyLabels).map(([value, label]) => (
+          {Object.entries(SPECIALTY_LABELS).map(([value, label]) => (
             <button
               key={value}
               type="button"

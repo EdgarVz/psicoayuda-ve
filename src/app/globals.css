@@ -7,7 +7,7 @@
   --color-background: #FDF8F3;
   --color-background-alt: #F7F1EA;
   --color-foreground: #2D3436;
-  --color-muted: #8B7E72;
+  --color-muted: #F5F0EA;
   --color-muted-light: #B0A89C;
   --color-muted-foreground: #6B5E54;
   --color-border: #E6DED4;
@@ -20,6 +20,13 @@
   --color-warning-text: #8B6E00;
   --color-success: #E8F4F0;
   --color-success-text: #2B7A6E;
+  --color-card: #FFFFFF;
+  --color-card-foreground: #2D3436;
+  --color-popover: #FFFFFF;
+  --color-secondary: #FAF6F1;
+  --color-secondary-foreground: #6B5E54;
+  --color-input: #E6DED4;
+  --color-ring: #2B7A6E;
 
   --radius-button: 12px;
   --radius-card: 16px;

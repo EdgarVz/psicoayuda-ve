@@ -1,12 +1,7 @@
 import { createServerSupabase } from '@/lib/supabase/server'
 import { logger } from '@/lib/logger'
 import type { PsychologistCardData, PsychologistFilters } from './types'
-
-interface PsychologistProfileRow {
-  specialties: string[]
-  languages: string[]
-  is_available: boolean
-}
+import type { NestedPsychologistProfile } from '@/types/database'
 
 export async function getPsychologists(filters?: PsychologistFilters): Promise<PsychologistCardData[]> {
   const supabase = await createServerSupabase()
@@ -45,9 +40,9 @@ export async function getPsychologists(filters?: PsychologistFilters): Promise<P
     id: row.id,
     displayName: row.display_name,
     avatarUrl: row.avatar_url,
-    specialties: (row.psychologist_profiles as unknown as PsychologistProfileRow).specialties ?? [],
-    languages: (row.psychologist_profiles as unknown as PsychologistProfileRow).languages ?? [],
-    isAvailable: (row.psychologist_profiles as unknown as PsychologistProfileRow).is_available ?? false,
+    specialties: (row.psychologist_profiles as unknown as NestedPsychologistProfile).specialties ?? [],
+    languages: (row.psychologist_profiles as unknown as NestedPsychologistProfile).languages ?? [],
+    isAvailable: (row.psychologist_profiles as unknown as NestedPsychologistProfile).is_available ?? false,
   }))
 }
 

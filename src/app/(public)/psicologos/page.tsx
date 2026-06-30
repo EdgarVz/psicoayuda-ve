@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { getPsychologists } from '@/features/catalog/queries'
-import { CatalogClient } from './catalog-client'
+import { CatalogClient } from '@/features/catalog/components/catalog-client'
 
 export const metadata: Metadata = {
   title: 'Psicólogos disponibles',

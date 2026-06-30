@@ -340,3 +340,32 @@ export const Constants = {
     },
   },
 } as const
+
+export interface NestedPsychologistProfile {
+  full_name: string
+  biography: string | null
+  specialties: string[]
+  languages: string[]
+  is_available: boolean
+  availability: Record<string, unknown> | null
+  license_verified: boolean
+  license_number: string
+  years_experience: number | null
+  whatsapp_link: string | null
+  license_document: string | null
+}
+
+export interface NestedPatientProfile {
+  display_name: string
+  psychologist_profiles: NestedPsychologistProfile | NestedPsychologistProfile[]
+}
+
+export interface NestedPsychologistRequestProfile {
+  display_name: string
+}
+
+export interface NestedAdminProfile {
+  full_name: string
+  license_number: string
+  license_document: string | null
+}

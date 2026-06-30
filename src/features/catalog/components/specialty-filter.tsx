@@ -1,17 +1,6 @@
 'use client'
 
-const SPECIALTIES = [
-  { value: 'duelo', label: 'Duelo' },
-  { value: 'ansiedad', label: 'Ansiedad' },
-  { value: 'crisis_panico', label: 'Crisis de pánico' },
-  { value: 'trauma', label: 'Trauma' },
-  { value: 'apoyo_ninos', label: 'Apoyo niños' },
-  { value: 'apoyo_adolescentes', label: 'Apoyo adolescentes' },
-  { value: 'depresion', label: 'Depresión' },
-  { value: 'estres', label: 'Estrés' },
-  { value: 'violencia', label: 'Violencia' },
-  { value: 'adicciones', label: 'Adicciones' },
-]
+import { SPECIALTY_LABELS } from '@/lib/specialties'
 
 interface SpecialtyFilterProps {
   selected: string[]
@@ -39,7 +28,7 @@ export function SpecialtyFilter({ selected, onChange }: SpecialtyFilterProps) {
       >
         Todas
       </button>
-      {SPECIALTIES.map(({ value, label }) => (
+      {Object.entries(SPECIALTY_LABELS).map(([value, label]) => (
         <button
           key={value}
           onClick={() => toggle(value)}
