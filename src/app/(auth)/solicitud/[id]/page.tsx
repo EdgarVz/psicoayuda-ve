@@ -3,6 +3,11 @@ import { createServerSupabase } from '@/lib/supabase/server'
 import { RequestStatus } from '@/features/appointments/components/request-status'
 import type { AppointmentRequestStatus } from '@/features/appointments/types'
 
+interface NestedPsychologistInfo {
+  display_name: string
+  psychologist_profiles: { whatsapp_link: string | null } | { whatsapp_link: string | null }[]
+}
+
 interface PageProps {
   params: Promise<{ id: string }>
 }
@@ -37,10 +42,7 @@ export default async function SolicitudPage({ params }: PageProps) {
     notFound()
   }
 
-  const profile = requestData.profiles as unknown as {
-    display_name: string
-    psychologist_profiles: { whatsapp_link: string | null } | { whatsapp_link: string | null }[]
-  }
+  const profile = requestData.profiles as unknown as NestedPsychologistInfo
 
   const displayName = profile.display_name
   const psyProfile = Array.isArray(profile.psychologist_profiles)

@@ -2,7 +2,7 @@ import { createServerSupabase } from '@/lib/supabase/server'
 import { logger } from '@/lib/logger'
 import type { PsychologistCardData, PsychologistFilters } from './types'
 
-interface PsychologistProfileRow {
+interface CatalogPsychologistProfile {
   specialties: string[]
   languages: string[]
   is_available: boolean
@@ -45,9 +45,9 @@ export async function getPsychologists(filters?: PsychologistFilters): Promise<P
     id: row.id,
     displayName: row.display_name,
     avatarUrl: row.avatar_url,
-    specialties: (row.psychologist_profiles as unknown as PsychologistProfileRow).specialties ?? [],
-    languages: (row.psychologist_profiles as unknown as PsychologistProfileRow).languages ?? [],
-    isAvailable: (row.psychologist_profiles as unknown as PsychologistProfileRow).is_available ?? false,
+    specialties: (row.psychologist_profiles as unknown as CatalogPsychologistProfile).specialties ?? [],
+    languages: (row.psychologist_profiles as unknown as CatalogPsychologistProfile).languages ?? [],
+    isAvailable: (row.psychologist_profiles as unknown as CatalogPsychologistProfile).is_available ?? false,
   }))
 }
 
