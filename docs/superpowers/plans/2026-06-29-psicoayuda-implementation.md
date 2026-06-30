@@ -1,6 +1,8 @@
 # PsicoAyuda VE — Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
+>
+> **Note:** Updated 2026-06-30: root layout uses `geist/font/sans` (not `localFont`) and `@/components/ui/sonner` (not `@/components/ui/toaster`).
 
 **Goal:** Build PsicoAyuda VE, a psychological crisis support platform for Venezuela connecting patients with verified volunteer psychologists exclusively via WhatsApp.
 
@@ -594,18 +596,9 @@ Expected: PASS
 
 ```typescript
 import type { Metadata } from 'next'
-import localFont from 'next/font/local'
-import { headers } from 'next/headers'
+import { GeistSans } from 'geist/font/sans'
 import './globals.css'
-import { Toaster } from '@/components/ui/toaster'
-
-const geist = localFont({
-  src: [
-    { path: '../../node_modules/geist/dist/fonts/geist-sans/Geist-Variable.woff2', style: 'normal' },
-  ],
-  variable: '--font-geist',
-  display: 'swap',
-})
+import { Toaster } from '@/components/ui/sonner'
 
 export const metadata: Metadata = {
   title: { template: '%s · PsicoAyuda VE', default: 'PsicoAyuda VE — Apoyo psicológico en Venezuela' },
@@ -613,11 +606,8 @@ export const metadata: Metadata = {
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const headersList = await headers()
-  const nonce = headersList.get('x-nonce') ?? ''
-
   return (
-    <html lang="es" className={geist.variable}>
+    <html lang="es" className={GeistSans.variable}>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>

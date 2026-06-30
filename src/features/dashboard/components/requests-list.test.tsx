@@ -73,8 +73,8 @@ describe('RequestsList (patient view)', () => {
 describe('RequestsList (psychologist view)', () => {
   it('renders patient info', () => {
     render(<RequestsList requests={psychologistRequests} />)
-    expect(screen.getByText((content) => content.includes('Paciente A'))).toBeDefined()
-    expect(screen.getByText((content) => content.includes('30 años'))).toBeDefined()
+    expect(screen.getByText((content: string) => content.includes('Paciente A'))).toBeDefined()
+    expect(screen.getByText((content: string) => content.includes('30 años'))).toBeDefined()
   })
 
   it('shows accept/reject buttons for pending', () => {
