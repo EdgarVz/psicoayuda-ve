@@ -6,6 +6,12 @@ import { logger } from '@/lib/logger'
 import { revalidatePath } from 'next/cache'
 import type { PendingPsychologist } from '@/features/admin/types'
 
+interface NestedPsychologistProfile {
+  full_name: string
+  license_number: string
+  license_document: string | null
+}
+
 export async function verifyPsychologist(profileId: string): Promise<{ error?: string }> {
   const supabase = await createServerSupabase()
   const { data: { user } } = await supabase.auth.getUser()
@@ -74,7 +80,7 @@ export async function getPendingPsychologists(): Promise<PendingPsychologist[]> 
     .order('created_at', { ascending: false })
 
   return (data ?? []).map((row) => {
-    const psy = row.psychologist_profiles as unknown as { full_name: string; license_number: string; license_document: string | null }
+    const psy = row.psychologist_profiles as unknown as NestedPsychologistProfile
     return {
       id: row.id,
       displayName: row.display_name,

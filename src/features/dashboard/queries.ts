@@ -1,6 +1,15 @@
 import { createServerSupabase } from '@/lib/supabase/server'
 import type { PatientRequestView, PsychologistRequestView, DashboardStats } from './types'
 
+interface NestedPsychologistWithProfile {
+  whatsapp_link: string | null
+  profiles: { display_name: string }
+}
+
+interface NestedPatientProfile {
+  display_name: string
+}
+
 export async function getPatientRequests(userId: string): Promise<PatientRequestView[]> {
   const supabase = await createServerSupabase()
 
@@ -23,10 +32,7 @@ export async function getPatientRequests(userId: string): Promise<PatientRequest
     .order('created_at', { ascending: false })
 
   return (data ?? []).map((row) => {
-    const psy = row.psychologist_profiles as unknown as {
-      whatsapp_link: string | null
-      profiles: { display_name: string }
-    }
+    const psy = row.psychologist_profiles as unknown as NestedPsychologistWithProfile
     return {
       id: row.id,
       psychologistName: psy.profiles.display_name,
@@ -59,7 +65,7 @@ export async function getPsychologistRequests(userId: string): Promise<Psycholog
 
   return (data ?? []).map((row) => ({
     id: row.id,
-    patientName: (row.profiles as unknown as { display_name: string }).display_name,
+    patientName: (row.profiles as unknown as NestedPatientProfile).display_name,
     patientAge: row.patient_age,
     reason: row.reason,
     status: row.status,
