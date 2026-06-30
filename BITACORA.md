@@ -349,3 +349,27 @@ El catálogo de psicólogos no mostraba resultados pese a haber datos en DB. Cau
 ### Checks
 - lint PASS, tsc PASS, tests 81/81 PASS (18 suites)
 - 11 archivos modificados/nuevos, +95/-20 líneas
+
+## 2026-06-30 — DoD fixes post-sprint
+
+### Problemas encontrados y corregidos
+1. **middleware.ts no eliminado:** Block G migró lógica a `proxy.ts` pero `middleware.ts` quedó. Build fallaba con "Both middleware and proxy detected".
+2. **Export name incorrecto:** Next.js 16 requiere `export function proxy` (no `middleware`) en `proxy.ts`.
+3. **middleware.test.ts desactualizado:** importaba `middleware` desde `./proxy` — roto tras rename.
+4. **@playwright/test no instalado:** `npx tsc --noEmit` fallaba con 6 errores (`Cannot find module '@playwright/test'`).
+5. **Vercel Root Directory:** Configurado como `src/` → rutas `./src/src/middleware.ts`. Cambiar a ` ` (vacío) en Settings.
+
+### Archivos modificados
+- `src/middleware.ts` — **eliminado** (migrado a proxy.ts)
+- `src/proxy.ts` — `export function proxy` (antes `middleware`)
+- `src/middleware.test.ts` — importa `proxy` en vez de `middleware`
+- `package.json` — `@playwright/test` añadido a devDependencies
+- `BITACORA.md` — esta entrada
+
+### DoD final
+| Check | Resultado |
+|-------|-----------|
+| `npm run lint` | ✅ PASS |
+| `npx tsc --noEmit` | ✅ 0 errores |
+| `npm run build` | ✅ 9 rutas + Proxy |
+| `npm test` | ✅ 81/81 (18 suites) |
