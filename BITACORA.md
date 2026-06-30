@@ -283,3 +283,35 @@ El catálogo de psicólogos no mostraba resultados pese a haber datos en DB. Cau
 - lint PASS, tsc PASS (0 errores), build PASS
 - Branch: `fix/tech-debt-realign`
 - Commit: `c68be40`
+
+## 2026-06-30 — Tech debt sprint + Psychologist registration (Phase 9)
+
+### Bloque A-H: Tech debt + doc alignment
+
+| Bloque | Archivo | Cambio |
+|--------|---------|--------|
+| A | `ARCHITECTURE.md` | font loading (`geist/font/sans`), database.ts path, enum specialty documentado |
+| B | `globals.css` | +7 tokens alineados con DESIGN.md; `--color-muted` corregido |
+| C | `specialty-filter.tsx` + `request-form.tsx` | especialidades vía `SPECIALTY_LABELS` desde `@/lib/specialties` |
+| D | `database.ts` + 5 archivos | nested joins tipados con interfaces con nombre (`Nested*`), reemplazan `as unknown as` inline |
+| E | `middleware.ts` | CSP: `*.sentry-cdn.com` en script-src, `*.ingest.sentry.io` en connect-src |
+| F1 | `catalog-client.tsx` | movido a `features/catalog/components/` |
+| F2 | `request-status.tsx` | eliminado `'use client'` innecesario |
+| G | `resend.ts` | `console.warn` → `logger.warn` + mantener console.warn como dev fallback |
+| H | `vitest.config.ts` | environment `node` → `jsdom` |
+
+### Bloque I: Registro de psicólogo (ruta `/registro-psicologo`)
+- **Task 9.1:** `schemas.ts` — Zod schema + 5 tests PASS
+- **Task 9.2:** `actions.ts` — Server Action con admin client insert + 5 tests PASS
+- **Task 9.3:** `registration-form.tsx` — Client Form con pill toggles, 4 estados, consent + `page.tsx` protegida + 5 tests PASS
+- Flujo: Magic Link → formulario → admin client insert → dashboard
+- Build verificado: PASS
+
+### Archivos modificados/nuevos
+- 23 archivos modificados, 7 nuevos, +644/-70 líneas
+- Nuevos: `src/app/(auth)/registro-psicologo/page.tsx`, `src/features/psychologist-registration/` (5 archivos)
+
+### Checks
+- lint PASS, tsc 0 errores, tests 83/83 (18 suites), build 9 rutas PASS
+- Branch: `fix-tech-debt-registration` (worktree Paseo)
+- PR: [#7](https://github.com/EdgarVz/psicoayuda-ve/pull/7) contra `develop`

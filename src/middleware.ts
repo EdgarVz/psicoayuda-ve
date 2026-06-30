@@ -12,11 +12,11 @@ export async function middleware(request: NextRequest) {
   const nonce = crypto.randomUUID()
   const csp = [
     `default-src 'self'`,
-    `script-src 'self' 'nonce-${nonce}'`,
+    `script-src 'self' 'nonce-${nonce}' https://js.sentry-cdn.com`,
     `style-src 'self' 'unsafe-inline'`,
     `img-src 'self' data: blob: https://*.supabase.co`,
     `font-src 'self'`,
-    `connect-src 'self' https://*.supabase.co`,
+    `connect-src 'self' https://*.supabase.co https://*.ingest.sentry.io`,
     `frame-ancestors 'none'`,
   ].join('; ')
 

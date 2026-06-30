@@ -18,7 +18,7 @@
 | CSS | Tailwind CSS + shadcn/ui | 4 | Open source |
 | CI/CD | GitHub Actions | — | Free para repos públicos |
 | Hosting | Vercel | — | Free tier (serverless) |
-| Font files | Geist | — | Self-hosted via `next/font/local` |
+| Font files | Geist | — | Self-hosted via `geist/font/sans` |
 
 ## Tipografía
 - Body/UI: **Geist** (Variable, self-hosted via `next/font/local`)
@@ -98,6 +98,7 @@
 ### Enums
 - `user_role`: 'psychologist', 'patient'
 - `request_status`: 'pending', 'accepted', 'rejected'
+- `specialty`: 'ansiedad', 'depresion', 'estres', 'duelo', 'autoestima', 'crisis_panico', 'apoyo_ninos', 'apoyo_adolescentes', 'violencia', 'adicciones'
 
 ## Flujo de conexión WhatsApp
 
@@ -126,3 +127,4 @@
 - Resend (free tier) — notificaciones email
 
 > **Nota:** Phase 8 implementado: `features/admin/actions.ts`, `features/admin/components/pending-verification.tsx`, `features/admin/components/verification-detail.tsx`.
+> **Nota:** Phase 9 implementado: `features/psychologist-registration/schemas.ts`, `features/psychologist-registration/actions.ts`, `features/psychologist-registration/components/registration-form.tsx`, `app/(auth)/registro-psicologo/page.tsx`.

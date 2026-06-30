@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 >
-> **Note:** Updated 2026-06-30: root layout uses `geist/font/sans` (not `localFont`) and `@/components/ui/sonner` (not `@/components/ui/toaster`).
+> **Note:** Updated 2026-06-30: root layout uses `geist/font/sans` (not `localFont`) and `@/components/ui/sonner` (not `@/components/ui/toaster`). Phase 9 (registro psicólogo) + tech debt sprint completado. Estructura actualizada con `registro-psicologo/` route y `psychologist-registration/` feature.
 
 **Goal:** Build PsicoAyuda VE, a psychological crisis support platform for Venezuela connecting patients with verified volunteer psychologists exclusively via WhatsApp.
 
@@ -33,7 +33,8 @@ src/
 │   │   ├── layout.tsx                        → Auth check wrapper
 │   │   ├── dashboard/page.tsx                → Dashboard role-based
 │   │   ├── solicitar/[id]/page.tsx           → Formulario de solicitud
-│   │   └── solicitud/[id]/page.tsx           → Estado de la solicitud
+│   │   ├── solicitud/[id]/page.tsx           → Estado de la solicitud
+│   │   └── registro-psicologo/page.tsx       → Registro de psicólogo
 │   └── admin/
 │       ├── layout.tsx                        → Sidebar admin (#3D3834)
 │       └── page.tsx                          → Verificación de psicólogos
@@ -74,6 +75,10 @@ src/
 │       │   └── verification-detail.tsx
 │       ├── actions.ts
 │       └── types.ts
+│   └── psychologist-registration/
+│       ├── components/registration-form.tsx
+│       ├── actions.ts
+│       └── schemas.ts
 ├── lib/
 │   ├── supabase/
 │   │   ├── client.ts
@@ -2963,15 +2968,16 @@ Expected: All tests pass
 - ✅ Stack (Next.js 16, Supabase, Zod, Zustand, Tailwind 4, shadcn/ui) — Task 0.2
 - ✅ Data model (enums, 4 tables, RLS) — Tasks 2.1–2.4
 - ✅ RLS policies (whatsapp_on_accepted, all policies) — Task 2.2
-- ✅ Page architecture (all routes) — Tasks 3.3, 4.3–4.4, 5.3, 6.4–6.5, 7.3, 8.3
+- ✅ Page architecture (all routes) — Tasks 3.3, 4.3–4.4, 5.3, 6.4–6.5, 7.3, 8.3, 9.3
 - ✅ Auth (Magic Links only, no passwords) — Tasks 3.1–3.3
 - ✅ Component critical states (loading, available, unavailable, idle, submitting, success, error) — Tasks 4.2, 6.3, 6.5
 - ✅ WhatsApp button #25d366 + pulse — Task 6.5
-- ✅ Resend notifications (fallback) — Task 9.1
+- ✅ Resend notifications (fallback) — Task 9.1 (doc)
 - ✅ CSP nonce — Task 1.5
 - ✅ Rate limiting — Task 1.4
 - ✅ Admin sidebar #3D3834 — Task 1.6
 - ✅ Global warm palette — Task 1.6
+- ✅ Psychologist registration (magic link + form + admin client) — Tasks 9.1–9.3
 
 **2. Placeholder scan:** None found.
 
