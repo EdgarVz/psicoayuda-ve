@@ -131,8 +131,9 @@ export function RequestForm({ psychologistId, psychologistName }: RequestFormPro
       </div>
 
       <div className="bg-[#FAF6F1] rounded-radius-card p-6">
-        <label className="flex items-start gap-3 cursor-pointer">
+        <label htmlFor="consent-checkbox" className="flex items-start gap-3 cursor-pointer">
           <input
+            id="consent-checkbox"
             type="checkbox"
             checked={consent}
             onChange={(e) => setConsent(e.target.checked)}
