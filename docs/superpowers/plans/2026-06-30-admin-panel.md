@@ -24,7 +24,7 @@
 
 ### Existing (no changes):
 - `src/app/admin/layout.tsx` — sidebar layout
-- `src/middleware.ts` — route protection
+- `src/proxy.ts` — route protection (Next.js 16)
 
 ---
 

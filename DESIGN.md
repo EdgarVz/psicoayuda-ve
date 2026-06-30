@@ -87,7 +87,7 @@ Los badges y highlights usan verde primary en versión clara (50-100).
 ## 3. Typography Rules
 
 ### Font Families
-- **UI/Body**: `Geist Variable` — geométrica sans-serif. Cargada vía `next/font/local`.
+- **UI/Body**: `Geist Variable` — geométrica sans-serif. Cargada vía `geist/font/sans`.
 
 ### Font Files (self-hosted)
 ```

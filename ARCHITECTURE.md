@@ -21,7 +21,7 @@
 | Font files | Geist | — | Self-hosted via `geist/font/sans` |
 
 ## Tipografía
-- Body/UI: **Geist** (Variable, self-hosted via `next/font/local`)
+- Body/UI: **Geist** (Variable, via `geist/font/sans`)
 
 ## Modelo de datos
 
@@ -126,5 +126,15 @@
 - Supabase (free tier) — PostgreSQL + Auth + Storage
 - Resend (free tier) — notificaciones email
 
-> **Nota:** Phase 8 implementado: `features/admin/actions.ts`, `features/admin/components/pending-verification.tsx`, `features/admin/components/verification-detail.tsx`.
-> **Nota:** Phase 9 implementado: `features/psychologist-registration/schemas.ts`, `features/psychologist-registration/actions.ts`, `features/psychologist-registration/components/registration-form.tsx`, `app/(auth)/registro-psicologo/page.tsx`.
+> **Nota:** Phase 8 ✅ implementado: `features/admin/actions.ts`, `features/admin/components/pending-verification.tsx`, `features/admin/components/verification-detail.tsx`.
+> **Nota:** Phase 9 ✅ implementado: `features/psychologist-registration/schemas.ts`, `features/psychologist-registration/actions.ts`, `features/psychologist-registration/components/registration-form.tsx`, `app/(auth)/registro-psicologo/page.tsx`.
+
+### Proxy (Next.js 16 Middleware)
+
+Next.js 16 reemplaza `middleware.ts` por `proxy.ts`. El archivo `src/proxy.ts` maneja:
+
+- **CSP nonce**: genera un nonce criptográfico por request y lo inyecta en el header `Content-Security-Policy`
+- **Auth check**: lee la cookie `auth_logged_in` y setea `x-user-authenticated` para layouts Server Component
+- **Route protection**: redirige a `/login` rutas protegidas (`/dashboard`, `/solicitar/*`, `/solicitud/*`) sin cookie
+- **Admin guard**: verifica `auth.getUser()` + `admin_roles` para `/admin`
+- **Matcher**: excluye `_next/static`, `_next/image`, `favicon.ico`, `api/auth`
