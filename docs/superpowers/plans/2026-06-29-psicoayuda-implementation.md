@@ -91,7 +91,7 @@ src/
 │   └── utils.ts
 ├── types/
 │   └── database.ts
-└── middleware.ts
+└── proxy.ts
 ```
 
 ---
@@ -456,10 +456,10 @@ Expected: PASS
 
 ---
 
-#### Task 1.5 — middleware.ts
+#### Task 1.5 — proxy.ts (Next.js 16 middleware)
 
 **Files:**
-- Create: `src/middleware.ts`
+- Create: `src/proxy.ts`
 
 - [x] **Step 1: Write middleware**
 

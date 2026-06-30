@@ -200,7 +200,7 @@ export type SchemaName = z.infer<typeof schemaName>
 - `features/auth/schemas.ts` — `magicLinkSchema` (email), `psychologistSignupSchema` (email, display_name, full_name, license_number)
 - `features/auth/actions.ts` — Server actions: `sendMagicLink(email)`: llama a `supabase.auth.signInWithOtp({ email })`. `signOut()`: `supabase.auth.signOut()` + limpia cookie
 - `app/login/page.tsx` — Solo input email + botón "Enviar enlace mágico". Sin contraseñas, sin Google OAuth
-- `middleware.ts` — security headers + auth check + admin check via `admin_roles`
+- `proxy.ts` — security headers + auth check + admin check via `admin_roles`
 
 ### Psychologist Catalog
 - `features/catalog/store.ts` — Zustand: filters (specialties, availability, language), resultCount, setFilter, clearFilters

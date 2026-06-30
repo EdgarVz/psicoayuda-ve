@@ -20,7 +20,7 @@
 
 ## Seguridad
 - RLS en TODA tabla de Supabase. `service_role_key` solo en `lib/supabase/admin.ts`, nunca en cliente.
-- CSP nonce por request en middleware. Rate limiting via in-memory Map (lib/rate-limit.ts).
+- CSP nonce por request en proxy. Rate limiting via in-memory Map (lib/rate-limit.ts).
 - Admin roles en tabla `admin_roles`, no en `profiles`.
 - Webhooks protegidos con `WEBHOOK_SECRET` via header.
 

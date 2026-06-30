@@ -66,7 +66,7 @@ No schema changes required. Tables already exist:
 
 ## Auth / RLS
 
-- Admin route already protected in `middleware.ts` via `auth.getUser()` + `admin_roles` check
+- Admin route already protected in `proxy.ts` via `auth.getUser()` + `admin_roles` check
 - `admin_roles` has `admin_read_own` RLS policy
 - Actions use `createAdminSupabase()` (service_role) for all writes
 
