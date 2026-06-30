@@ -66,7 +66,6 @@ src/
 │   │   │   ├── patient-dashboard.tsx
 │   │   │   ├── psychologist-dashboard.tsx
 │   │   │   └── stats-cards.tsx
-│   │   ├── actions.ts
 │   │   ├── queries.ts
 │   │   └── types.ts
 │   └── admin/
@@ -1967,7 +1966,7 @@ Expected: PASS ✅
 - Create: `src/features/dashboard/types.ts`
 - Create: `src/features/dashboard/queries.ts`
 
-- [ ] **Step 1: Write types**
+- [x] **Step 1: Write types**
 
 ```typescript
 import type { Database } from '@/types/database'
@@ -2000,7 +1999,7 @@ export interface DashboardStats {
 }
 ```
 
-- [ ] **Step 2: Write queries**
+- [x] **Step 2: Write queries**
 
 ```typescript
 import { createServerSupabase } from '@/lib/supabase/server'
@@ -2103,7 +2102,7 @@ export async function getPsychologistStats(userId: string): Promise<DashboardSta
 - Create: `src/features/dashboard/components/requests-list.tsx`
 - Create: `src/features/dashboard/components/stats-cards.tsx`
 
-- [ ] **Step 1: Write StatsCards**
+- [x] **Step 1: Write StatsCards**
 
 ```typescript
 import type { DashboardStats } from '@/features/dashboard/types'
@@ -2133,7 +2132,7 @@ export function StatsCards({ stats }: StatsCardsProps) {
 }
 ```
 
-- [ ] **Step 2: Write RequestsList (shared between patient/psychologist views)**
+- [x] **Step 2: Write RequestsList (shared between patient/psychologist views)**
 
 ```typescript
 'use client'
@@ -2282,7 +2281,7 @@ export function RequestsList({ requests, role }: RequestsListProps) {
 }
 ```
 
-- [ ] **Step 3: Write PatientDashboard**
+- [x] **Step 3: Write PatientDashboard**
 
 ```typescript
 import type { PatientRequestView, DashboardStats } from '@/features/dashboard/types'
@@ -2307,7 +2306,7 @@ export function PatientDashboard({ requests, stats }: PatientDashboardProps) {
 }
 ```
 
-- [ ] **Step 4: Write PsychologistDashboard**
+- [x] **Step 4: Write PsychologistDashboard**
 
 ```typescript
 import type { PsychologistRequestView, DashboardStats } from '@/features/dashboard/types'
@@ -2339,7 +2338,7 @@ export function PsychologistDashboard({ requests, stats }: PsychologistDashboard
 **Files:**
 - Create: `src/app/(auth)/dashboard/page.tsx`
 
-- [ ] **Step 1: Write dashboard page**
+- [x] **Step 1: Write dashboard page**
 
 ```typescript
 import type { Metadata } from 'next'
@@ -2398,7 +2397,7 @@ export default async function DashboardPage() {
 }
 ```
 
-- [ ] **Step 2: Build check**
+- [x] **Step 2: Build check**
 
 ```bash
 npm run build
@@ -2416,7 +2415,7 @@ Expected: PASS
 - Create: `src/features/admin/types.ts`
 - Create: `src/features/admin/actions.ts`
 
-- [ ] **Step 1: Write types**
+- [x] **Step 1: Write types**
 
 ```typescript
 export interface PendingPsychologist {
@@ -2436,7 +2435,7 @@ export interface VerificationAction {
 }
 ```
 
-- [ ] **Step 2: Write admin actions**
+- [x] **Step 2: Write admin actions**
 
 ```typescript
 'use server'
@@ -2531,7 +2530,7 @@ export async function getPendingPsychologists(): Promise<PendingPsychologist[]> 
 - Create: `src/features/admin/components/pending-verification.tsx`
 - Create: `src/features/admin/components/verification-detail.tsx`
 
-- [ ] **Step 1: Write PendingVerification**
+- [x] **Step 1: Write PendingVerification**
 
 ```typescript
 'use client'
@@ -2636,7 +2635,7 @@ export function PendingVerification({ psychologists }: PendingVerificationProps)
 }
 ```
 
-- [ ] **Step 2: Write VerificationDetail**
+- [x] **Step 2: Write VerificationDetail**
 
 ```typescript
 import type { PendingPsychologist } from '@/features/admin/types'
@@ -2712,7 +2711,7 @@ export function VerificationDetail({ psychologist, onClose, onVerify, onReject }
 **Files:**
 - Modify: `src/app/admin/page.tsx`
 
-- [ ] **Step 1: Write admin page**
+- [x] **Step 1: Write admin page**
 
 ```typescript
 import type { Metadata } from 'next'
@@ -2735,7 +2734,7 @@ export default async function AdminPage() {
 }
 ```
 
-- [ ] **Step 2: Build check**
+- [x] **Step 2: Build check**
 
 ```bash
 npm run build
@@ -2753,7 +2752,7 @@ Expected: PASS
 - Create: `src/lib/resend.ts`
 - Modify: `src/features/appointments/actions.ts`
 
-- [ ] **Step 1: Write Resend client**
+- [x] **Step 1: Write Resend client**
 
 ```typescript
 import { env } from '@/lib/env'
@@ -2835,7 +2834,7 @@ export async function sendRejectedEmail(patientEmail: string, psychologistName: 
 }
 ```
 
-- [ ] **Step 2: Integrate Resend into appointment actions**
+- [x] **Step 2: Integrate Resend into appointment actions**
 
 ```typescript
 // In src/features/appointments/actions.ts, add to submitRequest
@@ -2884,7 +2883,7 @@ if (reqData) {
 - Create: `vitest.config.ts`
 - Create: `playwright.config.ts`
 
-- [ ] **Step 1: Create Vitest config**
+- [x] **Step 1: Create Vitest config**
 
 ```typescript
 import { defineConfig } from 'vitest/config'
@@ -2904,7 +2903,7 @@ export default defineConfig({
 })
 ```
 
-- [ ] **Step 2: Add test script to package.json**
+- [x] **Step 2: Add test script to package.json**
 
 ```json
 {
@@ -2915,7 +2914,7 @@ export default defineConfig({
 }
 ```
 
-- [ ] **Step 3: Run all tests**
+- [x] **Step 3: Run all tests**
 
 ```bash
 npm test
@@ -2927,7 +2926,7 @@ Expected: ALL PASS
 
 #### Task 10.2 — Final DoD
 
-- [ ] **Step 1: Run lint**
+- [x] **Step 1: Run lint**
 
 ```bash
 npm run lint
@@ -2935,7 +2934,7 @@ npm run lint
 
 Expected: No errors
 
-- [ ] **Step 2: Run typecheck**
+- [x] **Step 2: Run typecheck**
 
 ```bash
 npx tsc --noEmit
@@ -2943,7 +2942,7 @@ npx tsc --noEmit
 
 Expected: No errors
 
-- [ ] **Step 3: Run build**
+- [x] **Step 3: Run build**
 
 ```bash
 npm run build
@@ -2951,7 +2950,7 @@ npm run build
 
 Expected: Build succeeds with no errors (no `ignoreBuildErrors: true`)
 
-- [ ] **Step 4: Run tests**
+- [x] **Step 4: Run tests**
 
 ```bash
 npm test

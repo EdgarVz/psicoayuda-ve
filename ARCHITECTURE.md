@@ -98,7 +98,7 @@
 ### Enums
 - `user_role`: 'psychologist', 'patient'
 - `request_status`: 'pending', 'accepted', 'rejected'
-- `specialty`: 'ansiedad', 'depresion', 'estres', 'duelo', 'autoestima', 'crisis_panico', 'apoyo_ninos', 'apoyo_adolescentes', 'violencia', 'adicciones'
+- `specialty`: 'duelo', 'ansiedad', 'crisis_panico', 'trauma', 'apoyo_ninos', 'apoyo_adolescentes', 'depresion', 'estres', 'violencia', 'adicciones'
 
 ## Flujo de conexión WhatsApp
 

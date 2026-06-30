@@ -315,3 +315,19 @@ El catálogo de psicólogos no mostraba resultados pese a haber datos en DB. Cau
 - lint PASS, tsc 0 errores, tests 83/83 (18 suites), build 9 rutas PASS
 - Branch: `fix-tech-debt-registration` (worktree Paseo)
 - PR: [#7](https://github.com/EdgarVz/psicoayuda-ve/pull/7) contra `develop`
+
+## 2026-06-30 — Tech debt sprint: plan + doc fixes
+
+### Cambios
+- `docs/superpowers/plans/2026-06-30-tech-debt-sprint.md` — plan integral para 9 bloques de deuda técnica
+- `ARCHITECTURE.md` — corregido enum `specialty` (eliminado `autoestima` inexistente)
+- `docs/superpowers/plans/2026-06-29-psicoayuda-implementation.md` — checkboxes Phases 5-9 marcados `[x]`, estructura dashboard actualizada
+- `docs/superpowers/plans/2026-06-30-admin-panel.md` — checkboxes marcados `[x]`
+
+### Pendiente (próximos subagentes)
+- Wave 1: Bug navbar (B), Resend (E), middleware→proxy (G), Playwright (H)
+- Wave 2: CSS tokens (A), type safety (C), accesibilidad input (F)
+- Wave 3: Migration formal years_experience (I)
+
+### Checks
+- lint PASS, tsc PASS, build PASS

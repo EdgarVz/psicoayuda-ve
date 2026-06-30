@@ -1,6 +1,6 @@
 # Admin Panel Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Build admin panel for verifying psychologist profiles (Phase 8 of PsicoAyuda VE).
 
@@ -33,7 +33,7 @@
 **Files:**
 - Create: `src/features/admin/types.ts`
 
-- [ ] **Step 1: Write types**
+- [x] **Step 1: Write types**
 
 ```typescript
 export interface PendingPsychologist {
@@ -47,7 +47,7 @@ export interface PendingPsychologist {
 }
 ```
 
-- [ ] **Step 2: Verify typecheck**
+- [x] **Step 2: Verify typecheck**
 
 ```bash
 npx tsc --noEmit
@@ -55,7 +55,7 @@ npx tsc --noEmit
 
 Expected: PASS
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add src/features/admin/types.ts
@@ -70,7 +70,7 @@ git commit -m "feat(admin): add PendingPsychologist type"
 - Create: `src/features/admin/actions.ts`
 - Create: `src/features/admin/actions.test.ts`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```typescript
 import { describe, it, expect, vi, beforeEach } from 'vitest'
@@ -146,7 +146,7 @@ describe('admin actions', () => {
 })
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 ```bash
 npx vitest run src/features/admin/actions.test.ts --no-threads
@@ -154,7 +154,7 @@ npx vitest run src/features/admin/actions.test.ts --no-threads
 
 Expected: FAIL (actions.ts does not exist yet)
 
-- [ ] **Step 3: Write admin actions**
+- [x] **Step 3: Write admin actions**
 
 ```typescript
 'use server'
@@ -242,7 +242,7 @@ export async function getPendingPsychologists(): Promise<PendingPsychologist[]> 
 }
 ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 ```bash
 npx vitest run src/features/admin/actions.test.ts --no-threads
@@ -250,7 +250,7 @@ npx vitest run src/features/admin/actions.test.ts --no-threads
 
 Expected: PASS (4/4)
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/features/admin/actions.ts src/features/admin/actions.test.ts
@@ -265,7 +265,7 @@ git commit -m "feat(admin): add admin actions with tests"
 - Create: `src/features/admin/components/verification-detail.tsx`
 - Create: `src/features/admin/components/verification-detail.test.tsx`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```typescript
 import { describe, it, expect, vi } from 'vitest'
@@ -327,7 +327,7 @@ describe('VerificationDetail', () => {
 })
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 ```bash
 npx vitest run src/features/admin/components/verification-detail.test.tsx --no-threads
@@ -335,7 +335,7 @@ npx vitest run src/features/admin/components/verification-detail.test.tsx --no-t
 
 Expected: FAIL (component does not exist yet)
 
-- [ ] **Step 3: Write VerificationDetail component**
+- [x] **Step 3: Write VerificationDetail component**
 
 ```typescript
 'use client'
@@ -406,7 +406,7 @@ export function VerificationDetail({ psychologist, onClose, onVerify, onReject }
 }
 ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 ```bash
 npx vitest run src/features/admin/components/verification-detail.test.tsx --no-threads
@@ -414,7 +414,7 @@ npx vitest run src/features/admin/components/verification-detail.test.tsx --no-t
 
 Expected: PASS (3/3)
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/features/admin/components/verification-detail.tsx src/features/admin/components/verification-detail.test.tsx
@@ -429,7 +429,7 @@ git commit -m "feat(admin): add VerificationDetail shadcn Dialog component"
 - Create: `src/features/admin/components/pending-verification.tsx`
 - Create: `src/features/admin/components/pending-verification.test.tsx`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```typescript
 import { describe, it, expect, vi } from 'vitest'
@@ -474,7 +474,7 @@ describe('PendingVerification', () => {
 })
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 ```bash
 npx vitest run src/features/admin/components/pending-verification.test.tsx --no-threads
@@ -482,7 +482,7 @@ npx vitest run src/features/admin/components/pending-verification.test.tsx --no-
 
 Expected: FAIL (component does not exist yet)
 
-- [ ] **Step 3: Write PendingVerification component**
+- [x] **Step 3: Write PendingVerification component**
 
 ```typescript
 'use client'
@@ -596,7 +596,7 @@ export function PendingVerification({ psychologists }: PendingVerificationProps)
 }
 ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 ```bash
 npx vitest run src/features/admin/components/pending-verification.test.tsx --no-threads
@@ -604,7 +604,7 @@ npx vitest run src/features/admin/components/pending-verification.test.tsx --no-
 
 Expected: PASS (2/2)
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/features/admin/components/pending-verification.tsx src/features/admin/components/pending-verification.test.tsx
@@ -618,7 +618,7 @@ git commit -m "feat(admin): add PendingVerification table with sonner toast"
 **Files:**
 - Create: `src/app/admin/page.tsx`
 
-- [ ] **Step 1: Write admin page**
+- [x] **Step 1: Write admin page**
 
 ```typescript
 import type { Metadata } from 'next'
@@ -641,7 +641,7 @@ export default async function AdminPage() {
 }
 ```
 
-- [ ] **Step 2: Build check**
+- [x] **Step 2: Build check**
 
 ```bash
 npm run build
@@ -649,7 +649,7 @@ npm run build
 
 Expected: PASS
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add src/app/admin/page.tsx
@@ -660,7 +660,7 @@ git commit -m "feat(admin): add admin page with pending verifications"
 
 ### Task 8.6: DoD
 
-- [ ] **Step 1: Run all tests**
+- [x] **Step 1: Run all tests**
 
 ```bash
 npm test
@@ -668,7 +668,7 @@ npm test
 
 Expected: ALL PASS
 
-- [ ] **Step 2: Run lint**
+- [x] **Step 2: Run lint**
 
 ```bash
 npm run lint
@@ -676,7 +676,7 @@ npm run lint
 
 Expected: No errors
 
-- [ ] **Step 3: Run typecheck**
+- [x] **Step 3: Run typecheck**
 
 ```bash
 npx tsc --noEmit
@@ -684,7 +684,7 @@ npx tsc --noEmit
 
 Expected: No errors
 
-- [ ] **Step 4: Run build**
+- [x] **Step 4: Run build**
 
 ```bash
 npm run build
