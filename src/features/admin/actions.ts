@@ -73,11 +73,16 @@ export async function getPendingPsychologists(): Promise<PendingPsychologist[]> 
     .eq('psychologist_profiles.license_verified', false)
     .order('created_at', { ascending: false })
 
-  return (data ?? []).map((row) => ({
-    id: row.id,
-    displayName: row.display_name,
-    avatarUrl: row.avatar_url,
-    createdAt: row.created_at,
-    ...(row.psychologist_profiles as unknown as { full_name: string; license_number: string; license_document: string | null }),
-  }))
+  return (data ?? []).map((row) => {
+    const psy = row.psychologist_profiles as unknown as { full_name: string; license_number: string; license_document: string | null }
+    return {
+      id: row.id,
+      displayName: row.display_name,
+      avatarUrl: row.avatar_url,
+      createdAt: row.created_at,
+      fullName: psy.full_name,
+      licenseNumber: psy.license_number,
+      licenseDocument: psy.license_document,
+    }
+  })
 }
