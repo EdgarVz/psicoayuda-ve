@@ -232,3 +232,26 @@ El catálogo de psicólogos no mostraba resultados pese a haber datos en DB. Cau
 ### Checks
 - lint PASS, tsc PASS, build PASS, tests 12/12 PASS
 - Branch: `fix/tech-debt`
+
+## 2026-06-29 — Phase 7: Dashboard (TDD)
+
+### Cambios
+- `src/features/dashboard/types.ts` — interfaces `PatientRequestView`, `PsychologistRequestView`, `DashboardStats`
+- `src/features/dashboard/queries.ts` — `getPatientRequests`, `getPsychologistRequests`, `getPatientStats`, `getPsychologistStats`
+- `src/features/dashboard/components/stats-cards.tsx` — 4 cards con labels en español
+- `src/features/dashboard/components/requests-list.tsx` — Client Component con tabs, filtros, acciones Aceptar/Rechazar, WhatsApp link; usa `SPECIALTY_LABELS`
+- `src/features/dashboard/components/patient-dashboard.tsx` — "Mis espacios"
+- `src/features/dashboard/components/psychologist-dashboard.tsx` — "Solicitudes recibidas"
+- `src/app/(auth)/dashboard/page.tsx` — página role-based con `getUser()`
+- `vitest.config.ts`: soporte `.test.tsx` + `jsdom` + `@testing-library/react`
+
+### TDD Cycles
+1. `queries.test.ts` → 5 tests (mock Supabase)
+2. `stats-cards.test.tsx` → 3 tests (render jsdom)
+3. `requests-list.test.tsx` → 8 tests (tabs, filtros, acciones, empty state)
+4. `patient-dashboard.test.tsx` + `psychologist-dashboard.test.tsx` → 4 tests (composición)
+5. Dashboard page — build check
+
+### Checks
+- lint PASS, tsc PASS, build PASS, tests 32/32 PASS
+- Branch: `feat/dashboard-phase-7`
