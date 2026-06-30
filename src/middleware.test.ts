@@ -16,7 +16,7 @@ vi.mock('@/lib/supabase/server', () => ({
   createServerSupabase: vi.fn(),
 }))
 
-import { middleware } from './proxy'
+import { proxy } from './proxy'
 import { createServerSupabase } from '@/lib/supabase/server'
 
 function createRequest(pathname: string, isLoggedIn = false) {
@@ -31,7 +31,7 @@ function createRequest(pathname: string, isLoggedIn = false) {
   }
 }
 
-describe('middleware', () => {
+describe('proxy', () => {
   beforeEach(() => {
     vi.clearAllMocks()
   })
@@ -43,7 +43,7 @@ describe('middleware', () => {
     const mockResponse = { status: 307 }
     mockRedirect.mockReturnValue(mockResponse)
 
-    const result = await middleware(req as never)
+    const result = await proxy(req as never)
 
     expect(mockRedirect).toHaveBeenCalledWith(expectedUrl)
     expect(result).toBe(mockResponse)
@@ -57,7 +57,7 @@ describe('middleware', () => {
       },
     } as never)
 
-    const result = await middleware(req as never)
+    const result = await proxy(req as never)
 
     expect(mockRedirect).toHaveBeenCalledWith(new URL('/login', req.url))
     expect(result).toBeDefined()
@@ -68,7 +68,7 @@ describe('middleware', () => {
     const headers = new Headers()
     mockNext.mockReturnValue({ headers })
 
-    const result = await middleware(req as never)
+    const result = await proxy(req as never)
 
     const csp = headers.get('Content-Security-Policy')
     expect(csp).toContain("default-src 'self'")
@@ -82,7 +82,7 @@ describe('middleware', () => {
     const headers = new Headers()
     mockNext.mockReturnValue({ headers })
 
-    await middleware(req as never)
+    await proxy(req as never)
 
     expect(mockRedirect).not.toHaveBeenCalled()
     expect(mockNext).toHaveBeenCalled()
