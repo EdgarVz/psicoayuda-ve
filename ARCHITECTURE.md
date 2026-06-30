@@ -125,4 +125,4 @@
 - Supabase (free tier) — PostgreSQL + Auth + Storage
 - Resend (free tier) — notificaciones email
 
-> **Nota:** `features/admin/` (Phase 8 — Admin Panel) no está implementado aún. Solo existe `src/app/admin/layout.tsx`.
+> **Nota:** Phase 8 implementado: `features/admin/actions.ts`, `features/admin/components/pending-verification.tsx`, `features/admin/components/verification-detail.tsx`.

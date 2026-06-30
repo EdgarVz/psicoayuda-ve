@@ -257,6 +257,20 @@ El catálogo de psicólogos no mostraba resultados pese a haber datos en DB. Cau
 - Branch: `feat/dashboard-phase-7`
 - Commit: `763d8b4`
 
+## 2026-06-30 — Phase 8: Admin Panel (fix/admin-panel)
+
+### Cambios
+- `src/features/admin/types.ts`: interface `PendingPsychologist`
+- `src/features/admin/actions.ts`: `verifyPsychologist`, `rejectPsychologist`, `getPendingPsychologists`
+- `src/features/admin/components/verification-detail.tsx`: modal con shadcn Dialog
+- `src/features/admin/components/pending-verification.tsx`: tabla con toast sonner
+- `src/app/admin/page.tsx`: server component con lista de pendientes
+- Tests: actions, VerificationDetail, PendingVerification
+
+### Checks
+- tests PASS (15 files, 68 tests), lint PASS, tsc PASS, build PASS
+- Branch: `fix/admin-panel`
+
 ## 2026-06-30 — Tech debt + doc realignment (fix/tech-debt-realign)
 
 ### Cambios
