@@ -124,3 +124,5 @@
 - Vercel (Hobby) — deploys automáticos desde `develop` y `main`
 - Supabase (free tier) — PostgreSQL + Auth + Storage
 - Resend (free tier) — notificaciones email
+
+> **Nota:** `features/admin/` (Phase 8 — Admin Panel) no está implementado aún. Solo existe `src/app/admin/layout.tsx`.

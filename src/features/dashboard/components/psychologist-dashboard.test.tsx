@@ -31,7 +31,7 @@ describe('PsychologistDashboard', () => {
 
   it('renders StatsCards and RequestsList', () => {
     render(<PsychologistDashboard requests={mockRequests} stats={mockStats} />)
-    expect(screen.getByText((c) => c.includes('Paciente A'))).toBeDefined()
+    expect(screen.getByText((c: string) => c.includes('Paciente A'))).toBeDefined()
     expect(screen.getAllByText('1')).toHaveLength(2)
   })
 })
