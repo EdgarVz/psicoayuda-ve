@@ -2,11 +2,12 @@
 
 import { createServerSupabase } from '@/lib/supabase/server'
 import { createAdminSupabase } from '@/lib/supabase/admin'
+import { withRateLimit } from '@/lib/rate-limit'
 import { psychologistRegistrationSchema, type PsychologistRegistrationInput } from './schemas'
 import { logger } from '@/lib/logger'
 import { revalidatePath } from 'next/cache'
 
-export async function registerPsychologist(
+async function registerPsychologistImpl(
   input: PsychologistRegistrationInput
 ): Promise<{ error?: string }> {
   const supabase = await createServerSupabase()
@@ -47,3 +48,9 @@ export async function registerPsychologist(
   revalidatePath('/dashboard')
   return {}
 }
+
+export const registerPsychologist = withRateLimit(registerPsychologistImpl, {
+  limit: 5,
+  windowMs: 60000,
+  keyFn: () => 'register-psychologist',
+})

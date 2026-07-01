@@ -1,37 +1,53 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { rateLimit } from './rate-limit'
+import { withRateLimit } from './rate-limit'
 
-beforeEach(() => {
-  vi.restoreAllMocks()
-})
-
-describe('rateLimit', () => {
-  it('allows first request from an IP', async () => {
-    const result = await rateLimit('192.168.1.1', 3, 10_000)
-    expect(result.success).toBe(true)
+describe('withRateLimit', () => {
+  beforeEach(() => {
+    vi.useFakeTimers()
   })
 
-  it('blocks request after limit is reached', async () => {
-    const ip = '192.168.1.2'
-
-    const r1 = await rateLimit(ip, 2, 10_000)
-    expect(r1.success).toBe(true)
-
-    const r2 = await rateLimit(ip, 2, 10_000)
-    expect(r2.success).toBe(true)
-
-    const r3 = await rateLimit(ip, 2, 10_000)
-    expect(r3.success).toBe(false)
+  it('calls action when under limit', async () => {
+    const action = vi.fn().mockResolvedValue('ok')
+    const wrapped = withRateLimit(action, { limit: 3, windowMs: 60000, keyFn: () => 'ip-1' })
+    const result = await wrapped()
+    expect(result).toBe('ok')
+    expect(action).toHaveBeenCalledOnce()
   })
 
-  it('treats different IPs independently', async () => {
-    const r1 = await rateLimit('10.0.0.1', 1, 10_000)
-    expect(r1.success).toBe(true)
+  it('blocks when over limit', async () => {
+    const action = vi.fn().mockResolvedValue('ok')
+    const wrapped = withRateLimit(action, { limit: 2, windowMs: 60000, keyFn: () => 'ip-2' })
+    await wrapped()
+    await wrapped()
+    const result = await wrapped()
+    expect(result).toEqual({ error: expect.stringContaining('Demasiadas solicitudes') })
+    expect(action).toHaveBeenCalledTimes(2)
+  })
 
-    const r1b = await rateLimit('10.0.0.1', 1, 10_000)
-    expect(r1b.success).toBe(false)
+  it('resets after window expires', async () => {
+    const action = vi.fn().mockResolvedValue('ok')
+    const wrapped = withRateLimit(action, { limit: 1, windowMs: 60000, keyFn: () => 'ip-3' })
+    await wrapped()
+    const blocked = await wrapped()
+    expect(blocked).toEqual({ error: expect.stringContaining('Demasiadas solicitudes') })
+    vi.advanceTimersByTime(60001)
+    const result = await wrapped()
+    expect(result).toBe('ok')
+    expect(action).toHaveBeenCalledTimes(2)
+  })
 
-    const r2 = await rateLimit('10.0.0.2', 1, 10_000)
-    expect(r2.success).toBe(true)
+  it('passes arguments to action', async () => {
+    const action = vi.fn().mockResolvedValue('ok')
+    const wrapped = withRateLimit(action, { limit: 5, windowMs: 60000, keyFn: (...args) => args[0] })
+    await wrapped('arg1', 'arg2')
+    expect(action).toHaveBeenCalledWith('arg1', 'arg2')
+  })
+
+  it('returns remaining seconds in error message', async () => {
+    const action = vi.fn().mockResolvedValue('ok')
+    const wrapped = withRateLimit(action, { limit: 1, windowMs: 60000, keyFn: () => 'ip-4' })
+    await wrapped()
+    const result = await wrapped()
+    expect(result).toEqual({ error: expect.stringContaining('60') })
   })
 })

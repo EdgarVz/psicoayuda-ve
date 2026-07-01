@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createServerSupabase } from '@/lib/supabase/server'
 import { getPatientRequests, getPsychologistRequests, getPatientStats, getPsychologistStats } from '@/features/dashboard/queries'
@@ -45,6 +46,14 @@ export default async function DashboardPage() {
 
     return (
       <div className="max-w-4xl mx-auto px-4 py-8">
+        <div className="mb-6 flex justify-end">
+          <Link
+            href="/dashboard/editar-perfil"
+            className="text-sm text-primary hover:underline"
+          >
+            Editar perfil
+          </Link>
+        </div>
         <PsychologistDashboard requests={requests} stats={stats} />
       </div>
     )
