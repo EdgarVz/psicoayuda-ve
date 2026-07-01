@@ -128,6 +128,7 @@
 
 > **Nota:** Phase 8 ✅ implementado: `features/admin/actions.ts`, `features/admin/components/pending-verification.tsx`, `features/admin/components/verification-detail.tsx`.
 > **Nota:** Phase 9 ✅ implementado: `features/psychologist-registration/schemas.ts`, `features/psychologist-registration/actions.ts`, `features/psychologist-registration/components/registration-form.tsx`, `app/(public)/registro-psicologo/page.tsx`.
+> **Nota:** Phase 10 ✅ implementado: rate limiting integrado, WhatsApp link post-aprobación, formulario editar perfil. Ver `features/psychologist/schemas.ts`, `features/psychologist/actions.ts`, `features/psychologist/components/edit-profile-form.tsx`, `app/(auth)/dashboard/editar-perfil/page.tsx`.
 
 ### Proxy (Next.js 16 Middleware)
 
