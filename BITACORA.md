@@ -400,3 +400,35 @@ El catálogo de psicólogos no mostraba resultados pese a haber datos en DB. Cau
 | `npx tsc --noEmit` | ✅ 0 errores |
 | `npm run build` | ✅ 10 rutas + Proxy |
 | `npm test` | ✅ 165/165 (33 suites) |
+
+---
+
+## 2026-07-01 — 4 features: rate limiting, WhatsApp link, edit profile
+
+### Features implementadas
+
+**Task 1 — Rate Limiting:**
+- `withRateLimit` wrapper agregado a `src/lib/rate-limit.ts`
+- Wrapped: `registerPsychologist` (5/min), `sendMagicLink` (3/min/email), `submitRequest` (10/min/user)
+- `keyFn` soporta `string | Promise<string>` (async para derivar user ID de sesión)
+- 5 tests unitarios PASS
+
+**Task 2 — WhatsApp Link Post-Aprobación:**
+- `WhatsAppButton` component creado con icono SVG + mensaje predeterminado
+- `request-status.tsx` muestra el botón solo en status `accepted`
+- Fallback text cuando el psicólogo no configuró su enlace
+
+**Task 3 — Edit Profile:**
+- Ruta `/dashboard/editar-perfil` con formulario completo
+- Schema Zod `PsychologistProfileUpdateSchema` con validación de todos los campos
+- Server Action `updatePsychologistProfile` con admin client
+- Formulario `EditProfileForm` (nombre, bio, especialidades pill toggle, idiomas, WhatsApp, disponibilidad, experiencia)
+- 2 tests unitarios (render + toggle especialidad)
+
+### PRs
+- [#19](https://github.com/EdgarVz/psicoayuda-ve/pull/19) — feat/rate-limiting → develop
+- [#20](https://github.com/EdgarVz/psicoayuda-ve/pull/20) — feat/whatsapp-link → develop
+- [#21](https://github.com/EdgarVz/psicoayuda-ve/pull/21) — feat/edit-profile → develop
+
+### Pendiente
+- Task 4: E2E tests con mocks de red (Playwright) + documentación final

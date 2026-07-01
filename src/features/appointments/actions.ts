@@ -3,11 +3,12 @@
 import { revalidatePath } from 'next/cache'
 import { createServerSupabase } from '@/lib/supabase/server'
 import { createAdminSupabase } from '@/lib/supabase/admin'
+import { withRateLimit } from '@/lib/rate-limit'
 import { getResendClient } from '@/lib/resend'
 import { appointmentRequestSchema, type AppointmentRequestInput } from './schemas'
 import { logger } from '@/lib/logger'
 
-export async function submitRequest(input: AppointmentRequestInput): Promise<
+async function submitRequestImpl(input: AppointmentRequestInput): Promise<
   { data: { id: string } } | { error: string }
 > {
   const supabase = await createServerSupabase()
@@ -60,6 +61,16 @@ export async function submitRequest(input: AppointmentRequestInput): Promise<
   revalidatePath('/dashboard')
   return { data: { id: data.id } }
 }
+
+export const submitRequest = withRateLimit(submitRequestImpl, {
+  limit: 10,
+  windowMs: 60000,
+  keyFn: async () => {
+    const supabase = await createServerSupabase()
+    const { data: { user } } = await supabase.auth.getUser()
+    return `submit-request:${user?.id ?? 'anonymous'}`
+  },
+})
 
 export async function acceptRequest(requestId: string): Promise<{ error?: string }> {
   const supabase = await createServerSupabase()
