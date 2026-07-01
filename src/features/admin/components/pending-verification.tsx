@@ -54,7 +54,7 @@ export function PendingVerification({ psychologists }: PendingVerificationProps)
               <td className="py-3">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-background-alt flex items-center justify-center text-sm font-medium text-muted">
-                    {psy.displayName.charAt(0)}
+                    👩‍⚕️
                   </div>
                   <div>
                     <p className="font-medium">{psy.fullName}</p>

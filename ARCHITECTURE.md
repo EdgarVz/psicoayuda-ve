@@ -127,7 +127,7 @@
 - Resend (free tier) — notificaciones email
 
 > **Nota:** Phase 8 ✅ implementado: `features/admin/actions.ts`, `features/admin/components/pending-verification.tsx`, `features/admin/components/verification-detail.tsx`.
-> **Nota:** Phase 9 ✅ implementado: `features/psychologist-registration/schemas.ts`, `features/psychologist-registration/actions.ts`, `features/psychologist-registration/components/registration-form.tsx`, `app/(auth)/registro-psicologo/page.tsx`.
+> **Nota:** Phase 9 ✅ implementado: `features/psychologist-registration/schemas.ts`, `features/psychologist-registration/actions.ts`, `features/psychologist-registration/components/registration-form.tsx`, `app/(public)/registro-psicologo/page.tsx`.
 
 ### Proxy (Next.js 16 Middleware)
 

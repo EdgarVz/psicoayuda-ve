@@ -107,9 +107,9 @@ describe('PsychologistProfile', () => {
     expect(screen.queryByText('Sobre mí')).toBeNull()
   })
 
-  it('renders avatar fallback with first letter of fullName', () => {
+  it('renders avatar fallback with emoji', () => {
     render(<PsychologistProfile psychologist={base} />)
-    expect(screen.getByText('M')).toBeDefined()
+    expect(screen.getByTestId('avatar-fallback')).toBeDefined()
   })
 
   it('renders "¿Cómo funciona?" card with 4 numbered steps', () => {

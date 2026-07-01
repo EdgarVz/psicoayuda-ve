@@ -24,7 +24,6 @@ function formatAvailability(availability: Record<string, unknown> | null): strin
 }
 
 export function PsychologistProfile({ psychologist }: PsychologistProfileProps) {
-  const initial = psychologist.fullName.charAt(0).toUpperCase()
   const schedule = formatAvailability(psychologist.availability as Record<string, unknown> | null)
 
   return (
@@ -41,8 +40,8 @@ export function PsychologistProfile({ psychologist }: PsychologistProfileProps) 
               className="object-cover"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-3xl text-muted">
-              {initial}
+            <div data-testid="avatar-fallback" className="w-full h-full flex items-center justify-center text-3xl text-muted">
+              👩‍⚕️
             </div>
           )}
         </div>

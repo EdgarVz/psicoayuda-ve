@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { MagicLinkForm } from '@/features/auth/components/magic-link-form'
 
 export const metadata: Metadata = {
@@ -21,9 +22,9 @@ export default function LoginPage() {
 
       <p className="text-center text-sm text-muted mt-8">
         ¿Eres psicólogo?{' '}
-        <a href="/registro-psicologo" className="text-primary hover:underline">
+        <Link href="/registro-psicologo" className="text-primary hover:underline">
           Regístrate aquí
-        </a>
+        </Link>
       </p>
     </div>
   )
