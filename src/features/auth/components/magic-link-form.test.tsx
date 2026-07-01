@@ -42,7 +42,7 @@ describe('MagicLinkForm', () => {
   })
 
   it('shows sending state with disabled button', () => {
-    mockSend.mockReturnValue(new Promise<{ success: true }>(() => {}))
+    mockSend.mockReturnValue(new Promise(() => {}))
     render(<MagicLinkForm />)
 
     fireEvent.change(
