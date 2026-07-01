@@ -309,7 +309,7 @@ El catálogo de psicólogos no mostraba resultados pese a haber datos en DB. Cau
 
 ### Archivos modificados/nuevos
 - 23 archivos modificados, 7 nuevos, +644/-70 líneas
-- Nuevos: `src/app/(auth)/registro-psicologo/page.tsx`, `src/features/psychologist-registration/` (5 archivos)
+- Nuevos: `src/app/(public)/registro-psicologo/page.tsx`, `src/features/psychologist-registration/` (5 archivos)
 
 ### Checks
 - lint PASS, tsc 0 errores, tests 83/83 (18 suites), build 9 rutas PASS

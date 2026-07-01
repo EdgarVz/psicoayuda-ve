@@ -28,13 +28,13 @@ src/
 │   │   │   ├── page.tsx                      → Catálogo completo con filtros
 │   │   │   └── catalog-client.tsx            → Client wrapper
 │   │   ├── psicologo/[id]/page.tsx           → Detalle del psicólogo
-│   │   └── login/page.tsx                    → Magic Link form
+│   │   ├── login/page.tsx                    → Magic Link form
+│   │   └── registro-psicologo/page.tsx       → Registro de psicólogo
 │   ├── (auth)/
 │   │   ├── layout.tsx                        → Auth check wrapper
 │   │   ├── dashboard/page.tsx                → Dashboard role-based
 │   │   ├── solicitar/[id]/page.tsx           → Formulario de solicitud
-│   │   ├── solicitud/[id]/page.tsx           → Estado de la solicitud
-│   │   └── registro-psicologo/page.tsx       → Registro de psicólogo
+│   │   └── solicitud/[id]/page.tsx           → Estado de la solicitud
 │   └── admin/
 │       ├── layout.tsx                        → Sidebar admin (#3D3834)
 │       └── page.tsx                          → Verificación de psicólogos
@@ -2744,136 +2744,108 @@ Expected: PASS
 
 ---
 
-### Phase 9: Integration — Resend
+### Phase 9: Psychologist Registration
 
-#### Task 9.1 — Resend client + email templates
+> **Nota:** La integración con Resend (notificaciones email) se implementó en fases anteriores. Ver `src/lib/resend.ts` para el código real.
+
+#### Task 9.1 — Registration schema
 
 **Files:**
-- Create: `src/lib/resend.ts`
-- Modify: `src/features/appointments/actions.ts`
+- Create: `src/features/psychologist-registration/schemas.ts`
 
-- [x] **Step 1: Write Resend client**
+- [x] **Step 1: Define Zod schema**
 
 ```typescript
-import { env } from '@/lib/env'
+import { z } from 'zod'
+import { SPECIALTIES } from '@/lib/specialties'
+
+const specialtiesType = SPECIALTIES.map((s) => s.id) as [string, ...string[]]
+
+export const PsychologistRegistrationSchema = z.object({
+  fullName: z.string().min(2, 'El nombre debe tener al menos 2 caracteres'),
+  licenseNumber: z.string().min(1, 'El número de colegiatura es obligatorio'),
+  specialties: z.array(z.enum(specialtiesType)).min(1, 'Selecciona al menos una especialidad'),
+  languages: z.array(z.string()).min(1, 'Selecciona al menos un idioma'),
+  whatsappLink: z
+    .string()
+    .regex(/^https:\/\/wa\.me\/\d{7,15}$/, 'El enlace de WhatsApp no es válido'),
+  consentGranted: z.literal(true, {
+    errorMap: () => ({ message: 'Debes aceptar los términos y condiciones' }),
+  }),
+})
+
+export type PsychologistRegistrationInput = z.infer<typeof PsychologistRegistrationSchema>
+```
+
+#### Task 9.2 — Server action
+
+**Files:**
+- Create: `src/features/psychologist-registration/actions.ts`
+
+- [x] **Step 1: Write register action**
+
+```typescript
+'use server'
+
+import { createServerSupabase } from '@/lib/supabase/server'
+import { createAdminSupabase } from '@/lib/supabase/admin'
+import { PsychologistRegistrationSchema } from '@/features/psychologist-registration/schemas'
+import { revalidatePath } from 'next/cache'
 import { logger } from '@/lib/logger'
 
-const RESEND_FROM = 'onboarding@resend.dev'
+export async function registerPsychologist(input: PsychologistRegistrationInput) {
+  const supabase = await createServerSupabase()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'Debes iniciar sesión para registrarte como psicólogo' }
 
-function getResend() {
-  if (!env.RESEND_API_KEY) {
-    return null
-  }
-  // Dynamic import to avoid breaking when RESEND_API_KEY is missing
-  const { Resend } = require('resend')
-  return new Resend(env.RESEND_API_KEY)
-}
+  const parsed = PsychologistRegistrationSchema.safeParse(input)
+  if (!parsed.success) return { error: parsed.error.errors[0].message }
 
-export async function sendNewRequestEmail(psychologistEmail: string, patientName: string, reason: string[]): Promise<void> {
-  const resend = getResend()
-  if (!resend) {
-    logger.warn('Resend not configured — skipping email notification')
-    return
-  }
+  const adminSupabase = createAdminSupabase()
+  const { error: updateError } = await adminSupabase
+    .from('profiles')
+    .update({ role: 'psychologist', full_name: parsed.data.fullName })
+    .eq('id', user.id)
 
-  const { error } = await resend.emails.send({
-    from: RESEND_FROM,
-    to: psychologistEmail,
-    subject: 'Nueva solicitud de ayuda — PsicoAyuda VE',
-    html: `
-      <h2>Tienes una nueva solicitud</h2>
-      <p><strong>De:</strong> ${patientName}</p>
-      <p><strong>Motivo:</strong> ${reason.join(', ')}</p>
-      <p>Revisa tu dashboard para aceptar o rechazar la solicitud.</p>
-    `,
-  })
-
-  if (error) logger.error('Failed to send new request email', error)
-}
-
-export async function sendAcceptedEmail(patientEmail: string, psychologistName: string): Promise<void> {
-  const resend = getResend()
-  if (!resend) {
-    logger.warn('Resend not configured — skipping email notification')
-    return
+  if (updateError) {
+    logger.error('Failed to update profile', updateError)
+    return { error: 'Error al actualizar el perfil' }
   }
 
-  const { error } = await resend.emails.send({
-    from: RESEND_FROM,
-    to: patientEmail,
-    subject: 'Tu solicitud fue aceptada — PsicoAyuda VE',
-    html: `
-      <h2>Tu solicitud fue aceptada</h2>
-      <p><strong>Psicólogo:</strong> ${psychologistName}</p>
-      <p>Ingresa a tu dashboard para contactar al psicólogo vía WhatsApp.</p>
-    `,
-  })
+  const { error: insertError } = await adminSupabase
+    .from('psychologist_profiles')
+    .insert({
+      id: user.id,
+      license_number: parsed.data.licenseNumber,
+      specialties: parsed.data.specialties,
+      languages: parsed.data.languages,
+      whatsapp_link: parsed.data.whatsappLink,
+      consent_granted: parsed.data.consentGranted,
+    })
 
-  if (error) logger.error('Failed to send accepted email', error)
-}
-
-export async function sendRejectedEmail(patientEmail: string, psychologistName: string): Promise<void> {
-  const resend = getResend()
-  if (!resend) {
-    logger.warn('Resend not configured — skipping email notification')
-    return
+  if (insertError) {
+    logger.error('Failed to insert psychologist profile', insertError)
+    return { error: 'Error al crear el perfil de psicólogo. El número de colegiatura podría ya estar registrado.' }
   }
 
-  const { error } = await resend.emails.send({
-    from: RESEND_FROM,
-    to: patientEmail,
-    subject: 'Actualización de solicitud — PsicoAyuda VE',
-    html: `
-      <h2>Actualización de tu solicitud</h2>
-      <p>Lamentamos informarte que ${psychologistName} no pudo aceptar tu solicitud.</p>
-      <p>Te invitamos a buscar otro psicólogo disponible en nuestro catálogo.</p>
-    `,
-  })
-
-  if (error) logger.error('Failed to send rejected email', error)
+  revalidatePath('/psicologos')
+  return {}
 }
 ```
 
-- [x] **Step 2: Integrate Resend into appointment actions**
+#### Task 9.3 — Registration form component
 
-```typescript
-// In src/features/appointments/actions.ts, add to submitRequest
-import { createAdminSupabase } from '@/lib/supabase/admin'
-import { sendNewRequestEmail, sendAcceptedEmail, sendRejectedEmail } from '@/lib/resend'
+**Files:**
+- Create: `src/features/psychologist-registration/components/registration-form.tsx`
+- Create: `src/app/(public)/registro-psicologo/page.tsx`
 
-// In submitRequest, after successful insert:
-// Get psychologist email
-const adminSupabase = createAdminSupabase()
-const { data: psyProfile } = await adminSupabase
-  .from('profiles')
-  .select('id')
-  .eq('id', parsed.data.psychologist_id)
-  .single()
+- [x] **Step 1: Build form with specialty pills and consent checkbox**
 
-if (psyProfile) {
-  const { data: authUser } = await adminSupabase.auth.admin.getUserById(parsed.data.psychologist_id)
-  if (authUser?.user?.email) {
-    await sendNewRequestEmail(authUser.user.email, 'Un paciente', parsed.data.reason)
-  }
-}
-
-// In acceptRequest, after successful update:
-const { data: reqData } = await supabase
-  .from('appointment_requests')
-  .select('patient_id, psychologist_profiles!inner(profiles!inner(display_name))')
-  .eq('id', requestId)
-  .single()
-
-if (reqData) {
-  const psy = reqData.psychologist_profiles as unknown as { profiles: { display_name: string } }
-  const { data: patientAuth } = await adminSupabase.auth.admin.getUserById(reqData.patient_id)
-  if (patientAuth?.user?.email) {
-    await sendAcceptedEmail(patientAuth.user.email, psy.profiles.display_name)
-  }
-}
-```
+(See actual implementation in `src/features/psychologist-registration/components/registration-form.tsx`)
 
 ---
+
+
 
 ### Phase 10: Tests + DoD
 

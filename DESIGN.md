@@ -223,6 +223,12 @@ app/fonts/
 - Input email + botón "Enviar enlace mágico"
 - Link a registro psicólogo
 
+#### Psychologist Registration (`/registro-psicologo`)
+- Título "Regístrate como psicólogo voluntario"
+- Formulario: nombre completo, colegiatura, especialidades (pill toggles), idiomas, enlace WhatsApp
+- Checkbox de consentimiento para términos
+- Estados: idle → submitting → success / error
+
 #### Request Form (`/solicitar/[id]`)
 - Título "Cuéntanos un poco"
 - Checkboxes de motivo con selección múltiple
