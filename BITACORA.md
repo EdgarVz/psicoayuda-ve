@@ -430,5 +430,18 @@ El catálogo de psicólogos no mostraba resultados pese a haber datos en DB. Cau
 - [#20](https://github.com/EdgarVz/psicoayuda-ve/pull/20) — feat/whatsapp-link → develop
 - [#21](https://github.com/EdgarVz/psicoayuda-ve/pull/21) — feat/edit-profile → develop
 
-### Pendiente
-- Task 4: E2E tests con mocks de red (Playwright) + documentación final
+---
+
+## 2026-07-01 — Task 4: E2E tests con mocks de red
+
+### Cambios
+- Creados 3 fixtures JSON: `psychologists.json`, `psychologist-detail.json`, `requests.json`
+- Creados 4 spec files: `catalog.spec.ts`, `registration.spec.ts`, `login.spec.ts`, `request-status.spec.ts`
+- Tests usan `page.route()` + `route.fulfill()` para evitar dependencia de Supabase en vivo
+- Registration spec: corregido `registrarme` → `registrarse`
+
+### Checks
+| Check | Resultado |
+|-------|-----------|
+| `npm run lint` | ✅ PASS |
+| `npm test` | ✅ 171/171 (34 suites) |
