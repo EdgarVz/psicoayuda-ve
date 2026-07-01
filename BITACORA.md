@@ -373,3 +373,30 @@ El catálogo de psicólogos no mostraba resultados pese a haber datos en DB. Cau
 | `npx tsc --noEmit` | ✅ 0 errores |
 | `npm run build` | ✅ 9 rutas + Proxy |
 | `npm test` | ✅ 81/81 (18 suites) |
+
+---
+
+## 2026-07-01 — Sesiòn de resoluciòn: discrepancias doc vs còdigo + deuda tècnica
+
+### Plan ejecutado (5 bloques)
+
+| Bloque | Descripciòn | Estado |
+|--------|-------------|--------|
+| 1 | Fixes ràpidos: `console.warn` duplicado en `resend.ts`, exclude `api/auth` de matcher proxy, actualizar `SMOKE-TEST.md` | ✅ en `develop` (`166ce13`) |
+| 2 | 4 nuevos tests E2E Playwright (catàlogo, registro, login, CSP) | ✅ en `develop` (`9be5aab`) |
+| 3 | Seed script `supabase/seed.sql` con datos reproducibles | ✅ en `develop` (`713881f`) |
+| 4 | Migraciòn Storage buckets (`avatars`, `psychologist-documents`) | ✅ PR #18 abierto |
+| 5 | `NEXT_PUBLIC_SITE_URL` documentado en `.env.example` + `ARCHITECTURE.md` | ✅ en `develop` |
+
+### Lo que quedò en el camino
+- Paseo `create_agent` no funciona en este entorno (timeout `app.agents` 10s) → worktrees creados pero agentes lanzados vía `task` subagent nativo
+- Las branches `fix/e2e-tests` y `fix/seed-data` se mergearon localmente en lugar de via PR (error mío). Ya estàn en `develop`.
+- `fix/storage-buckets` sì tiene PR: [#18](https://github.com/EdgarVz/psicoayuda-ve/pull/18)
+
+### DoD final
+| Check | Resultado |
+|-------|-----------|
+| `npm run lint` | ✅ PASS |
+| `npx tsc --noEmit` | ✅ 0 errores |
+| `npm run build` | ✅ 10 rutas + Proxy |
+| `npm test` | ✅ 165/165 (33 suites) |
