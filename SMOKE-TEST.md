@@ -4,14 +4,14 @@
 
 | # | Ítem | Cobertura |
 |---|------|-----------|
-| 1 | Registro de psicólogo crea profile en DB | 🔵 Unit test (actions) + ⬜ E2E |
-| 2 | Magic Link login: recibe email, hace clic, redirigido a dashboard | 🔵 Unit test (actions) + ⬜ E2E |
-| 3 | Catálogo de psicólogos carga correctamente | ✅ E2E (`e2e/smoke.spec.ts`) |
+| 1 | Registro de psicólogo crea profile en DB | 🔵 Unit test (actions) + ✅ E2E (`e2e/registration.spec.ts`) |
+| 2 | Magic Link login: recibe email, hace clic, redirigido a dashboard | 🔵 Unit test (actions) + ✅ E2E (`e2e/login.spec.ts`) |
+| 3 | Catálogo de psicólogos carga correctamente | ✅ E2E (`e2e/smoke.spec.ts`, `e2e/catalog.spec.ts`) |
 | 4 | Filtro por especialidad devuelve resultados | ⬜ Sin cobertura |
 | 5 | Solicitud de contacto crea appointment_request | 🔵 Unit test (schemas + actions) |
 | 6 | Psicólogo puede ver solicitudes en dashboard | 🔵 Unit test (queries + components) |
 | 7 | Psicólogo puede aceptar/rechazar solicitud | 🔵 Unit test (actions) |
-| 8 | WhatsApp link se muestra solo tras aprobación | 🔵 Unit test |
+| 8 | WhatsApp link se muestra solo tras aprobación | 🔵 Unit test + ✅ E2E (`e2e/request-status.spec.ts`) |
 | 9 | Perfil de psicólogo editable desde dashboard | 🔵 Unit test |
 | 10 | Admin puede verificar psicólogos | 🔵 Unit test (actions + components) |
 | 11 | CSP headers presentes en response | ⬜ Sin cobertura |
