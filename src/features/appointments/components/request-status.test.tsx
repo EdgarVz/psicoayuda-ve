@@ -2,6 +2,33 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { RequestStatus } from './request-status'
+import { WhatsAppButton } from './whatsapp-button'
+
+const encodedMessage = encodeURIComponent(
+  'Hola, vengo de PsicoAyuda VE. Solicito apoyo psicológico.',
+)
+
+describe('WhatsAppButton', () => {
+  it('renders WhatsApp link with encoded message when link provided', () => {
+    render(<WhatsAppButton whatsappLink="https://wa.me/584141234567" />)
+    const link = screen.getByText('Contactar por WhatsApp')
+    expect(link.closest('a')).toHaveAttribute(
+      'href',
+      `https://wa.me/584141234567?text=${encodedMessage}`,
+    )
+    expect(link.closest('a')).toHaveAttribute('target', '_blank')
+  })
+
+  it('shows fallback text when whatsappLink is null', () => {
+    render(<WhatsAppButton whatsappLink={null} />)
+    expect(
+      screen.getByText(
+        'El psicólogo aún no ha configurado su enlace de WhatsApp.',
+      ),
+    ).toBeDefined()
+    expect(screen.queryByText('Contactar por WhatsApp')).toBeNull()
+  })
+})
 
 describe('RequestStatus', () => {
   describe('pending', () => {
@@ -39,7 +66,7 @@ describe('RequestStatus', () => {
       psychologistName: 'María García',
     }
 
-    it('shows "Solicitud aceptada" and WhatsApp link when provided', () => {
+    it('shows "Solicitud aceptada" and WhatsApp button when link provided', () => {
       render(
         <RequestStatus
           {...baseAccepted}
@@ -50,7 +77,7 @@ describe('RequestStatus', () => {
       const waLink = screen.getByText('Contactar por WhatsApp')
       expect(waLink.closest('a')).toHaveAttribute(
         'href',
-        'https://wa.me/584141234567'
+        `https://wa.me/584141234567?text=${encodedMessage}`,
       )
     })
 
@@ -63,16 +90,19 @@ describe('RequestStatus', () => {
       )
       expect(
         screen.getByText(
-          '“Hola, vengo de PsicoAyuda VE. Solicito apoyo psicológico.”'
-        )
+          '“Hola, vengo de PsicoAyuda VE. Solicito apoyo psicológico.”',
+        ),
       ).toBeDefined()
     })
 
-    it('does not render WhatsApp link when not provided', () => {
+    it('shows fallback when whatsappLink is not provided', () => {
       render(<RequestStatus {...baseAccepted} />)
       expect(
-        screen.queryByText('Contactar por WhatsApp')
-      ).toBeNull()
+        screen.getByText(
+          'El psicólogo aún no ha configurado su enlace de WhatsApp.',
+        ),
+      ).toBeDefined()
+      expect(screen.queryByText('Contactar por WhatsApp')).toBeNull()
     })
   })
 
