@@ -3,6 +3,7 @@ import { logger } from '@/lib/logger'
 import type { PsychologistCardData, PsychologistFilters } from './types'
 
 interface CatalogPsychologistProfile {
+  full_name: string
   specialties: string[]
   languages: string[]
   is_available: boolean
@@ -18,6 +19,7 @@ export async function getPsychologists(filters?: PsychologistFilters): Promise<P
       display_name,
       avatar_url,
       psychologist_profiles!inner (
+        full_name,
         specialties,
         languages,
         is_available
@@ -41,14 +43,17 @@ export async function getPsychologists(filters?: PsychologistFilters): Promise<P
     return []
   }
 
-  return (data ?? []).map((row) => ({
-    id: row.id,
-    displayName: row.display_name,
-    avatarUrl: row.avatar_url,
-    specialties: (row.psychologist_profiles as unknown as CatalogPsychologistProfile).specialties ?? [],
-    languages: (row.psychologist_profiles as unknown as CatalogPsychologistProfile).languages ?? [],
-    isAvailable: (row.psychologist_profiles as unknown as CatalogPsychologistProfile).is_available ?? false,
-  }))
+  return (data ?? []).map((row) => {
+    const psy = row.psychologist_profiles as unknown as CatalogPsychologistProfile
+    return {
+      id: row.id,
+      displayName: psy.full_name || row.display_name,
+      avatarUrl: row.avatar_url,
+      specialties: psy.specialties ?? [],
+      languages: psy.languages ?? [],
+      isAvailable: psy.is_available ?? false,
+    }
+  })
 }
 
 export async function getHomePsychologists(): Promise<PsychologistCardData[]> {
