@@ -55,7 +55,7 @@ describe('sendMagicLink', () => {
     expect(result).toEqual({ success: true })
     expect(mockSignInWithOtp).toHaveBeenCalledWith({
       email: 'test@example.com',
-      options: { emailRedirectTo: 'http://localhost:3000/dashboard' },
+      options: { emailRedirectTo: 'http://localhost:3000/auth/callback' },
     })
   })
 

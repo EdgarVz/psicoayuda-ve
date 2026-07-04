@@ -19,7 +19,7 @@ async function sendMagicLinkImpl(input: MagicLinkInput): Promise<{ success?: tru
   const { error } = await supabase.auth.signInWithOtp({
     email: parsed.data.email,
     options: {
-      emailRedirectTo: `${origin}/dashboard`,
+      emailRedirectTo: `${origin}/auth/callback`,
     },
   })
 
@@ -39,4 +39,15 @@ export const sendMagicLink = withRateLimit(sendMagicLinkImpl, {
 export async function signOut(): Promise<void> {
   const supabase = await createServerSupabase()
   await supabase.auth.signOut()
+}
+
+export async function clearAuthCookie(): Promise<void> {
+  const { cookies } = await import('next/headers')
+  const cookieStore = await cookies()
+  cookieStore.set('auth_logged_in', 'false', {
+    path: '/',
+    httpOnly: false,
+    sameSite: 'lax',
+    maxAge: 0,
+  })
 }
