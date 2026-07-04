@@ -445,3 +445,33 @@ El catálogo de psicólogos no mostraba resultados pese a haber datos en DB. Cau
 |-------|-----------|
 | `npm run lint` | ✅ PASS |
 | `npm test` | ✅ 171/171 (34 suites) |
+
+---
+
+## 2026-07-04 — Fix: auth callback flow (Magic Link session cookie)
+
+### Problema
+Al hacer clic en el Magic Link, el usuario redirigía a `/login` en vez de iniciar sesión. Causa: `proxy.ts` lee la cookie `auth_logged_in` para determinar si el usuario está autenticado, pero ningún código la seteaba tras el login exitoso.
+
+### Solución
+Creado flujo de callback post-autenticación:
+
+| Archivo | Descripción |
+|---------|-------------|
+| `src/app/(public)/auth/callback/page.tsx` | Client Component que procesa el token del Magic Link, llama al API para setear la cookie y redirige a `/dashboard` |
+| `src/app/api/auth/set-cookie/route.ts` | Route Handler que setea `auth_logged_in=true` en cookie |
+| `src/features/auth/actions.ts` | `emailRedirectTo` cambiado de `/dashboard` a `/auth/callback` |
+| `src/proxy.ts` | `/auth/callback` agregado a rutas públicas |
+
+### Flujo corregido
+```
+Email → clic en enlace → /auth/callback#access_token=xxx → procesa token → POST /api/auth/set-cookie → setea auth_logged_in → redirect a /dashboard → proxy ve cookie → permite acceso ✅
+```
+
+### Checks
+| Check | Resultado |
+|-------|-----------|
+| `npm run build` | ✅ 12 rutas + Proxy |
+| `npx tsc --noEmit` | ✅ 0 errores |
+| `npm test` | ✅ 171/171 (34 suites) |
+| Commit | `fadbd39` |
