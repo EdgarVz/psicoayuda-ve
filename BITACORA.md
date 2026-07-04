@@ -544,3 +544,21 @@ Email → clic en enlace → /auth/callback#access_token=xxx → procesa token �
 | `npx tsc --noEmit` | ✅ |
 | `npm run build` | ✅ 12 rutas + Proxy |
 | `npm test` | ✅ 171/171 (34 suites) |
+
+---
+
+## 2026-07-04 — Fix: catálogo mostraba "Usuario" en vez del nombre del psicólogo
+
+### Problema
+Al registrar un psicólogo nuevo, el `profiles.display_name` quedaba como "Usuario" (valor por defecto del trigger `handle_new_user`), mientras que el nombre real estaba en `psychologist_profiles.full_name`. El catálogo usaba `display_name` de `profiles`.
+
+### Fix
+`src/features/catalog/queries.ts`: agregado `full_name` al select de `psychologist_profiles`, `displayName` ahora usa `psy.full_name || row.display_name`.
+
+### Checks
+| Check | Resultado |
+|-------|-----------|
+| `npm run lint` | ✅ |
+| `npx tsc --noEmit` | ✅ |
+| `npm run build` | ✅ 12 rutas + Proxy |
+| `npm test` | ✅ 171/171 (34 suites) |
