@@ -6,7 +6,7 @@ Envía un email a [security@psicoayuda.com.ve] o abre un issue privado en GitHub
 
 ## Políticas implementadas (OWASP L1)
 
-- **CSP**: Content-Security-Policy con nonce por request en middleware
+- **CSP**: Content-Security-Policy con nonce por request en `proxy.ts`
 - **Rate limiting**: Map en memoria (10 requests/10s)
 - **Input validation**: Zod en cada formulario, API endpoint y webhook
 - **Env validation**: Zod schema en `lib/env.ts` — REQUIRED lanza error, OPTIONAL fallback null

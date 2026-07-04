@@ -1,6 +1,8 @@
 # PsicoAyuda VE — Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
+>
+> **Note:** Updated 2026-06-30: root layout uses `geist/font/sans` (not `localFont`) and `@/components/ui/sonner` (not `@/components/ui/toaster`). Phase 9 (registro psicólogo) + tech debt sprint completado. Estructura actualizada con `registro-psicologo/` route y `psychologist-registration/` feature.
 
 **Goal:** Build PsicoAyuda VE, a psychological crisis support platform for Venezuela connecting patients with verified volunteer psychologists exclusively via WhatsApp.
 
@@ -16,15 +18,18 @@
 src/
 ├── app/
 │   ├── layout.tsx
-│   ├── page.tsx                              → Hero + 6 psicólogos destacados
 │   ├── error.tsx
 │   ├── not-found.tsx
 │   ├── globals.css
 │   ├── (public)/
 │   │   ├── layout.tsx                        → Navbar + Footer
-│   │   ├── psicologos/page.tsx               → Catálogo completo con filtros
+│   │   ├── page.tsx                          → Hero + 6 psicólogos destacados
+│   │   ├── psicologos/
+│   │   │   ├── page.tsx                      → Catálogo completo con filtros
+│   │   │   └── catalog-client.tsx            → Client wrapper
 │   │   ├── psicologo/[id]/page.tsx           → Detalle del psicólogo
-│   │   └── login/page.tsx                    → Magic Link form
+│   │   ├── login/page.tsx                    → Magic Link form
+│   │   └── registro-psicologo/page.tsx       → Registro de psicólogo
 │   ├── (auth)/
 │   │   ├── layout.tsx                        → Auth check wrapper
 │   │   ├── dashboard/page.tsx                → Dashboard role-based
@@ -61,7 +66,6 @@ src/
 │   │   │   ├── patient-dashboard.tsx
 │   │   │   ├── psychologist-dashboard.tsx
 │   │   │   └── stats-cards.tsx
-│   │   ├── actions.ts
 │   │   ├── queries.ts
 │   │   └── types.ts
 │   └── admin/
@@ -70,6 +74,10 @@ src/
 │       │   └── verification-detail.tsx
 │       ├── actions.ts
 │       └── types.ts
+│   └── psychologist-registration/
+│       ├── components/registration-form.tsx
+│       ├── actions.ts
+│       └── schemas.ts
 ├── lib/
 │   ├── supabase/
 │   │   ├── client.ts
@@ -78,10 +86,12 @@ src/
 │   ├── resend.ts
 │   ├── env.ts
 │   ├── logger.ts
-│   └── rate-limit.ts
+│   ├── rate-limit.ts
+│   ├── specialties.ts
+│   └── utils.ts
 ├── types/
 │   └── database.ts
-└── middleware.ts
+└── proxy.ts
 ```
 
 ---
@@ -108,7 +118,7 @@ After creation, user shares: project ref, URL, anon key, service_role_key.
 **Files:**
 - Create: (entire project scaffold)
 
-- [ ] **Step 1: Create Next.js project**
+- [x] **Step 1: Create Next.js project**
 
 ```bash
 npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias "@/*" --use-npm
@@ -116,7 +126,7 @@ npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --
 
 Expected: project scaffolded with `src/`, `app/`, `tsconfig.json` etc.
 
-- [ ] **Step 2: Install dependencies**
+- [x] **Step 2: Install dependencies**
 
 ```bash
 npm install @supabase/supabase-js zustand zod resend
@@ -127,11 +137,11 @@ npx shadcn@latest add button card input label checkbox select toast
 
 Expected: all deps installed, shadcn initialized with default config.
 
-- [ ] **Step 3: Verify tsconfig alias**
+- [x] **Step 3: Verify tsconfig alias**
 
 Read `tsconfig.json` to confirm `"@/*": ["./src/*"]` exists.
 
-- [ ] **Step 4: Create opencode.json**
+- [x] **Step 4: Create opencode.json**
 
 ```json
 {
@@ -146,7 +156,7 @@ Read `tsconfig.json` to confirm `"@/*": ["./src/*"]` exists.
 
 Replace `<NEW_PROJECT_REF>` with the actual project ref from Task 0.1.
 
-- [ ] **Step 5: Create .env.local**
+- [x] **Step 5: Create .env.local**
 
 ```
 NEXT_PUBLIC_SUPABASE_URL=https://<ref>.supabase.co
@@ -161,7 +171,7 @@ SENTRY_DSN=
 
 #### Task 0.3 — Initialize git & create branches
 
-- [ ] **Step 1: Initialize git & first commit**
+- [x] **Step 1: Initialize git & first commit**
 
 ```bash
 git init
@@ -171,7 +181,7 @@ git commit -m "chore: initial scaffold"
 
 Expected: git initialized, first commit created.
 
-- [ ] **Step 2: Create GitHub repository**
+- [x] **Step 2: Create GitHub repository**
 
 Puede ser manual (https://github.com/new) o via CLI:
 
@@ -181,7 +191,7 @@ gh repo create psicoayuda-ve --public --push --source=.
 
 Expected: repositorio remoto creado, commit pusheado a `main`.
 
-- [ ] **Step 3: Create develop branch**
+- [x] **Step 3: Create develop branch**
 
 ```bash
 git branch develop
@@ -198,13 +208,15 @@ Expected: remote `origin` con ramas `main` y `develop`.
 
 **Action:** Manual via Vercel dashboard.
 
-1. Ir a https://vercel.com/new
-2. Importar repositorio `psicoayuda-ve`
-3. Framework preset: Next.js (detectado automático)
-4. Environment variables: copiar todas de `.env.local`
-5. Deploy — `main` queda vinculado como producción
-6. Project Settings → Git: agregar `develop` como Preview Branch
-7. Copiar `NEXT_PUBLIC_SITE_URL` = URL de preview de develop
+✅ Completado.
+
+1. ✅ Ir a https://vercel.com/new
+2. ✅ Importar repositorio `psicoayuda-ve`
+3. ✅ Framework preset: Next.js (detectado automático)
+4. ✅ Environment variables: copiar todas de `.env.local`
+5. ✅ Deploy — `main` queda vinculado como producción
+6. ✅ Project Settings → Git: agregar `develop` como Preview Branch
+7. ⬜ Copiar `NEXT_PUBLIC_SITE_URL` = URL de preview de develop
 
 Expected: `main` deploya a producción, `develop` deploya a preview automático. Build pasa en ambos.
 
@@ -217,7 +229,7 @@ Expected: `main` deploya a producción, `develop` deploya a preview automático.
 **Files:**
 - Create: `src/types/database.ts`
 
-- [ ] **Step 1: Run Supabase typegen**
+- [x] **Step 1: Run Supabase typegen**
 
 ```bash
 npx supabase gen types typescript --project-id <ref> > src/types/database.ts
@@ -234,7 +246,7 @@ Expected: `src/types/database.ts` created with table types.
 **Files:**
 - Create: `src/lib/env.ts`
 
-- [ ] **Step 1: Write env validation schema**
+- [x] **Step 1: Write env validation schema**
 
 ```typescript
 import { createEnv } from '@t3-oss/env-nextjs'
@@ -262,7 +274,7 @@ export const env = createEnv({
 })
 ```
 
-- [ ] **Step 2: Run typecheck**
+- [x] **Step 2: Run typecheck**
 
 ```bash
 npx tsc --noEmit
@@ -278,7 +290,7 @@ Expected: PASS (env types inferred correctly)
 - Create: `src/lib/supabase/client.ts`
 - Create: `src/lib/supabase/server.ts`
 
-- [ ] **Step 1: Write browser client**
+- [x] **Step 1: Write browser client**
 
 ```typescript
 import { createBrowserClient } from '@supabase/ssr'
@@ -292,7 +304,7 @@ export function createClient() {
 }
 ```
 
-- [ ] **Step 2: Write server client**
+- [x] **Step 2: Write server client**
 
 ```typescript
 import { createServerClient } from '@supabase/ssr'
@@ -321,7 +333,7 @@ export async function createServerSupabase() {
 }
 ```
 
-- [ ] **Step 3: Typecheck**
+- [x] **Step 3: Typecheck**
 
 ```bash
 npx tsc --noEmit
@@ -336,7 +348,7 @@ Expected: PASS
 **Files:**
 - Create: `src/lib/supabase/admin.ts`
 
-- [ ] **Step 1: Write admin client**
+- [x] **Step 1: Write admin client**
 
 ```typescript
 import { createClient } from '@supabase/supabase-js'
@@ -354,7 +366,7 @@ export function createAdminSupabase() {
 }
 ```
 
-- [ ] **Step 2: Typecheck**
+- [x] **Step 2: Typecheck**
 
 ```bash
 npx tsc --noEmit
@@ -370,7 +382,7 @@ Expected: PASS
 - Create: `src/lib/logger.ts`
 - Create: `src/lib/rate-limit.ts`
 
-- [ ] **Step 1: Write logger**
+- [x] **Step 1: Write logger**
 
 ```typescript
 import { env } from '@/lib/env'
@@ -403,7 +415,7 @@ export const logger = {
 }
 ```
 
-- [ ] **Step 2: Write rate-limiter**
+- [x] **Step 2: Write rate-limiter**
 
 ```typescript
 const store = new Map<string, { count: number; resetAt: number }>()
@@ -434,7 +446,7 @@ setInterval(() => {
 }, 60_000)
 ```
 
-- [ ] **Step 3: Typecheck**
+- [x] **Step 3: Typecheck**
 
 ```bash
 npx tsc --noEmit
@@ -444,12 +456,12 @@ Expected: PASS
 
 ---
 
-#### Task 1.5 — middleware.ts
+#### Task 1.5 — proxy.ts (Next.js 16 middleware)
 
 **Files:**
-- Create: `src/middleware.ts`
+- Create: `src/proxy.ts`
 
-- [ ] **Step 1: Write middleware**
+- [x] **Step 1: Write middleware**
 
 ```typescript
 import { type NextRequest, NextResponse } from 'next/server'
@@ -526,7 +538,7 @@ export const config = {
 }
 ```
 
-- [ ] **Step 2: Typecheck**
+- [x] **Step 2: Typecheck**
 
 ```bash
 npx tsc --noEmit
@@ -547,7 +559,7 @@ Expected: PASS
 - Create: `src/app/(auth)/layout.tsx`
 - Create: `src/app/admin/layout.tsx`
 
-- [ ] **Step 1: Write globals.css**
+- [x] **Step 1: Write globals.css**
 
 ```css
 @import "tailwindcss";
@@ -584,22 +596,13 @@ Expected: PASS
 }
 ```
 
-- [ ] **Step 2: Write root layout**
+- [x] **Step 2: Write root layout**
 
 ```typescript
 import type { Metadata } from 'next'
-import localFont from 'next/font/local'
-import { headers } from 'next/headers'
+import { GeistSans } from 'geist/font/sans'
 import './globals.css'
-import { Toaster } from '@/components/ui/toaster'
-
-const geist = localFont({
-  src: [
-    { path: '../../node_modules/geist/dist/fonts/geist-sans/Geist-Variable.woff2', style: 'normal' },
-  ],
-  variable: '--font-geist',
-  display: 'swap',
-})
+import { Toaster } from '@/components/ui/sonner'
 
 export const metadata: Metadata = {
   title: { template: '%s · PsicoAyuda VE', default: 'PsicoAyuda VE — Apoyo psicológico en Venezuela' },
@@ -607,11 +610,8 @@ export const metadata: Metadata = {
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const headersList = await headers()
-  const nonce = headersList.get('x-nonce') ?? ''
-
   return (
-    <html lang="es" className={geist.variable}>
+    <html lang="es" className={GeistSans.variable}>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
@@ -624,7 +624,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 }
 ```
 
-- [ ] **Step 3: Write error.tsx**
+- [x] **Step 3: Write error.tsx**
 
 ```typescript
 'use client'
@@ -642,7 +642,7 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
 }
 ```
 
-- [ ] **Step 4: Write not-found.tsx**
+- [x] **Step 4: Write not-found.tsx**
 
 ```typescript
 import Link from 'next/link'
@@ -660,7 +660,7 @@ export default function NotFound() {
 }
 ```
 
-- [ ] **Step 5: Write public layout**
+- [x] **Step 5: Write public layout**
 
 ```typescript
 import { Navbar } from '@/features/layout/components/navbar'
@@ -675,7 +675,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
 }
 ```
 
-- [ ] **Step 6: Write auth layout**
+- [x] **Step 6: Write auth layout**
 
 ```typescript
 import { redirect } from 'next/navigation'
@@ -693,7 +693,7 @@ export default async function AuthLayout({ children }: { children: React.ReactNo
 }
 ```
 
-- [ ] **Step 7: Write admin layout**
+- [x] **Step 7: Write admin layout**
 
 ```typescript
 import type { Metadata } from 'next'
@@ -720,7 +720,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 }
 ```
 
-- [ ] **Step 8: Build check**
+- [x] **Step 8: Build check**
 
 ```bash
 npm run build
@@ -736,7 +736,7 @@ Expected: PASS (may need to stub Navbar import — will be created in Task 1.7)
 - Create: `src/features/layout/components/navbar.tsx`
 - Create: `src/features/layout/components/footer.tsx`
 
-- [ ] **Step 1: Write Navbar**
+- [x] **Step 1: Write Navbar**
 
 ```typescript
 'use client'
@@ -786,7 +786,7 @@ export function Navbar({ isLoggedIn = false }: NavbarProps) {
 }
 ```
 
-- [ ] **Step 2: Write Footer**
+- [x] **Step 2: Write Footer**
 
 ```typescript
 export function Footer() {
@@ -801,7 +801,7 @@ export function Footer() {
 }
 ```
 
-- [ ] **Step 3: Update public layout to include Footer**
+- [x] **Step 3: Update public layout to include Footer**
 
 ```typescript
 import { Navbar } from '@/features/layout/components/navbar'
@@ -818,7 +818,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
 }
 ```
 
-- [ ] **Step 4: Build check**
+- [x] **Step 4: Build check**
 
 ```bash
 npm run build
@@ -835,7 +835,7 @@ Expected: PASS
 **Files:**
 - Execute via Supabase MCP: `execute_sql`
 
-- [ ] **Step 1: Create enums**
+- [x] **Step 1: Create enums**
 
 ```sql
 CREATE TYPE user_role AS ENUM ('psychologist', 'patient');
@@ -847,7 +847,7 @@ CREATE TYPE specialty AS ENUM (
 );
 ```
 
-- [ ] **Step 2: Create profiles table**
+- [x] **Step 2: Create profiles table**
 
 ```sql
 CREATE TABLE profiles (
@@ -863,7 +863,7 @@ CREATE TABLE profiles (
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 ```
 
-- [ ] **Step 3: Create psychologist_profiles table**
+- [x] **Step 3: Create psychologist_profiles table**
 
 ```sql
 CREATE TABLE psychologist_profiles (
@@ -885,7 +885,7 @@ CREATE TABLE psychologist_profiles (
 ALTER TABLE psychologist_profiles ENABLE ROW LEVEL SECURITY;
 ```
 
-- [ ] **Step 4: Create appointment_requests table**
+- [x] **Step 4: Create appointment_requests table**
 
 ```sql
 CREATE TABLE appointment_requests (
@@ -904,7 +904,7 @@ CREATE TABLE appointment_requests (
 ALTER TABLE appointment_requests ENABLE ROW LEVEL SECURITY;
 ```
 
-- [ ] **Step 5: Create admin_roles table**
+- [x] **Step 5: Create admin_roles table**
 
 ```sql
 CREATE TABLE admin_roles (
@@ -916,7 +916,7 @@ CREATE TABLE admin_roles (
 ALTER TABLE admin_roles ENABLE ROW LEVEL SECURITY;
 ```
 
-- [ ] **Step 6: Verify tables exist**
+- [x] **Step 6: Verify tables exist**
 
 ```sql
 SELECT table_name FROM information_schema.tables WHERE table_schema = 'public';
@@ -928,7 +928,7 @@ Expected: 4 tables returned
 
 #### Task 2.2 — Migration: RLS policies
 
-- [ ] **Step 1: Create all RLS policies**
+- [x] **Step 1: Create all RLS policies**
 
 ```sql
 -- Profiles: public read verified psychologists
@@ -991,7 +991,7 @@ CREATE POLICY "admin_read_own" ON admin_roles
   FOR SELECT USING (auth.uid() = user_id);
 ```
 
-- [ ] **Step 2: Verify RLS is enabled on all tables**
+- [x] **Step 2: Verify RLS is enabled on all tables**
 
 ```sql
 SELECT tablename, rowsecurity FROM pg_tables WHERE schemaname = 'public' AND tablename IN ('profiles', 'psychologist_profiles', 'appointment_requests', 'admin_roles');
@@ -1003,7 +1003,7 @@ Expected: all 4 tables have `rowsecurity = true`
 
 #### Task 2.3 — Trigger: auto updated_at
 
-- [ ] **Step 1: Create trigger function and apply to tables**
+- [x] **Step 1: Create trigger function and apply to tables**
 
 ```sql
 CREATE OR REPLACE FUNCTION update_timestamp()
@@ -1031,7 +1031,7 @@ CREATE TRIGGER set_timestamp
 
 #### Task 2.4 — Trigger: auto profile on signup
 
-- [ ] **Step 1: Create trigger**
+- [x] **Step 1: Create trigger**
 
 ```sql
 CREATE OR REPLACE FUNCTION handle_new_user()
@@ -1052,7 +1052,7 @@ CREATE TRIGGER on_auth_user_created
   FOR EACH ROW EXECUTE FUNCTION handle_new_user();
 ```
 
-- [ ] **Step 2: Verify trigger exists**
+- [x] **Step 2: Verify trigger exists**
 
 ```sql
 SELECT tgname FROM pg_trigger WHERE tgname = 'on_auth_user_created';
@@ -1060,7 +1060,7 @@ SELECT tgname FROM pg_trigger WHERE tgname = 'on_auth_user_created';
 
 Expected: trigger found
 
-- [ ] **Step 3: Regenerate types**
+- [x] **Step 3: Regenerate types**
 
 ```bash
 npx supabase gen types typescript --project-id <ref> > src/types/database.ts
@@ -1075,79 +1075,13 @@ npx supabase gen types typescript --project-id <ref> > src/types/database.ts
 **Files:**
 - Create: `src/features/auth/schemas.ts`
 
-- [ ] **Step 1: Write schemas**
+- [x] **Step 1: Write schemas**
 
-```typescript
-import { z } from 'zod'
+- [x] **Step 2: Write test for schemas**
 
-export const magicLinkSchema = z.object({
-  email: z
-    .string()
-    .email('Ingresa un correo electrónico válido'),
-})
+- [x] **Step 3: Run test**
 
-export type MagicLinkInput = z.infer<typeof magicLinkSchema>
-
-export const psychologistSignupSchema = z.object({
-  email: z.string().email('Ingresa un correo electrónico válido'),
-  display_name: z.string().min(2, 'Mínimo 2 caracteres').max(50, 'Máximo 50 caracteres'),
-  full_name: z.string().min(3, 'Ingresa tu nombre completo').max(100, 'Máximo 100 caracteres'),
-  license_number: z.string().min(3, 'Ingresa tu número de colegiado'),
-})
-
-export type PsychologistSignupInput = z.infer<typeof psychologistSignupSchema>
-```
-
-- [ ] **Step 2: Write test for schemas**
-
-```typescript
-import { describe, it, expect } from 'vitest'
-import { magicLinkSchema, psychologistSignupSchema } from './schemas'
-
-describe('magicLinkSchema', () => {
-  it('accepts valid email', () => {
-    expect(magicLinkSchema.safeParse({ email: 'test@example.com' }).success).toBe(true)
-  })
-
-  it('rejects invalid email', () => {
-    expect(magicLinkSchema.safeParse({ email: 'not-an-email' }).success).toBe(false)
-  })
-
-  it('rejects empty email', () => {
-    expect(magicLinkSchema.safeParse({ email: '' }).success).toBe(false)
-  })
-})
-
-describe('psychologistSignupSchema', () => {
-  it('accepts valid data', () => {
-    const result = psychologistSignupSchema.safeParse({
-      email: 'psych@example.com',
-      display_name: 'Dr. Pérez',
-      full_name: 'Juan Pérez',
-      license_number: 'VEN-12345',
-    })
-    expect(result.success).toBe(true)
-  })
-
-  it('rejects short display_name', () => {
-    const result = psychologistSignupSchema.safeParse({
-      email: 'psych@example.com',
-      display_name: 'A',
-      full_name: 'Juan Pérez',
-      license_number: 'VEN-12345',
-    })
-    expect(result.success).toBe(false)
-  })
-})
-```
-
-- [ ] **Step 3: Run test**
-
-```bash
-npx vitest run src/features/auth/schemas.test.ts
-```
-
-Expected: PASS
+Expected: PASS ✅ (5/5 tests passed)
 
 ---
 
@@ -1156,64 +1090,8 @@ Expected: PASS
 **Files:**
 - Create: `src/features/auth/actions.ts`
 
-- [ ] **Step 1: Write auth actions**
-
-```typescript
-'use server'
-
-import { headers } from 'next/headers'
-import { createServerSupabase } from '@/lib/supabase/server'
-import { magicLinkSchema, type MagicLinkInput } from './schemas'
-import { env } from '@/lib/env'
-
-export async function sendMagicLink(input: MagicLinkInput): Promise<{ success?: true; error?: string }> {
-  const parsed = magicLinkSchema.safeParse(input)
-  if (!parsed.success) {
-    return { error: parsed.error.errors[0].message }
-  }
-
-  const supabase = await createServerSupabase()
-  const headersList = await headers()
-  const origin = headersList.get('origin') ?? env.NEXT_PUBLIC_SITE_URL
-
-  const { error } = await supabase.auth.signInWithOtp({
-    email: parsed.data.email,
-    options: {
-      emailRedirectTo: `${origin}/dashboard`,
-    },
-  })
-
-  if (error) {
-    return { error: 'Error al enviar el enlace. Intenta de nuevo.' }
-  }
-
-  return { success: true }
-}
-
-export async function signOut(): Promise<void> {
-  const supabase = await createServerSupabase()
-  await supabase.auth.signOut()
-}
-```
-
-- [ ] **Step 2: Write test for auth actions**
-
-```typescript
-import { describe, it, expect } from 'vitest'
-import { magicLinkSchema } from './schemas'
-
-describe('sendMagicLink validation', () => {
-  it('rejects empty email via schema', () => {
-    const result = magicLinkSchema.safeParse({ email: '' })
-    expect(result.success).toBe(false)
-  })
-
-  it('accepts valid email via schema', () => {
-    const result = magicLinkSchema.safeParse({ email: 'user@example.com' })
-    expect(result.success).toBe(true)
-  })
-})
-```
+- [x] **Step 1: Write auth actions**
+- [x] **Step 2: Write test for auth actions**
 
 ---
 
@@ -1223,117 +1101,11 @@ describe('sendMagicLink validation', () => {
 - Create: `src/features/auth/components/magic-link-form.tsx`
 - Create: `src/app/(public)/login/page.tsx`
 
-- [ ] **Step 1: Write MagicLinkForm component**
+- [x] **Step 1: Write MagicLinkForm component**
+- [x] **Step 2: Write login page**
+- [x] **Step 3: Build check**
 
-```typescript
-'use client'
-
-import { useState } from 'react'
-import { sendMagicLink } from '@/features/auth/actions'
-
-type FormState = 'idle' | 'sending' | 'sent' | 'error'
-
-export function MagicLinkForm() {
-  const [email, setEmail] = useState('')
-  const [state, setState] = useState<FormState>('idle')
-  const [error, setError] = useState('')
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    setState('sending')
-    setError('')
-
-    const result = await sendMagicLink({ email })
-
-    if (result.error) {
-      setError(result.error)
-      setState('error')
-      return
-    }
-
-    setState('sent')
-  }
-
-  if (state === 'sent') {
-    return (
-      <div className="text-center p-8 bg-background-alt rounded-radius-card">
-        <p className="text-lg font-medium mb-2">Revisa tu correo</p>
-        <p className="text-muted">Te enviamos un enlace mágico para iniciar sesión.</p>
-      </div>
-    )
-  }
-
-  return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <label htmlFor="email" className="block text-sm font-medium mb-1">
-          Correo electrónico
-        </label>
-        <input
-          id="email"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="tucorreo@ejemplo.com"
-          required
-          disabled={state === 'sending'}
-          className="w-full px-4 py-3 rounded-radius-button border border-border bg-white focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50"
-        />
-      </div>
-
-      {error && <p className="text-sm text-danger">{error}</p>}
-
-      <button
-        type="submit"
-        disabled={state === 'sending'}
-        className="w-full bg-primary text-white py-3 rounded-radius-button font-medium hover:bg-primary-light transition-colors disabled:opacity-50"
-      >
-        {state === 'sending' ? 'Enviando...' : 'Enviar enlace mágico'}
-      </button>
-    </form>
-  )
-}
-```
-
-- [ ] **Step 2: Write login page**
-
-```typescript
-import type { Metadata } from 'next'
-import { MagicLinkForm } from '@/features/auth/components/magic-link-form'
-
-export const metadata: Metadata = {
-  title: 'Iniciar sesión',
-  description: 'Accede a PsicoAyuda VE con tu correo electrónico',
-}
-
-export default function LoginPage() {
-  return (
-    <div className="max-w-md mx-auto px-4 py-16">
-      <div className="text-center mb-8">
-        <h1 className="text-2xl font-semibold mb-2">Bienvenido de vuelta</h1>
-        <p className="text-muted">Ingresa tu correo para recibir un enlace mágico</p>
-      </div>
-
-      <MagicLinkForm />
-
-      <p className="text-center text-sm text-muted mt-8">
-        ¿Eres psicólogo?{' '}
-        <a href="/registro-psicologo" className="text-primary hover:underline">
-          Regístrate aquí
-        </a>
-      </p>
-    </div>
-  )
-}
-```
-
-- [ ] **Step 3: Build check**
-
-```bash
-npm run build
-```
-
-Expected: PASS
+Expected: PASS ✅
 
 ---
 
@@ -1345,87 +1117,8 @@ Expected: PASS
 - Create: `src/features/catalog/types.ts`
 - Create: `src/features/catalog/queries.ts`
 
-- [ ] **Step 1: Write types**
-
-```typescript
-import type { Database } from '@/types/database'
-
-type ProfileRow = Database['public']['Tables']['profiles']['Row']
-type PsychologistRow = Database['public']['Tables']['psychologist_profiles']['Row']
-
-export interface PsychologistCardData {
-  id: string
-  displayName: string
-  avatarUrl: string | null
-  specialties: string[]
-  languages: string[]
-  isAvailable: boolean
-}
-
-export interface PsychologistFilters {
-  specialties?: string[]
-  isAvailable?: boolean
-}
-```
-
-- [ ] **Step 2: Write queries**
-
-```typescript
-import { createServerSupabase } from '@/lib/supabase/server'
-import type { PsychologistCardData, PsychologistFilters } from './types'
-
-export async function getPsychologists(filters?: PsychologistFilters): Promise<PsychologistCardData[]> {
-  const supabase = await createServerSupabase()
-
-  let query = supabase
-    .from('profiles')
-    .select(`
-      id,
-      display_name,
-      avatar_url,
-      psychologist_profiles!inner (
-        specialties,
-        languages,
-        is_available
-      )
-    `)
-    .eq('role', 'psychologist')
-    .eq('psychologist_profiles.license_verified', true)
-
-  if (filters?.isAvailable !== undefined) {
-    query = query.eq('psychologist_profiles.is_available', filters.isAvailable)
-  }
-
-  if (filters?.specialties && filters.specialties.length > 0) {
-    query = query.overlaps('psychologist_profiles.specialties', filters.specialties)
-  }
-
-  const { data, error } = await query.order('psychologist_profiles.is_available', { ascending: false })
-
-  if (error) {
-    return []
-  }
-
-  return (data ?? []).map((row) => ({
-    id: row.id,
-    displayName: row.display_name,
-    avatarUrl: row.avatar_url,
-    specialties: (row.psychologist_profiles as unknown as PsychologistProfileRow).specialties ?? [],
-    languages: (row.psychologist_profiles as unknown as PsychologistProfileRow).languages ?? [],
-    isAvailable: (row.psychologist_profiles as unknown as PsychologistProfileRow).is_available ?? false,
-  }))
-}
-
-export async function getHomePsychologists(): Promise<PsychologistCardData[]> {
-  return getPsychologists({ isAvailable: true }).then(psychologists => psychologists.slice(0, 6))
-}
-
-interface PsychologistProfileRow {
-  specialties: string[]
-  languages: string[]
-  is_available: boolean
-}
-```
+- [x] **Step 1: Write types**
+- [x] **Step 2: Write queries**
 
 ---
 
@@ -1436,169 +1129,9 @@ interface PsychologistProfileRow {
 - Create: `src/features/catalog/components/psychologist-list.tsx`
 - Create: `src/features/catalog/components/specialty-filter.tsx`
 
-- [ ] **Step 1: Write PsychologistCard**
-
-```typescript
-'use client'
-
-import Link from 'next/link'
-import Image from 'next/image'
-import type { PsychologistCardData } from '@/features/catalog/types'
-
-export function PsychologistCard({ psychologist }: { psychologist: PsychologistCardData }) {
-  return (
-    <div className="bg-white rounded-radius-card border border-border p-4 flex gap-4 items-start">
-      <div className="relative w-24 h-24 rounded-full overflow-hidden flex-shrink-0 bg-background-alt">
-        {psychologist.avatarUrl ? (
-          <Image src={psychologist.avatarUrl} alt={psychologist.displayName} fill unoptimized className="object-cover" />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center text-2xl text-muted">
-            {psychologist.displayName.charAt(0)}
-          </div>
-        )}
-      </div>
-
-      <div className="flex-1 min-w-0">
-        <h3 className="font-semibold text-lg truncate">{psychologist.displayName}</h3>
-
-        <div className="flex flex-wrap gap-1.5 mt-2">
-          {psychologist.specialties.map((s) => (
-            <span key={s} className="text-xs bg-background-alt text-muted-foreground px-2 py-0.5 rounded-full">
-              {s}
-            </span>
-          ))}
-        </div>
-
-        <div className="flex items-center gap-2 mt-3">
-          <span className={`w-2 h-2 rounded-full ${psychologist.isAvailable ? 'bg-available' : 'bg-unavailable'}`} />
-          <span className="text-sm text-muted">
-            {psychologist.isAvailable ? 'Disponible ahora' : 'No disponible'}
-          </span>
-        </div>
-
-        <Link
-          href={`/psicologo/${psychologist.id}`}
-          className={`mt-3 inline-block text-sm px-4 py-2 rounded-radius-button font-medium transition-colors ${
-            psychologist.isAvailable
-              ? 'bg-primary text-white hover:bg-primary-light'
-              : 'bg-unavailable/20 text-muted cursor-not-allowed pointer-events-none'
-          }`}
-        >
-          {psychologist.isAvailable ? 'Conectar' : 'No disponible temporalmente'}
-        </Link>
-      </div>
-    </div>
-  )
-}
-
-export function PsychologistCardSkeleton() {
-  return (
-    <div className="bg-white rounded-radius-card border border-border p-4 flex gap-4 animate-pulse">
-      <div className="w-24 h-24 rounded-full bg-background-alt flex-shrink-0" />
-      <div className="flex-1 space-y-3">
-        <div className="h-5 bg-background-alt rounded w-2/3" />
-        <div className="h-4 bg-background-alt rounded w-1/3" />
-        <div className="h-4 bg-background-alt rounded w-1/4" />
-      </div>
-    </div>
-  )
-}
-```
-
-- [ ] **Step 2: Write PsychologistList**
-
-```typescript
-'use client'
-
-import type { PsychologistCardData } from '@/features/catalog/types'
-import { PsychologistCard, PsychologistCardSkeleton } from './psychologist-card'
-
-interface PsychologistListProps {
-  psychologists: PsychologistCardData[]
-  isLoading?: boolean
-}
-
-export function PsychologistList({ psychologists, isLoading }: PsychologistListProps) {
-  if (isLoading) {
-    return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <PsychologistCardSkeleton key={i} />
-        ))}
-      </div>
-    )
-  }
-
-  if (psychologists.length === 0) {
-    return (
-      <div className="text-center py-16">
-        <p className="text-lg text-muted">No hay psicólogos disponibles en este momento</p>
-        <p className="text-sm text-muted-light mt-1">Vuelve a consultar más tarde</p>
-      </div>
-    )
-  }
-
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      {psychologists.map((psychologist) => (
-        <PsychologistCard key={psychologist.id} psychologist={psychologist} />
-      ))}
-    </div>
-  )
-}
-```
-
-- [ ] **Step 3: Write SpecialtyFilter**
-
-```typescript
-'use client'
-
-const SPECIALTIES = [
-  { value: 'duelo', label: 'Duelo' },
-  { value: 'ansiedad', label: 'Ansiedad' },
-  { value: 'crisis_panico', label: 'Crisis de pánico' },
-  { value: 'trauma', label: 'Trauma' },
-  { value: 'apoyo_ninos', label: 'Apoyo niños' },
-  { value: 'apoyo_adolescentes', label: 'Apoyo adolescentes' },
-  { value: 'depresion', label: 'Depresión' },
-  { value: 'estres', label: 'Estrés' },
-  { value: 'violencia', label: 'Violencia' },
-  { value: 'adicciones', label: 'Adicciones' },
-]
-
-interface SpecialtyFilterProps {
-  selected: string[]
-  onChange: (specialties: string[]) => void
-}
-
-export function SpecialtyFilter({ selected, onChange }: SpecialtyFilterProps) {
-  function toggle(specialty: string) {
-    if (selected.includes(specialty)) {
-      onChange(selected.filter((s) => s !== specialty))
-    } else {
-      onChange([...selected, specialty])
-    }
-  }
-
-  return (
-    <div className="flex flex-wrap gap-2">
-      {SPECIALTIES.map(({ value, label }) => (
-        <button
-          key={value}
-          onClick={() => toggle(value)}
-          className={`px-3 py-1.5 text-sm rounded-full border transition-colors ${
-            selected.includes(value)
-              ? 'bg-primary text-white border-primary'
-              : 'bg-white text-muted-foreground border-border hover:border-primary hover:text-primary'
-          }`}
-        >
-          {label}
-        </button>
-      ))}
-    </div>
-  )
-}
-```
+- [x] **Step 1: Write PsychologistCard**
+- [x] **Step 2: Write PsychologistList**
+- [x] **Step 3: Write SpecialtyFilter**
 
 ---
 
@@ -1607,55 +1140,10 @@ export function SpecialtyFilter({ selected, onChange }: SpecialtyFilterProps) {
 **Files:**
 - Modify: `src/app/page.tsx`
 
-- [ ] **Step 1: Write home page**
+- [x] **Step 1: Write home page**
+- [x] **Step 2: Build check**
 
-```typescript
-import Link from 'next/link'
-import { getHomePsychologists } from '@/features/catalog/queries'
-import { PsychologistList } from '@/features/catalog/components/psychologist-list'
-
-export const metadata = {
-  title: 'PsicoAyuda VE — Apoyo psicológico en Venezuela',
-  description: 'Conectamos pacientes con psicólogos voluntarios verificados en Venezuela. Apoyo emocional gratuito vía WhatsApp.',
-}
-
-export default async function HomePage() {
-  const psychologists = await getHomePsychologists()
-
-  return (
-    <div>
-      <section className="max-w-4xl mx-auto px-4 py-16 text-center">
-        <h1 className="text-3xl md:text-4xl font-semibold mb-4">
-          Un espacio para hablar<br />cuando más lo necesitas
-        </h1>
-        <p className="text-muted text-lg mb-8 max-w-2xl mx-auto">
-          Conectamos pacientes con psicólogos voluntarios verificados en Venezuela.
-          Apoyo emocional gratuito y confidencial vía WhatsApp.
-        </p>
-        <Link
-          href="/psicologos"
-          className="inline-block bg-primary text-white px-8 py-3 rounded-radius-button font-medium text-lg hover:bg-primary-light transition-colors"
-        >
-          Encontrar un psicólogo
-        </Link>
-      </section>
-
-      <section className="max-w-6xl mx-auto px-4 pb-16">
-        <h2 className="text-2xl font-semibold mb-6 text-center">Psicólogos disponibles</h2>
-        <PsychologistList psychologists={psychologists} />
-      </section>
-    </div>
-  )
-}
-```
-
-- [ ] **Step 2: Build check**
-
-```bash
-npm run build
-```
-
-Expected: PASS
+Expected: PASS ✅
 
 ---
 
@@ -1664,86 +1152,11 @@ Expected: PASS
 **Files:**
 - Create: `src/app/(public)/psicologos/page.tsx`
 
-- [ ] **Step 1: Write catalog page**
+- [x] **Step 1: Write catalog page**
+- [x] **Step 2: Write catalog client wrapper**
+- [x] **Step 3: Build check**
 
-```typescript
-import type { Metadata } from 'next'
-import { getPsychologists } from '@/features/catalog/queries'
-import { CatalogClient } from './catalog-client'
-
-export const metadata: Metadata = {
-  title: 'Psicólogos disponibles',
-  description: 'Encuentra psicólogos voluntarios verificados en Venezuela por especialidad',
-}
-
-export default async function PsicologosPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ specialties?: string; available?: string }>
-}) {
-  const params = await searchParams
-  const specialties = params.specialties ? params.specialties.split(',') : undefined
-  const isAvailable = params.available === 'true' ? true : params.available === 'false' ? false : undefined
-
-  const psychologists = await getPsychologists({ specialties, isAvailable })
-
-  return (
-    <div className="max-w-6xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-semibold mb-2">Psicólogos disponibles</h1>
-      <p className="text-muted mb-8">Selecciona una especialidad para filtrar</p>
-
-      <CatalogClient initialPsychologists={psychologists} initialSpecialties={specialties ?? []} />
-    </div>
-  )
-}
-```
-
-- [ ] **Step 2: Write catalog client wrapper**
-
-```typescript
-'use client'
-
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import type { PsychologistCardData } from '@/features/catalog/types'
-import { SpecialtyFilter } from '@/features/catalog/components/specialty-filter'
-import { PsychologistList } from '@/features/catalog/components/psychologist-list'
-
-interface CatalogClientProps {
-  initialPsychologists: PsychologistCardData[]
-  initialSpecialties: string[]
-}
-
-export function CatalogClient({ initialPsychologists, initialSpecialties }: CatalogClientProps) {
-  const router = useRouter()
-  const [selectedSpecialties, setSelectedSpecialties] = useState<string[]>(initialSpecialties)
-  const [psychologists] = useState(initialPsychologists)
-
-  function handleSpecialtyChange(specialties: string[]) {
-    setSelectedSpecialties(specialties)
-    const params = new URLSearchParams()
-    if (specialties.length > 0) params.set('specialties', specialties.join(','))
-    router.push(`/psicologos?${params.toString()}`)
-  }
-
-  return (
-    <>
-      <SpecialtyFilter selected={selectedSpecialties} onChange={handleSpecialtyChange} />
-      <div className="mt-6">
-        <PsychologistList psychologists={psychologists} />
-      </div>
-    </>
-  )
-}
-```
-
-- [ ] **Step 3: Build check**
-
-```bash
-npm run build
-```
-
-Expected: PASS
+Expected: PASS ✅
 
 ---
 
@@ -1754,7 +1167,7 @@ Expected: PASS
 **Files:**
 - Create: `src/features/psychologist/queries.ts`
 
-- [ ] **Step 1: Write queries**
+- [x] **Step 1: Write queries**
 
 ```typescript
 import { createServerSupabase } from '@/lib/supabase/server'
@@ -1827,7 +1240,7 @@ export async function getPsychologistById(id: string): Promise<PsychologistDetai
 **Files:**
 - Create: `src/features/psychologist/components/psychologist-profile.tsx`
 
-- [ ] **Step 1: Write component**
+- [x] **Step 1: Write component**
 
 ```typescript
 import Image from 'next/image'
@@ -1925,7 +1338,7 @@ export function PsychologistProfile({ psychologist }: PsychologistProfileProps) 
 **Files:**
 - Create: `src/app/(public)/psicologo/[id]/page.tsx`
 
-- [ ] **Step 1: Write page**
+- [x] **Step 1: Write page**
 
 ```typescript
 import type { Metadata } from 'next'
@@ -1957,13 +1370,13 @@ export default async function PsychologistPage({ params }: PageProps) {
 }
 ```
 
-- [ ] **Step 2: Build check**
+- [x] **Step 2: Build check**
 
 ```bash
 npm run build
 ```
 
-Expected: PASS
+Expected: PASS ✅
 
 ---
 
@@ -1975,7 +1388,7 @@ Expected: PASS
 - Create: `src/features/appointments/types.ts`
 - Create: `src/features/appointments/schemas.ts`
 
-- [ ] **Step 1: Write schemas**
+- [x] **Step 1: Write schemas**
 
 ```typescript
 import { z } from 'zod'
@@ -2004,7 +1417,7 @@ export const appointmentRequestSchema = z.object({
 export type AppointmentRequestInput = z.infer<typeof appointmentRequestSchema>
 ```
 
-- [ ] **Step 2: Write types**
+- [x] **Step 2: Write types**
 
 ```typescript
 import type { Database } from '@/types/database'
@@ -2013,7 +1426,7 @@ export type AppointmentRequest = Database['public']['Tables']['appointment_reque
 export type AppointmentRequestStatus = Database['public']['Tables']['appointment_requests']['Row']['status']
 ```
 
-- [ ] **Step 3: Schema tests**
+- [x] **Step 3: Schema tests**
 
 ```typescript
 import { describe, it, expect } from 'vitest'
@@ -2057,7 +1470,7 @@ describe('appointmentRequestSchema', () => {
 })
 ```
 
-- [ ] **Step 4: Run tests**
+- [x] **Step 4: Run tests**
 
 ```bash
 npx vitest run src/features/appointments/schemas.test.ts
@@ -2072,7 +1485,7 @@ Expected: PASS
 **Files:**
 - Create: `src/features/appointments/actions.ts`
 
-- [ ] **Step 1: Write actions**
+- [x] **Step 1: Write actions**
 
 ```typescript
 'use server'
@@ -2154,7 +1567,7 @@ export async function rejectRequest(requestId: string): Promise<{ error?: string
 }
 ```
 
-- [ ] **Step 2: Build check**
+- [x] **Step 2: Build check**
 
 ```bash
 npm run build
@@ -2169,7 +1582,7 @@ Expected: PASS
 **Files:**
 - Create: `src/features/appointments/components/request-form.tsx`
 
-- [ ] **Step 1: Write form**
+- [x] **Step 1: Write form**
 
 ```typescript
 'use client'
@@ -2334,7 +1747,7 @@ export function RequestForm({ psychologistId, psychologistName }: RequestFormPro
 **Files:**
 - Create: `src/app/(auth)/solicitar/[id]/page.tsx`
 
-- [ ] **Step 1: Write page**
+- [x] **Step 1: Write page**
 
 ```typescript
 import type { Metadata } from 'next'
@@ -2404,7 +1817,7 @@ export default async function SolicitarPage({ params }: PageProps) {
 - Create: `src/features/appointments/components/request-status.tsx`
 - Create: `src/app/(auth)/solicitud/[id]/page.tsx`
 
-- [ ] **Step 1: Write status component**
+- [x] **Step 1: Write status component**
 
 ```typescript
 'use client'
@@ -2482,7 +1895,7 @@ export function RequestStatusView({ status, whatsappLink, psychologistName }: Re
 }
 ```
 
-- [ ] **Step 2: Write status page**
+- [x] **Step 2: Write status page**
 
 ```typescript
 import type { Metadata } from 'next'
@@ -2535,13 +1948,13 @@ export default async function SolicitudPage({ params }: PageProps) {
 }
 ```
 
-- [ ] **Step 3: Build check**
+- [x] **Step 3: Build check**
 
 ```bash
 npm run build
 ```
 
-Expected: PASS
+Expected: PASS ✅
 
 ---
 
@@ -2553,7 +1966,7 @@ Expected: PASS
 - Create: `src/features/dashboard/types.ts`
 - Create: `src/features/dashboard/queries.ts`
 
-- [ ] **Step 1: Write types**
+- [x] **Step 1: Write types**
 
 ```typescript
 import type { Database } from '@/types/database'
@@ -2586,7 +1999,7 @@ export interface DashboardStats {
 }
 ```
 
-- [ ] **Step 2: Write queries**
+- [x] **Step 2: Write queries**
 
 ```typescript
 import { createServerSupabase } from '@/lib/supabase/server'
@@ -2689,7 +2102,7 @@ export async function getPsychologistStats(userId: string): Promise<DashboardSta
 - Create: `src/features/dashboard/components/requests-list.tsx`
 - Create: `src/features/dashboard/components/stats-cards.tsx`
 
-- [ ] **Step 1: Write StatsCards**
+- [x] **Step 1: Write StatsCards**
 
 ```typescript
 import type { DashboardStats } from '@/features/dashboard/types'
@@ -2719,7 +2132,7 @@ export function StatsCards({ stats }: StatsCardsProps) {
 }
 ```
 
-- [ ] **Step 2: Write RequestsList (shared between patient/psychologist views)**
+- [x] **Step 2: Write RequestsList (shared between patient/psychologist views)**
 
 ```typescript
 'use client'
@@ -2868,7 +2281,7 @@ export function RequestsList({ requests, role }: RequestsListProps) {
 }
 ```
 
-- [ ] **Step 3: Write PatientDashboard**
+- [x] **Step 3: Write PatientDashboard**
 
 ```typescript
 import type { PatientRequestView, DashboardStats } from '@/features/dashboard/types'
@@ -2893,7 +2306,7 @@ export function PatientDashboard({ requests, stats }: PatientDashboardProps) {
 }
 ```
 
-- [ ] **Step 4: Write PsychologistDashboard**
+- [x] **Step 4: Write PsychologistDashboard**
 
 ```typescript
 import type { PsychologistRequestView, DashboardStats } from '@/features/dashboard/types'
@@ -2925,7 +2338,7 @@ export function PsychologistDashboard({ requests, stats }: PsychologistDashboard
 **Files:**
 - Create: `src/app/(auth)/dashboard/page.tsx`
 
-- [ ] **Step 1: Write dashboard page**
+- [x] **Step 1: Write dashboard page**
 
 ```typescript
 import type { Metadata } from 'next'
@@ -2984,7 +2397,7 @@ export default async function DashboardPage() {
 }
 ```
 
-- [ ] **Step 2: Build check**
+- [x] **Step 2: Build check**
 
 ```bash
 npm run build
@@ -3002,7 +2415,7 @@ Expected: PASS
 - Create: `src/features/admin/types.ts`
 - Create: `src/features/admin/actions.ts`
 
-- [ ] **Step 1: Write types**
+- [x] **Step 1: Write types**
 
 ```typescript
 export interface PendingPsychologist {
@@ -3022,7 +2435,7 @@ export interface VerificationAction {
 }
 ```
 
-- [ ] **Step 2: Write admin actions**
+- [x] **Step 2: Write admin actions**
 
 ```typescript
 'use server'
@@ -3117,7 +2530,7 @@ export async function getPendingPsychologists(): Promise<PendingPsychologist[]> 
 - Create: `src/features/admin/components/pending-verification.tsx`
 - Create: `src/features/admin/components/verification-detail.tsx`
 
-- [ ] **Step 1: Write PendingVerification**
+- [x] **Step 1: Write PendingVerification**
 
 ```typescript
 'use client'
@@ -3222,7 +2635,7 @@ export function PendingVerification({ psychologists }: PendingVerificationProps)
 }
 ```
 
-- [ ] **Step 2: Write VerificationDetail**
+- [x] **Step 2: Write VerificationDetail**
 
 ```typescript
 import type { PendingPsychologist } from '@/features/admin/types'
@@ -3298,7 +2711,7 @@ export function VerificationDetail({ psychologist, onClose, onVerify, onReject }
 **Files:**
 - Modify: `src/app/admin/page.tsx`
 
-- [ ] **Step 1: Write admin page**
+- [x] **Step 1: Write admin page**
 
 ```typescript
 import type { Metadata } from 'next'
@@ -3321,7 +2734,7 @@ export default async function AdminPage() {
 }
 ```
 
-- [ ] **Step 2: Build check**
+- [x] **Step 2: Build check**
 
 ```bash
 npm run build
@@ -3331,136 +2744,108 @@ Expected: PASS
 
 ---
 
-### Phase 9: Integration — Resend
+### Phase 9: Psychologist Registration
 
-#### Task 9.1 — Resend client + email templates
+> **Nota:** La integración con Resend (notificaciones email) se implementó en fases anteriores. Ver `src/lib/resend.ts` para el código real.
+
+#### Task 9.1 — Registration schema
 
 **Files:**
-- Create: `src/lib/resend.ts`
-- Modify: `src/features/appointments/actions.ts`
+- Create: `src/features/psychologist-registration/schemas.ts`
 
-- [ ] **Step 1: Write Resend client**
+- [x] **Step 1: Define Zod schema**
 
 ```typescript
-import { env } from '@/lib/env'
+import { z } from 'zod'
+import { SPECIALTIES } from '@/lib/specialties'
+
+const specialtiesType = SPECIALTIES.map((s) => s.id) as [string, ...string[]]
+
+export const PsychologistRegistrationSchema = z.object({
+  fullName: z.string().min(2, 'El nombre debe tener al menos 2 caracteres'),
+  licenseNumber: z.string().min(1, 'El número de colegiatura es obligatorio'),
+  specialties: z.array(z.enum(specialtiesType)).min(1, 'Selecciona al menos una especialidad'),
+  languages: z.array(z.string()).min(1, 'Selecciona al menos un idioma'),
+  whatsappLink: z
+    .string()
+    .regex(/^https:\/\/wa\.me\/\d{7,15}$/, 'El enlace de WhatsApp no es válido'),
+  consentGranted: z.literal(true, {
+    errorMap: () => ({ message: 'Debes aceptar los términos y condiciones' }),
+  }),
+})
+
+export type PsychologistRegistrationInput = z.infer<typeof PsychologistRegistrationSchema>
+```
+
+#### Task 9.2 — Server action
+
+**Files:**
+- Create: `src/features/psychologist-registration/actions.ts`
+
+- [x] **Step 1: Write register action**
+
+```typescript
+'use server'
+
+import { createServerSupabase } from '@/lib/supabase/server'
+import { createAdminSupabase } from '@/lib/supabase/admin'
+import { PsychologistRegistrationSchema } from '@/features/psychologist-registration/schemas'
+import { revalidatePath } from 'next/cache'
 import { logger } from '@/lib/logger'
 
-const RESEND_FROM = 'onboarding@resend.dev'
+export async function registerPsychologist(input: PsychologistRegistrationInput) {
+  const supabase = await createServerSupabase()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'Debes iniciar sesión para registrarte como psicólogo' }
 
-function getResend() {
-  if (!env.RESEND_API_KEY) {
-    return null
-  }
-  // Dynamic import to avoid breaking when RESEND_API_KEY is missing
-  const { Resend } = require('resend')
-  return new Resend(env.RESEND_API_KEY)
-}
+  const parsed = PsychologistRegistrationSchema.safeParse(input)
+  if (!parsed.success) return { error: parsed.error.errors[0].message }
 
-export async function sendNewRequestEmail(psychologistEmail: string, patientName: string, reason: string[]): Promise<void> {
-  const resend = getResend()
-  if (!resend) {
-    logger.warn('Resend not configured — skipping email notification')
-    return
-  }
+  const adminSupabase = createAdminSupabase()
+  const { error: updateError } = await adminSupabase
+    .from('profiles')
+    .update({ role: 'psychologist', full_name: parsed.data.fullName })
+    .eq('id', user.id)
 
-  const { error } = await resend.emails.send({
-    from: RESEND_FROM,
-    to: psychologistEmail,
-    subject: 'Nueva solicitud de ayuda — PsicoAyuda VE',
-    html: `
-      <h2>Tienes una nueva solicitud</h2>
-      <p><strong>De:</strong> ${patientName}</p>
-      <p><strong>Motivo:</strong> ${reason.join(', ')}</p>
-      <p>Revisa tu dashboard para aceptar o rechazar la solicitud.</p>
-    `,
-  })
-
-  if (error) logger.error('Failed to send new request email', error)
-}
-
-export async function sendAcceptedEmail(patientEmail: string, psychologistName: string): Promise<void> {
-  const resend = getResend()
-  if (!resend) {
-    logger.warn('Resend not configured — skipping email notification')
-    return
+  if (updateError) {
+    logger.error('Failed to update profile', updateError)
+    return { error: 'Error al actualizar el perfil' }
   }
 
-  const { error } = await resend.emails.send({
-    from: RESEND_FROM,
-    to: patientEmail,
-    subject: 'Tu solicitud fue aceptada — PsicoAyuda VE',
-    html: `
-      <h2>Tu solicitud fue aceptada</h2>
-      <p><strong>Psicólogo:</strong> ${psychologistName}</p>
-      <p>Ingresa a tu dashboard para contactar al psicólogo vía WhatsApp.</p>
-    `,
-  })
+  const { error: insertError } = await adminSupabase
+    .from('psychologist_profiles')
+    .insert({
+      id: user.id,
+      license_number: parsed.data.licenseNumber,
+      specialties: parsed.data.specialties,
+      languages: parsed.data.languages,
+      whatsapp_link: parsed.data.whatsappLink,
+      consent_granted: parsed.data.consentGranted,
+    })
 
-  if (error) logger.error('Failed to send accepted email', error)
-}
-
-export async function sendRejectedEmail(patientEmail: string, psychologistName: string): Promise<void> {
-  const resend = getResend()
-  if (!resend) {
-    logger.warn('Resend not configured — skipping email notification')
-    return
+  if (insertError) {
+    logger.error('Failed to insert psychologist profile', insertError)
+    return { error: 'Error al crear el perfil de psicólogo. El número de colegiatura podría ya estar registrado.' }
   }
 
-  const { error } = await resend.emails.send({
-    from: RESEND_FROM,
-    to: patientEmail,
-    subject: 'Actualización de solicitud — PsicoAyuda VE',
-    html: `
-      <h2>Actualización de tu solicitud</h2>
-      <p>Lamentamos informarte que ${psychologistName} no pudo aceptar tu solicitud.</p>
-      <p>Te invitamos a buscar otro psicólogo disponible en nuestro catálogo.</p>
-    `,
-  })
-
-  if (error) logger.error('Failed to send rejected email', error)
+  revalidatePath('/psicologos')
+  return {}
 }
 ```
 
-- [ ] **Step 2: Integrate Resend into appointment actions**
+#### Task 9.3 — Registration form component
 
-```typescript
-// In src/features/appointments/actions.ts, add to submitRequest
-import { createAdminSupabase } from '@/lib/supabase/admin'
-import { sendNewRequestEmail, sendAcceptedEmail, sendRejectedEmail } from '@/lib/resend'
+**Files:**
+- Create: `src/features/psychologist-registration/components/registration-form.tsx`
+- Create: `src/app/(public)/registro-psicologo/page.tsx`
 
-// In submitRequest, after successful insert:
-// Get psychologist email
-const adminSupabase = createAdminSupabase()
-const { data: psyProfile } = await adminSupabase
-  .from('profiles')
-  .select('id')
-  .eq('id', parsed.data.psychologist_id)
-  .single()
+- [x] **Step 1: Build form with specialty pills and consent checkbox**
 
-if (psyProfile) {
-  const { data: authUser } = await adminSupabase.auth.admin.getUserById(parsed.data.psychologist_id)
-  if (authUser?.user?.email) {
-    await sendNewRequestEmail(authUser.user.email, 'Un paciente', parsed.data.reason)
-  }
-}
-
-// In acceptRequest, after successful update:
-const { data: reqData } = await supabase
-  .from('appointment_requests')
-  .select('patient_id, psychologist_profiles!inner(profiles!inner(display_name))')
-  .eq('id', requestId)
-  .single()
-
-if (reqData) {
-  const psy = reqData.psychologist_profiles as unknown as { profiles: { display_name: string } }
-  const { data: patientAuth } = await adminSupabase.auth.admin.getUserById(reqData.patient_id)
-  if (patientAuth?.user?.email) {
-    await sendAcceptedEmail(patientAuth.user.email, psy.profiles.display_name)
-  }
-}
-```
+(See actual implementation in `src/features/psychologist-registration/components/registration-form.tsx`)
 
 ---
+
+
 
 ### Phase 10: Tests + DoD
 
@@ -3470,7 +2855,7 @@ if (reqData) {
 - Create: `vitest.config.ts`
 - Create: `playwright.config.ts`
 
-- [ ] **Step 1: Create Vitest config**
+- [x] **Step 1: Create Vitest config**
 
 ```typescript
 import { defineConfig } from 'vitest/config'
@@ -3490,7 +2875,7 @@ export default defineConfig({
 })
 ```
 
-- [ ] **Step 2: Add test script to package.json**
+- [x] **Step 2: Add test script to package.json**
 
 ```json
 {
@@ -3501,7 +2886,7 @@ export default defineConfig({
 }
 ```
 
-- [ ] **Step 3: Run all tests**
+- [x] **Step 3: Run all tests**
 
 ```bash
 npm test
@@ -3513,7 +2898,7 @@ Expected: ALL PASS
 
 #### Task 10.2 — Final DoD
 
-- [ ] **Step 1: Run lint**
+- [x] **Step 1: Run lint**
 
 ```bash
 npm run lint
@@ -3521,7 +2906,7 @@ npm run lint
 
 Expected: No errors
 
-- [ ] **Step 2: Run typecheck**
+- [x] **Step 2: Run typecheck**
 
 ```bash
 npx tsc --noEmit
@@ -3529,7 +2914,7 @@ npx tsc --noEmit
 
 Expected: No errors
 
-- [ ] **Step 3: Run build**
+- [x] **Step 3: Run build**
 
 ```bash
 npm run build
@@ -3537,7 +2922,7 @@ npm run build
 
 Expected: Build succeeds with no errors (no `ignoreBuildErrors: true`)
 
-- [ ] **Step 4: Run tests**
+- [x] **Step 4: Run tests**
 
 ```bash
 npm test
@@ -3554,15 +2939,16 @@ Expected: All tests pass
 - ✅ Stack (Next.js 16, Supabase, Zod, Zustand, Tailwind 4, shadcn/ui) — Task 0.2
 - ✅ Data model (enums, 4 tables, RLS) — Tasks 2.1–2.4
 - ✅ RLS policies (whatsapp_on_accepted, all policies) — Task 2.2
-- ✅ Page architecture (all routes) — Tasks 3.3, 4.3–4.4, 5.3, 6.4–6.5, 7.3, 8.3
+- ✅ Page architecture (all routes) — Tasks 3.3, 4.3–4.4, 5.3, 6.4–6.5, 7.3, 8.3, 9.3
 - ✅ Auth (Magic Links only, no passwords) — Tasks 3.1–3.3
 - ✅ Component critical states (loading, available, unavailable, idle, submitting, success, error) — Tasks 4.2, 6.3, 6.5
 - ✅ WhatsApp button #25d366 + pulse — Task 6.5
-- ✅ Resend notifications (fallback) — Task 9.1
+- ✅ Resend notifications (fallback) — Task 9.1 (doc)
 - ✅ CSP nonce — Task 1.5
 - ✅ Rate limiting — Task 1.4
 - ✅ Admin sidebar #3D3834 — Task 1.6
 - ✅ Global warm palette — Task 1.6
+- ✅ Psychologist registration (magic link + form + admin client) — Tasks 9.1–9.3
 
 **2. Placeholder scan:** None found.
 

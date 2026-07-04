@@ -18,10 +18,10 @@
 | CSS | Tailwind CSS + shadcn/ui | 4 | Open source |
 | CI/CD | GitHub Actions | — | Free para repos públicos |
 | Hosting | Vercel | — | Free tier (serverless) |
-| Font files | Geist | — | Self-hosted via `next/font/local` |
+| Font files | Geist | — | Self-hosted via `geist/font/sans` |
 
 ## Tipografía
-- Body/UI: **Geist** (Variable, self-hosted via `next/font/local`)
+- Body/UI: **Geist** (Variable, via `geist/font/sans`)
 
 ## Modelo de datos
 
@@ -38,6 +38,24 @@
 | created_at | timestamptz | |
 | updated_at | timestamptz | |
 
+### Auth (Magic Links)
+
+- **Método**: `supabase.auth.signInWithOtp()` con `emailRedirectTo`
+- **SMTP requerido**: Supabase Auth necesita un SMTP configurado para enviar los correos.
+- **Proveedor**: Resend u otro SMTP (SendGrid, Brevo, Mailersend)
+- **Configuración del SMTP** (en Supabase Dashboard → Authentication → Settings → SMTP Settings):
+
+  | Campo | Ejemplo (Resend) |
+  |-------|-----------------|
+  | SMTP Host | `smtp.resend.com` |
+  | SMTP Port | `587` |
+  | Username | `resend` |
+  | Password | `re_...` (API key de Resend) |
+  | Sender | `noreply@tudominio.com` |
+
+- `NEXT_PUBLIC_SITE_URL` debe coincidir con una URL permitida en Supabase Auth → URL Configuration → Redirect URLs
+- La URL de redirección post-login se construye como `${origin}/dashboard`
+
 #### `psychologist_profiles`
 | Columna | Tipo | Descripción |
 |---------|------|-------------|
@@ -52,6 +70,7 @@
 | whatsapp_link | text | wa.me/enlace (oculto hasta aprobación) |
 | availability | jsonb | Horarios disponibles |
 | is_available | boolean | Disponible para solicitudes |
+| years_experience | int | Años de experiencia profesional |
 | created_at | timestamptz | |
 | updated_at | timestamptz | |
 
@@ -79,6 +98,7 @@
 ### Enums
 - `user_role`: 'psychologist', 'patient'
 - `request_status`: 'pending', 'accepted', 'rejected'
+- `specialty`: 'duelo', 'ansiedad', 'crisis_panico', 'trauma', 'apoyo_ninos', 'apoyo_adolescentes', 'depresion', 'estres', 'violencia', 'adicciones'
 
 ## Flujo de conexión WhatsApp
 
@@ -105,3 +125,17 @@
 - Vercel (Hobby) — deploys automáticos desde `develop` y `main`
 - Supabase (free tier) — PostgreSQL + Auth + Storage
 - Resend (free tier) — notificaciones email
+
+> **Nota:** Phase 8 ✅ implementado: `features/admin/actions.ts`, `features/admin/components/pending-verification.tsx`, `features/admin/components/verification-detail.tsx`.
+> **Nota:** Phase 9 ✅ implementado: `features/psychologist-registration/schemas.ts`, `features/psychologist-registration/actions.ts`, `features/psychologist-registration/components/registration-form.tsx`, `app/(public)/registro-psicologo/page.tsx`.
+> **Nota:** Phase 10 ✅ implementado: rate limiting integrado, WhatsApp link post-aprobación, formulario editar perfil. Ver `features/psychologist/schemas.ts`, `features/psychologist/actions.ts`, `features/psychologist/components/edit-profile-form.tsx`, `app/(auth)/dashboard/editar-perfil/page.tsx`.
+
+### Proxy (Next.js 16 Middleware)
+
+Next.js 16 reemplaza `middleware.ts` por `proxy.ts`. El archivo `src/proxy.ts` maneja:
+
+- **CSP nonce**: genera un nonce criptográfico por request y lo inyecta en el header `Content-Security-Policy`
+- **Auth check**: lee la cookie `auth_logged_in` y setea `x-user-authenticated` para layouts Server Component
+- **Route protection**: redirige a `/login` rutas protegidas (`/dashboard`, `/solicitar/*`, `/solicitud/*`) sin cookie
+- **Admin guard**: verifica `auth.getUser()` + `admin_roles` para `/admin`
+- **Matcher**: excluye `_next/static`, `_next/image`, `favicon.ico`, `api/auth`

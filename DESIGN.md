@@ -87,7 +87,7 @@ Los badges y highlights usan verde primary en versión clara (50-100).
 ## 3. Typography Rules
 
 ### Font Families
-- **UI/Body**: `Geist Variable` — geométrica sans-serif. Cargada vía `next/font/local`.
+- **UI/Body**: `Geist Variable` — geométrica sans-serif. Cargada vía `geist/font/sans`.
 
 ### Font Files (self-hosted)
 ```
@@ -155,10 +155,11 @@ app/fonts/
 - Radius: 16px
 - Shadow: `sm`
 - Padding: 20px
-- Layout: avatar circular (56px) left, info right
+- Layout: vertical — avatar 56px centrado arriba, info debajo, botón al fondo
+- Avatar fallback: emoji 👩‍⚕️ en vez de inicial del nombre
 - Especialidades como chips en `#F5F0EA`, texto `#6B5E54`, border-radius 20px
 - Estado de disponibilidad: indicador verde/gris con texto descriptivo
-- Botón "Conectar" o "Vuelve pronto · Horario: Lun–Vie"
+- Botón "Conectar con [nombre completo]" o "Vuelve pronto · Horario: Lun–Vie"
 
 ### Inputs
 - Background: white
@@ -221,6 +222,12 @@ app/fonts/
 - Icono + copy sencillo
 - Input email + botón "Enviar enlace mágico"
 - Link a registro psicólogo
+
+#### Psychologist Registration (`/registro-psicologo`)
+- Título "Regístrate como psicólogo voluntario"
+- Formulario: nombre completo, colegiatura, especialidades (pill toggles), idiomas, enlace WhatsApp
+- Checkbox de consentimiento para términos
+- Estados: idle → submitting → success / error
 
 #### Request Form (`/solicitar/[id]`)
 - Título "Cuéntanos un poco"

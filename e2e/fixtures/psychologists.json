@@ -1,0 +1,28 @@
+{
+  "data": [
+    {
+      "id": "00000000-0000-0000-0000-000000000002",
+      "full_name": "Carlos Mendoza",
+      "license_verified": true,
+      "specialties": ["ansiedad", "depresion"],
+      "is_available": true,
+      "years_experience": 10,
+      "profiles": {
+        "display_name": "Dr. Carlos Mendoza",
+        "avatar_url": null
+      }
+    },
+    {
+      "id": "00000000-0000-0000-0000-000000000003",
+      "full_name": "Ana Lucía Rivas",
+      "license_verified": true,
+      "specialties": ["ansiedad", "crisis_panico"],
+      "is_available": true,
+      "years_experience": 8,
+      "profiles": {
+        "display_name": "Dra. Ana Lucía Rivas",
+        "avatar_url": null
+      }
+    }
+  ]
+}

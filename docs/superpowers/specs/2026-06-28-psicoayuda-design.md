@@ -150,6 +150,7 @@ CREATE POLICY "patient_insert_requests" ON appointment_requests
 | `/psicologos` | Público | Catálogo de psicólogos verificados |
 | `/psicologo/[id]` | Público | Perfil detalle del psicólogo |
 | `/login` | Público | Magic Link form |
+| `/registro-psicologo` | Público | Registro de psicólogo voluntario |
 | `/dashboard` | Auth | Contenido según role (patient/psychologist) |
 | `/solicitar/[id]` | Auth (patient) | Formulario de solicitud |
 | `/solicitud/[id]` | Auth | Estado de la solicitud |
@@ -169,6 +170,8 @@ src/
         [id]/
           page.tsx
       login/
+        page.tsx
+      registro-psicologo/
         page.tsx
     (auth)/
       layout.tsx

@@ -1,0 +1,105 @@
+'use server'
+
+import { createAdminSupabase } from '@/lib/supabase/admin'
+import { createServerSupabase } from '@/lib/supabase/server'
+import { logger } from '@/lib/logger'
+import { revalidatePath } from 'next/cache'
+import type { PendingPsychologist } from '@/features/admin/types'
+
+async function checkAdminAuth(): Promise<{ error?: string } | { userId: string }> {
+  try {
+    const supabase = await createServerSupabase()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return { error: 'Debes iniciar sesión' }
+
+    const admin = await supabase.from('admin_roles').select('id').eq('user_id', user.id).single()
+    if (!admin.data) return { error: 'No autorizado' }
+
+    return { userId: user.id }
+  } catch (e) {
+    logger.warn('checkAdminAuth failed', { error: e })
+    return { error: 'Error de autenticación' }
+  }
+}
+
+export async function verifyPsychologist(profileId: string): Promise<{ error?: string }> {
+  const auth = await checkAdminAuth()
+  if ('error' in auth) return auth
+
+  const adminSupabase = createAdminSupabase()
+  const { error } = await adminSupabase
+    .from('psychologist_profiles')
+    .update({ license_verified: true })
+    .eq('id', profileId)
+
+  if (error) {
+    logger.error('verify_psychologist failed', error, { profileId })
+    return { error: 'Error al verificar psicólogo' }
+  }
+
+  revalidatePath('/admin')
+  revalidatePath('/psicologos')
+  return {}
+}
+
+export async function rejectPsychologist(profileId: string): Promise<{ error?: string }> {
+  const auth = await checkAdminAuth()
+  if ('error' in auth) return auth
+
+  const adminSupabase = createAdminSupabase()
+  const { error } = await adminSupabase
+    .from('psychologist_profiles')
+    .update({ license_verified: false })
+    .eq('id', profileId)
+
+  if (error) {
+    logger.error('reject_psychologist failed', error, { profileId })
+    return { error: 'Error al rechazar psicólogo' }
+  }
+
+  revalidatePath('/admin')
+  return {}
+}
+
+export async function getPendingPsychologists(): Promise<PendingPsychologist[]> {
+  const adminSupabase = createAdminSupabase()
+
+  const { data: profiles } = await adminSupabase
+    .from('profiles')
+    .select('id, display_name, avatar_url, created_at')
+    .eq('role', 'psychologist')
+    .order('created_at', { ascending: false })
+
+  const profileIds = (profiles ?? []).map((p) => p.id)
+  if (profileIds.length === 0) return []
+
+  const { data: psyProfiles } = await adminSupabase
+    .from('psychologist_profiles')
+    .select('id, full_name, license_number, license_document, license_verified')
+    .in('id', profileIds)
+
+  const pendingIds = new Set(
+    (psyProfiles ?? [])
+      .filter((p) => p.license_verified === false)
+      .map((p) => p.id)
+  )
+
+  const psyById = new Map(
+    (psyProfiles ?? []).map((p) => [p.id, p])
+  )
+
+  return (profiles ?? [])
+    .filter((p) => pendingIds.has(p.id))
+    .map((row) => {
+      const psy = psyById.get(row.id)!
+      return {
+        id: row.id,
+        displayName: row.display_name,
+        avatarUrl: row.avatar_url,
+        createdAt: row.created_at,
+        fullName: psy.full_name,
+        licenseNumber: psy.license_number,
+        licenseDocument: psy.license_document,
+      }
+    })
+}
