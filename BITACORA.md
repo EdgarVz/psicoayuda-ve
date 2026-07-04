@@ -510,3 +510,37 @@ Email → clic en enlace → /auth/callback#access_token=xxx → procesa token �
 | `npx tsc --noEmit` | ✅ |
 | `npm run build` | ✅ |
 | `npm test` | ✅ |
+
+---
+
+## 2026-07-04 — Fix: getPatientRequests con queries planas, admin redirect, verify/reject
+
+### Problemas y soluciones
+
+| Issue | Causa | Fix |
+|-------|-------|-----|
+| Dashboard paciente seguía vacío tras fix anterior | `profiles!psychologist_id_fkey` — FK name incorrecto, PostgREST no resolvía join | `getPatientRequests` reescrito con 3 queries planas separadas (appointment_requests → profiles → psychologist_profiles) |
+| Admin page no mostraba pendientes | Mismo FK join issue en `getPendingPsychologists` | Reescrito con queries separadas (profiles + psychologist_profiles) |
+| Verificar/Rechazar no respondía | `createServerSupabase()` crasheaba en Server Actions en Vercel | Nuevo helper `checkAdminAuth` con try/catch + logger.warn |
+| Login como admin iba a /dashboard | Auth callback no chequeaba admin_roles | `auth/callback/page.tsx` ahora consulta `admin_roles` y redirige a /admin si corresponde |
+| Registro psicólogo redirect tardío | `useEffect` + server action tomaba segundos | Cambiado a estado `alreadyRegistered` que muestra mensaje "Ya estás registrado ⏳" de inmediato |
+| Sin campo documento en registro | No hay upload de archivos en formulario actual | Issue conocido — el seed tiene `license_document` NULL |
+
+### Archivos modificados
+
+| Archivo | Cambio |
+|---------|--------|
+| `src/features/dashboard/queries.ts` | `getPatientRequests` con 3 queries planas |
+| `src/features/dashboard/queries.test.ts` | Mock actualizado para 3 llamadas from() |
+| `src/features/admin/actions.ts` | `getPendingPsychologists` con queries separadas; `checkAdminAuth` helper con try/catch |
+| `src/features/psychologist-registration/actions.ts` | `checkExistingProfile` con try/catch |
+| `src/features/psychologist-registration/components/registration-form.tsx` | Estado `alreadyRegistered` con mensaje + botón |
+| `src/app/(public)/auth/callback/page.tsx` | Redirección a /admin si tiene admin_roles |
+
+### Checks
+| Check | Resultado |
+|-------|-----------|
+| `npm run lint` | ✅ |
+| `npx tsc --noEmit` | ✅ |
+| `npm run build` | ✅ 12 rutas + Proxy |
+| `npm test` | ✅ 171/171 (34 suites) |
