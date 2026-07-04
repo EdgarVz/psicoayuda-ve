@@ -13,47 +13,42 @@ interface NestedPatientProfile {
 export async function getPatientRequests(userId: string): Promise<PatientRequestView[]> {
   const supabase = await createServerSupabase()
 
-  const { data } = await supabase
+  const { data: requests } = await supabase
     .from('appointment_requests')
-    .select(`
-      id,
-      status,
-      reason,
-      created_at,
-      psychologist_id,
-      profiles!psychologist_id_fkey (
-        display_name
-      )
-    `)
+    .select('id, status, reason, created_at, psychologist_id')
     .eq('patient_id', userId)
     .order('created_at', { ascending: false })
 
-  const psychologistIds = [...new Set((data ?? []).map((r) => r.psychologist_id))] as string[]
+  const rows = requests ?? []
 
+  const psychologistIds = [...new Set(rows.map((r) => r.psychologist_id))] as string[]
+
+  const nameByPsychId = new Map<string, string>()
   const whatsappByPsychId = new Map<string, string | null>()
-  if (psychologistIds.length > 0) {
-    const { data: psyProfiles } = await supabase
-      .from('psychologist_profiles')
-      .select('id, whatsapp_link')
-      .in('id', psychologistIds)
 
-    for (const p of (psyProfiles ?? []) as NestedPsychologistProfile[]) {
+  if (psychologistIds.length > 0) {
+    const [{ data: psychNames }, { data: psychProfiles }] = await Promise.all([
+      supabase.from('profiles').select('id, display_name').in('id', psychologistIds),
+      supabase.from('psychologist_profiles').select('id, whatsapp_link').in('id', psychologistIds),
+    ])
+
+    for (const p of (psychNames ?? []) as { id: string; display_name: string }[]) {
+      nameByPsychId.set(p.id, p.display_name)
+    }
+    for (const p of (psychProfiles ?? []) as NestedPsychologistProfile[]) {
       whatsappByPsychId.set(p.id, p.whatsapp_link)
     }
   }
 
-  return (data ?? []).map((row) => {
-    const psyProfile = row.profiles as unknown as { display_name: string }
-    return {
-      id: row.id,
-      psychologistName: psyProfile.display_name,
-      psychologistId: row.psychologist_id,
-      status: row.status,
-      reason: row.reason,
-      createdAt: row.created_at,
-      whatsappLink: row.status === 'accepted' ? (whatsappByPsychId.get(row.psychologist_id) ?? null) : null,
-    }
-  })
+  return rows.map((row) => ({
+    id: row.id,
+    psychologistName: nameByPsychId.get(row.psychologist_id) ?? 'Desconocido',
+    psychologistId: row.psychologist_id,
+    status: row.status,
+    reason: row.reason,
+    createdAt: row.created_at,
+    whatsappLink: row.status === 'accepted' ? (whatsappByPsychId.get(row.psychologist_id) ?? null) : null,
+  }))
 }
 
 export async function getPsychologistRequests(userId: string): Promise<PsychologistRequestView[]> {
