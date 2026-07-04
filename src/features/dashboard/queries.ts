@@ -1,9 +1,9 @@
 import { createServerSupabase } from '@/lib/supabase/server'
 import type { PatientRequestView, PsychologistRequestView, DashboardStats } from './types'
 
-interface NestedPsychologistWithProfile {
+interface NestedPsychologistProfile {
+  id: string
   whatsapp_link: string | null
-  profiles: { display_name: string }
 }
 
 interface NestedPatientProfile {
@@ -21,26 +21,37 @@ export async function getPatientRequests(userId: string): Promise<PatientRequest
       reason,
       created_at,
       psychologist_id,
-      psychologist_profiles!inner (
-        whatsapp_link,
-        profiles!inner (
-          display_name
-        )
+      profiles!psychologist_id_fkey (
+        display_name
       )
     `)
     .eq('patient_id', userId)
     .order('created_at', { ascending: false })
 
+  const psychologistIds = [...new Set((data ?? []).map((r) => r.psychologist_id))] as string[]
+
+  const whatsappByPsychId = new Map<string, string | null>()
+  if (psychologistIds.length > 0) {
+    const { data: psyProfiles } = await supabase
+      .from('psychologist_profiles')
+      .select('id, whatsapp_link')
+      .in('id', psychologistIds)
+
+    for (const p of (psyProfiles ?? []) as NestedPsychologistProfile[]) {
+      whatsappByPsychId.set(p.id, p.whatsapp_link)
+    }
+  }
+
   return (data ?? []).map((row) => {
-    const psy = row.psychologist_profiles as unknown as NestedPsychologistWithProfile
+    const psyProfile = row.profiles as unknown as { display_name: string }
     return {
       id: row.id,
-      psychologistName: psy.profiles.display_name,
+      psychologistName: psyProfile.display_name,
       psychologistId: row.psychologist_id,
       status: row.status,
       reason: row.reason,
       createdAt: row.created_at,
-      whatsappLink: row.status === 'accepted' ? psy.whatsapp_link : null,
+      whatsappLink: row.status === 'accepted' ? (whatsappByPsychId.get(row.psychologist_id) ?? null) : null,
     }
   })
 }
