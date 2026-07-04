@@ -7,6 +7,20 @@ import { psychologistRegistrationSchema, type PsychologistRegistrationInput } fr
 import { logger } from '@/lib/logger'
 import { revalidatePath } from 'next/cache'
 
+export async function checkExistingProfile(): Promise<{ exists: boolean }> {
+  const supabase = await createServerSupabase()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { exists: false }
+
+  const { data } = await supabase
+    .from('psychologist_profiles')
+    .select('id')
+    .eq('id', user.id)
+    .maybeSingle()
+
+  return { exists: !!data }
+}
+
 async function registerPsychologistImpl(
   input: PsychologistRegistrationInput
 ): Promise<{ error?: string }> {

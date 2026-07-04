@@ -1,16 +1,29 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { registerPsychologist } from '@/features/psychologist-registration/actions'
+import { registerPsychologist, checkExistingProfile } from '@/features/psychologist-registration/actions'
 import type { PsychologistRegistrationInput } from '@/features/psychologist-registration/schemas'
 import { SPECIALTY_LABELS } from '@/lib/specialties'
 
 type FormState = 'idle' | 'submitting' | 'success' | 'error'
 
-export function RegistrationForm() {
+interface RegistrationFormProps {
+  userLoggedIn?: boolean
+}
+
+export function RegistrationForm({ userLoggedIn = false }: RegistrationFormProps) {
   const router = useRouter()
   const [state, setState] = useState<FormState>('idle')
+
+  useEffect(() => {
+    if (!userLoggedIn) return
+    checkExistingProfile().then((result) => {
+      if (result.exists) {
+        router.push('/dashboard')
+      }
+    })
+  }, [userLoggedIn, router])
   const [errorMessage, setErrorMessage] = useState('')
   const [fullName, setFullName] = useState('')
   const [licenseNumber, setLicenseNumber] = useState('')

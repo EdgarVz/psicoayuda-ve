@@ -1,7 +1,9 @@
 'use client'
 
+import { useCallback } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
+import { signOut, clearAuthCookie } from '@/features/auth/actions'
 
 interface NavbarProps {
   isLoggedIn?: boolean
@@ -9,6 +11,13 @@ interface NavbarProps {
 
 export function Navbar({ isLoggedIn = false }: NavbarProps) {
   const pathname = usePathname()
+  const router = useRouter()
+
+  const handleLogout = useCallback(async () => {
+    await signOut()
+    await clearAuthCookie()
+    router.push('/')
+  }, [router])
 
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
@@ -31,12 +40,20 @@ export function Navbar({ isLoggedIn = false }: NavbarProps) {
             Soy Psicólogo
           </Link>
           {isLoggedIn ? (
-            <Link
-              href="/dashboard"
-              className="text-sm bg-primary text-white px-4 py-2 rounded-radius-button hover:bg-primary-dark transition-colors"
-            >
-              Dashboard
-            </Link>
+            <>
+              <Link
+                href="/dashboard"
+                className="text-sm bg-primary text-white px-4 py-2 rounded-radius-button hover:bg-primary-dark transition-colors"
+              >
+                Dashboard
+              </Link>
+              <button
+                onClick={handleLogout}
+                className="text-sm text-danger hover:text-danger/80 transition-colors"
+              >
+                Cerrar sesión
+              </button>
+            </>
           ) : (
             <>
               <Link
