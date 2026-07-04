@@ -6,19 +6,25 @@ import { logger } from '@/lib/logger'
 import { revalidatePath } from 'next/cache'
 import type { PendingPsychologist } from '@/features/admin/types'
 
-interface NestedPsychologistProfile {
-  full_name: string
-  license_number: string
-  license_document: string | null
+async function checkAdminAuth(): Promise<{ error?: string } | { userId: string }> {
+  try {
+    const supabase = await createServerSupabase()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return { error: 'Debes iniciar sesión' }
+
+    const admin = await supabase.from('admin_roles').select('id').eq('user_id', user.id).single()
+    if (!admin.data) return { error: 'No autorizado' }
+
+    return { userId: user.id }
+  } catch (e) {
+    logger.warn('checkAdminAuth failed', { error: e })
+    return { error: 'Error de autenticación' }
+  }
 }
 
 export async function verifyPsychologist(profileId: string): Promise<{ error?: string }> {
-  const supabase = await createServerSupabase()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return { error: 'Debes iniciar sesión' }
-
-  const admin = await supabase.from('admin_roles').select('id').eq('user_id', user.id).single()
-  if (!admin.data) return { error: 'No autorizado' }
+  const auth = await checkAdminAuth()
+  if ('error' in auth) return auth
 
   const adminSupabase = createAdminSupabase()
   const { error } = await adminSupabase
@@ -37,12 +43,8 @@ export async function verifyPsychologist(profileId: string): Promise<{ error?: s
 }
 
 export async function rejectPsychologist(profileId: string): Promise<{ error?: string }> {
-  const supabase = await createServerSupabase()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return { error: 'Debes iniciar sesión' }
-
-  const admin = await supabase.from('admin_roles').select('id').eq('user_id', user.id).single()
-  if (!admin.data) return { error: 'No autorizado' }
+  const auth = await checkAdminAuth()
+  if ('error' in auth) return auth
 
   const adminSupabase = createAdminSupabase()
   const { error } = await adminSupabase
@@ -62,33 +64,42 @@ export async function rejectPsychologist(profileId: string): Promise<{ error?: s
 export async function getPendingPsychologists(): Promise<PendingPsychologist[]> {
   const adminSupabase = createAdminSupabase()
 
-  const { data } = await adminSupabase
+  const { data: profiles } = await adminSupabase
     .from('profiles')
-    .select(`
-      id,
-      display_name,
-      avatar_url,
-      created_at,
-      psychologist_profiles!inner (
-        full_name,
-        license_number,
-        license_document
-      )
-    `)
+    .select('id, display_name, avatar_url, created_at')
     .eq('role', 'psychologist')
-    .eq('psychologist_profiles.license_verified', false)
     .order('created_at', { ascending: false })
 
-  return (data ?? []).map((row) => {
-    const psy = row.psychologist_profiles as unknown as NestedPsychologistProfile
-    return {
-      id: row.id,
-      displayName: row.display_name,
-      avatarUrl: row.avatar_url,
-      createdAt: row.created_at,
-      fullName: psy.full_name,
-      licenseNumber: psy.license_number,
-      licenseDocument: psy.license_document,
-    }
-  })
+  const profileIds = (profiles ?? []).map((p) => p.id)
+  if (profileIds.length === 0) return []
+
+  const { data: psyProfiles } = await adminSupabase
+    .from('psychologist_profiles')
+    .select('id, full_name, license_number, license_document, license_verified')
+    .in('id', profileIds)
+
+  const pendingIds = new Set(
+    (psyProfiles ?? [])
+      .filter((p) => p.license_verified === false)
+      .map((p) => p.id)
+  )
+
+  const psyById = new Map(
+    (psyProfiles ?? []).map((p) => [p.id, p])
+  )
+
+  return (profiles ?? [])
+    .filter((p) => pendingIds.has(p.id))
+    .map((row) => {
+      const psy = psyById.get(row.id)!
+      return {
+        id: row.id,
+        displayName: row.display_name,
+        avatarUrl: row.avatar_url,
+        createdAt: row.created_at,
+        fullName: psy.full_name,
+        licenseNumber: psy.license_number,
+        licenseDocument: psy.license_document,
+      }
+    })
 }

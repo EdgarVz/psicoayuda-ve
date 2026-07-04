@@ -15,12 +15,13 @@ interface RegistrationFormProps {
 export function RegistrationForm({ userLoggedIn = false }: RegistrationFormProps) {
   const router = useRouter()
   const [state, setState] = useState<FormState>('idle')
+  const [alreadyRegistered, setAlreadyRegistered] = useState(false)
 
   useEffect(() => {
     if (!userLoggedIn) return
     checkExistingProfile().then((result) => {
       if (result.exists) {
-        router.push('/dashboard')
+        setAlreadyRegistered(true)
       }
     })
   }, [userLoggedIn, router])
@@ -68,6 +69,26 @@ export function RegistrationForm({ userLoggedIn = false }: RegistrationFormProps
 
     setState('success')
     router.push('/dashboard')
+  }
+
+  if (alreadyRegistered) {
+    return (
+      <div className="text-center max-w-md mx-auto py-8">
+        <div className="w-16 h-16 bg-warning/10 rounded-full flex items-center justify-center mx-auto mb-4">
+          <span className="text-3xl">⏳</span>
+        </div>
+        <h2 className="text-xl font-semibold mb-2">Ya estás registrado</h2>
+        <p className="text-muted mb-6">
+          Ya enviaste tu solicitud de registro como psicólogo. Está pendiente de verificación por el equipo administrativo.
+        </p>
+        <button
+          onClick={() => router.push('/dashboard')}
+          className="bg-primary text-white px-6 py-3 rounded-radius-button hover:opacity-90 transition-opacity"
+        >
+          Ir al dashboard
+        </button>
+      </div>
+    )
   }
 
   if (state === 'success') {

@@ -26,7 +26,13 @@ export default function AuthCallbackPage() {
         return
       }
 
-      router.push('/dashboard')
+      const { data: adminRole } = await supabase
+        .from('admin_roles')
+        .select('id')
+        .eq('user_id', session.user.id)
+        .maybeSingle()
+
+      router.push(adminRole ? '/admin' : '/dashboard')
       router.refresh()
     }
 
