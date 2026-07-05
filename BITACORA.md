@@ -543,7 +543,29 @@ Email → clic en enlace → /auth/callback#access_token=xxx → procesa token �
 | `npm run lint` | ✅ |
 | `npx tsc --noEmit` | ✅ |
 | `npm run build` | ✅ 12 rutas + Proxy |
-| `npm test` | ✅ 171/171 (34 suites) |
+| `npm test` | ✅ 174/174 (34 suites) |
+
+---
+
+## 2026-07-04 — Fix: pending null filter, email registro, field hints, template API
+
+### Cambios
+- **Pending psychologists**: filtro `=== false` no matcheaba `null`. Cambiado a `!p.license_verified` + try/catch + logging.
+- **Email registro**: nuevo correo "Registro recibido - PsicoAyuda VE" al psicólogo vía Resend.
+- **Field hints**: asteriscos rojos en labels obligatorios, "Mínimo 3 caracteres", "Mínimo 4 caracteres", contador `biography.length/1000`, "Ej: 9:00 - 15:00".
+- **Email templates (Supabase Auth)**: las plantillas de Magic Link y Confirmación se configuran en Supabase Dashboard → Authentication → Email Templates. No se pudo vía Management API por falta de `SUPABASE_ACCESS_TOKEN`.
+- **Resend**: para enviar correos a usuarios reales se requiere un dominio verificado. Opción recomendada: Vercel Marketplace → Resend Integration para obtener `RESEND_API_KEY`.
+
+### Archivos modificados
+`admin/actions.ts`, `registration-form.tsx`, `registration-form.test.tsx`, `psychologist-registration/actions.ts`
+
+### Checks
+| Check | Resultado |
+|-------|-----------|
+| `npm run lint` | ✅ |
+| `npx tsc --noEmit` | ✅ |
+| `npm run build` | ✅ 12 rutas + Proxy |
+| `npm test` | ✅ 174/174 (34 suites) |
 
 ---
 
