@@ -7,6 +7,9 @@ const validInput = {
   specialties: ['ansiedad'],
   languages: ['español'],
   whatsappLink: 'https://wa.me/584141234567',
+  biography: 'Psicóloga clínica con 8 años de experiencia en terapia individual y grupal.',
+  availabilityDays: ['monday', 'wednesday', 'friday'],
+  availabilityHours: '9:00 - 15:00',
   consentGranted: true as const,
 }
 
@@ -87,14 +90,47 @@ describe('psychologistRegistrationSchema', () => {
     }
   })
 
-  it('defaults languages to español', () => {
-    const { fullName, licenseNumber, specialties, whatsappLink, consentGranted } = validInput
+  it('rejects missing languages', () => {
     const result = psychologistRegistrationSchema.safeParse({
-      fullName, licenseNumber, specialties, whatsappLink, consentGranted,
+      ...validInput,
+      languages: [],
     })
-    expect(result.success).toBe(true)
-    if (result.success) {
-      expect(result.data.languages).toEqual(['español'])
+    expect(result.success).toBe(false)
+    if (!result.success) {
+      expect(result.error.issues[0].message).toBe('Selecciona al menos un idioma')
+    }
+  })
+
+  it('rejects short biography', () => {
+    const result = psychologistRegistrationSchema.safeParse({
+      ...validInput,
+      biography: 'Corto',
+    })
+    expect(result.success).toBe(false)
+    if (!result.success) {
+      expect(result.error.issues[0].message).toBe('Escribe al menos 10 caracteres sobre ti')
+    }
+  })
+
+  it('rejects empty availabilityDays', () => {
+    const result = psychologistRegistrationSchema.safeParse({
+      ...validInput,
+      availabilityDays: [],
+    })
+    expect(result.success).toBe(false)
+    if (!result.success) {
+      expect(result.error.issues[0].message).toBe('Selecciona al menos un día')
+    }
+  })
+
+  it('rejects empty availabilityHours', () => {
+    const result = psychologistRegistrationSchema.safeParse({
+      ...validInput,
+      availabilityHours: '',
+    })
+    expect(result.success).toBe(false)
+    if (!result.success) {
+      expect(result.error.issues[0].message).toBe('Indica el horario disponible')
     }
   })
 })

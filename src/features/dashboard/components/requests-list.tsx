@@ -34,7 +34,7 @@ export function RequestsList({ requests }: RequestsListProps) {
             className={`px-4 py-2 text-sm rounded-radius-button transition-colors ${
               filter === key
                 ? 'bg-primary text-white'
-                : 'bg-white border border-border text-muted hover:border-primary hover:text-primary'
+                : 'bg-white border border-border text-muted-foreground hover:border-primary hover:text-primary'
             }`}
           >
             {label}
@@ -47,14 +47,14 @@ export function RequestsList({ requests }: RequestsListProps) {
           <div key={req.id} className="bg-white border border-border rounded-radius-card p-4">
             <div className="flex items-center justify-between mb-2">
               <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                req.status === 'pending' ? 'bg-warning/10 text-warning' :
+                req.status === 'pending' ? 'bg-warning/10 text-warning-text' :
                 req.status === 'accepted' ? 'bg-green-100 text-green-700' :
                 'bg-red-50 text-danger'
               }`}>
                 {req.status === 'pending' ? 'Pendiente' :
                  req.status === 'accepted' ? 'Aceptada' : 'Rechazada'}
               </span>
-              <span className="text-xs text-muted">
+              <span className="text-xs text-muted-foreground">
                 {new Date(req.createdAt).toLocaleDateString('es-ES', {
                   day: 'numeric', month: 'short', year: 'numeric',
                 })}
@@ -114,7 +114,10 @@ export function RequestsList({ requests }: RequestsListProps) {
         ))}
 
         {filtered.length === 0 && (
-          <p className="text-center text-muted py-8">No hay solicitudes en esta categoría</p>
+          <div className="text-center py-8">
+            <p className="text-muted-foreground">No hay solicitudes en esta categoría</p>
+            <p className="text-sm text-muted-foreground mt-2">Mientras tanto, revisa tu disponibilidad o actualiza tu perfil para que los pacientes te encuentren más fácil.</p>
+          </div>
         )}
       </div>
     </div>

@@ -7,7 +7,7 @@ interface StatsCardsProps {
 export function StatsCards({ stats }: StatsCardsProps) {
   const cards = [
     { label: 'Total', value: stats.total, color: 'bg-primary/10 text-primary' },
-    { label: 'Pendientes', value: stats.pending, color: 'bg-warning/10 text-warning' },
+    { label: 'Pendientes', value: stats.pending, color: 'bg-warning/10 text-warning-text' },
     { label: 'Aceptadas', value: stats.accepted, color: 'bg-green-100 text-green-700' },
     { label: 'Rechazadas', value: stats.rejected, color: 'bg-red-50 text-danger' },
   ]

@@ -20,16 +20,16 @@ export function VerificationDetail({ psychologist, onClose, onVerify, onReject }
 
         <div className="space-y-3 text-sm">
           <div>
-            <span className="text-muted">Nombre de usuario:</span>
+            <span className="text-muted-foreground">Nombre de usuario:</span>
             <p>{psychologist.displayName}</p>
           </div>
           <div>
-            <span className="text-muted">Número de colegiatura:</span>
+            <span className="text-muted-foreground">Número de colegiatura:</span>
             <p>{psychologist.licenseNumber}</p>
           </div>
           {psychologist.licenseDocument && (
             <div>
-              <span className="text-muted">Documento:</span>
+              <span className="text-muted-foreground">Documento:</span>
               <a
                 href={psychologist.licenseDocument}
                 target="_blank"
@@ -41,7 +41,7 @@ export function VerificationDetail({ psychologist, onClose, onVerify, onReject }
             </div>
           )}
           <div>
-            <span className="text-muted">Registrado el:</span>
+            <span className="text-muted-foreground">Registrado el:</span>
             <p>{new Date(psychologist.createdAt).toLocaleDateString('es-ES')}</p>
           </div>
         </div>

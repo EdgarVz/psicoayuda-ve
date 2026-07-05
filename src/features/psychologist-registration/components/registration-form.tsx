@@ -29,6 +29,10 @@ export function RegistrationForm({ userLoggedIn = false }: RegistrationFormProps
   const [fullName, setFullName] = useState('')
   const [licenseNumber, setLicenseNumber] = useState('')
   const [whatsappLink, setWhatsappLink] = useState('')
+  const [biography, setBiography] = useState('')
+  const [selectedLanguages, setSelectedLanguages] = useState<string[]>([])
+  const [selectedDays, setSelectedDays] = useState<string[]>([])
+  const [availabilityHours, setAvailabilityHours] = useState('')
   const [selectedSpecialties, setSelectedSpecialties] = useState<string[]>([])
   const [consent, setConsent] = useState(false)
 
@@ -37,7 +41,23 @@ export function RegistrationForm({ userLoggedIn = false }: RegistrationFormProps
     licenseNumber.length >= 4 &&
     selectedSpecialties.length > 0 &&
     whatsappLink.startsWith('https://wa.me/') &&
+    biography.length >= 10 &&
+    selectedLanguages.length > 0 &&
+    selectedDays.length > 0 &&
+    availabilityHours.length > 0 &&
     consent
+
+  function toggleLanguage(value: string) {
+    setSelectedLanguages((prev) =>
+      prev.includes(value) ? prev.filter((r) => r !== value) : [...prev, value]
+    )
+  }
+
+  function toggleDay(value: string) {
+    setSelectedDays((prev) =>
+      prev.includes(value) ? prev.filter((r) => r !== value) : [...prev, value]
+    )
+  }
 
   function toggleSpecialty(value: string) {
     setSelectedSpecialties((prev) =>
@@ -56,8 +76,11 @@ export function RegistrationForm({ userLoggedIn = false }: RegistrationFormProps
       fullName,
       licenseNumber,
       specialties: selectedSpecialties as PsychologistRegistrationInput['specialties'],
-      languages: ['español'],
+      languages: selectedLanguages,
       whatsappLink,
+      biography,
+      availabilityDays: selectedDays,
+      availabilityHours,
       consentGranted: true as const,
     })
 
@@ -78,7 +101,7 @@ export function RegistrationForm({ userLoggedIn = false }: RegistrationFormProps
           <span className="text-3xl">⏳</span>
         </div>
         <h2 className="text-xl font-semibold mb-2">Ya estás registrado</h2>
-        <p className="text-muted mb-6">
+        <p className="text-muted-foreground mb-6">
           Ya enviaste tu solicitud de registro como psicólogo. Está pendiente de verificación por el equipo administrativo.
         </p>
         <button
@@ -98,7 +121,7 @@ export function RegistrationForm({ userLoggedIn = false }: RegistrationFormProps
           <span className="text-3xl">🌱</span>
         </div>
         <h2 className="text-xl font-semibold mb-2">Registro completado</h2>
-        <p className="text-muted">
+        <p className="text-muted-foreground">
           Bienvenido a PsicoAyuda VE. Tu perfil está pendiente de verificación por el equipo administrativo.
           Te notificaremos cuando sea aprobado.
         </p>
@@ -110,7 +133,7 @@ export function RegistrationForm({ userLoggedIn = false }: RegistrationFormProps
     <form onSubmit={handleSubmit} className="space-y-6">
       <div>
         <label htmlFor="fullName" className="block text-sm font-medium mb-1">
-          Nombre completo
+          Nombre completo <span className="text-destructive">*</span>
         </label>
         <input
           id="fullName"
@@ -121,11 +144,12 @@ export function RegistrationForm({ userLoggedIn = false }: RegistrationFormProps
           placeholder="Tu nombre completo"
           required
         />
+        <p className="text-xs text-muted-foreground mt-1">Mínimo 3 caracteres</p>
       </div>
 
       <div>
         <label htmlFor="licenseNumber" className="block text-sm font-medium mb-1">
-          Número de colegiatura
+          Número de colegiatura <span className="text-destructive">*</span>
         </label>
         <input
           id="licenseNumber"
@@ -136,11 +160,12 @@ export function RegistrationForm({ userLoggedIn = false }: RegistrationFormProps
           placeholder="Ej: 12345"
           required
         />
+        <p className="text-xs text-muted-foreground mt-1">Mínimo 4 caracteres</p>
       </div>
 
       <div>
         <label htmlFor="whatsappLink" className="block text-sm font-medium mb-1">
-          Enlace de WhatsApp
+          Enlace de WhatsApp <span className="text-destructive">*</span>
         </label>
         <input
           id="whatsappLink"
@@ -151,12 +176,89 @@ export function RegistrationForm({ userLoggedIn = false }: RegistrationFormProps
           placeholder="https://wa.me/584141234567"
           required
         />
-        <p className="text-xs text-muted mt-1">Usa el formato wa.me seguido de tu número con código de país</p>
+        <p className="text-xs text-muted-foreground mt-1">Usa el formato wa.me seguido de tu número con código de país</p>
+      </div>
+
+      <div>
+        <label htmlFor="biography" className="block text-sm font-medium mb-1">
+          Sobre ti <span className="text-destructive">*</span>
+        </label>
+        <textarea
+          id="biography"
+          value={biography}
+          onChange={(e) => setBiography(e.target.value)}
+          className="w-full px-3 py-2 border border-border rounded-radius-input bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary min-h-[100px] resize-y"
+          placeholder="Cuéntanos sobre tu experiencia, enfoque terapéutico y motivación para unirte"
+          required
+        />
+        <p className="text-xs text-muted-foreground mt-1">{biography.length}/1000 caracteres</p>
       </div>
 
       <fieldset>
         <legend className="text-sm font-medium mb-2">
-          Especialidades
+          Idiomas de atención <span className="text-destructive">*</span>
+        </legend>
+        <div className="flex flex-wrap gap-2">
+          {['español', 'inglés', 'portugués', 'francés'].map((lang) => (
+            <button
+              key={lang}
+              type="button"
+              onClick={() => toggleLanguage(lang)}
+              className={`px-4 py-2 rounded-full text-sm border transition-colors ${
+                selectedLanguages.includes(lang)
+                  ? 'bg-primary/10 border-primary text-primary'
+                  : 'bg-white border-border hover:border-primary/50 text-muted-foreground'
+              }`}
+            >
+              {lang.charAt(0).toUpperCase() + lang.slice(1)}
+            </button>
+          ))}
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend className="text-sm font-medium mb-2">
+          Disponibilidad <span className="text-destructive">*</span>
+        </legend>
+        <div className="space-y-3">
+          <div className="flex flex-wrap gap-2">
+            {[
+              { label: 'Lunes', value: 'monday' },
+              { label: 'Martes', value: 'tuesday' },
+              { label: 'Miércoles', value: 'wednesday' },
+              { label: 'Jueves', value: 'thursday' },
+              { label: 'Viernes', value: 'friday' },
+              { label: 'Sábado', value: 'saturday' },
+            ].map((day) => (
+              <button
+                key={day.value}
+                type="button"
+                onClick={() => toggleDay(day.value)}
+                className={`px-4 py-2 rounded-full text-sm border transition-colors ${
+                  selectedDays.includes(day.value)
+                    ? 'bg-primary/10 border-primary text-primary'
+                    : 'bg-white border-border hover:border-primary/50 text-muted-foreground'
+                }`}
+              >
+                {day.label}
+              </button>
+            ))}
+          </div>
+          <input
+            type="text"
+            value={availabilityHours}
+            onChange={(e) => setAvailabilityHours(e.target.value)}
+            className="w-full px-3 py-2 border border-border rounded-radius-input bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+            placeholder="Ej: 9:00 - 15:00"
+            required
+          />
+          <p className="text-xs text-muted-foreground mt-1">Ej: 9:00 - 15:00</p>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend className="text-sm font-medium mb-2">
+          Especialidades <span className="text-destructive">*</span>
         </legend>
         <div className="flex flex-wrap gap-2">
           {Object.entries(SPECIALTY_LABELS).map(([value, label]) => (
@@ -167,7 +269,7 @@ export function RegistrationForm({ userLoggedIn = false }: RegistrationFormProps
               className={`px-4 py-2 rounded-full text-sm border transition-colors ${
                 selectedSpecialties.includes(value)
                   ? 'bg-primary/10 border-primary text-primary'
-                  : 'bg-white border-border hover:border-primary/50 text-muted'
+                  : 'bg-white border-border hover:border-primary/50 text-muted-foreground'
               }`}
             >
               {label}
@@ -185,7 +287,7 @@ export function RegistrationForm({ userLoggedIn = false }: RegistrationFormProps
             onChange={(e) => setConsent(e.target.checked)}
             className="mt-0.5 accent-primary"
           />
-          <span className="text-sm text-muted">
+          <span className="text-sm text-muted-foreground">
             Certifico que soy un profesional de la salud mental habilitado y acepto los términos de la plataforma.
           </span>
         </label>
@@ -200,7 +302,7 @@ export function RegistrationForm({ userLoggedIn = false }: RegistrationFormProps
       <button
         type="submit"
         disabled={!isValid || state === 'submitting'}
-        className="w-full py-3 rounded-radius-button font-medium text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+        className={`w-full py-3 rounded-radius-button font-medium text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed ${state === 'submitting' ? 'opacity-70 animate-pulse' : ''}`}
         style={{ backgroundColor: '#2B7A6E' }}
       >
         {state === 'submitting' ? 'Registrando...' : 'Registrarme como psicólogo'}

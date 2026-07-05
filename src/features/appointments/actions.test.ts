@@ -206,7 +206,8 @@ describe('rejectRequest', () => {
   })
 
   it('returns success on reject', async () => {
-    mockSupabase()
+    const { mockSingle } = mockSupabase()
+    mockSingle.mockResolvedValue({ data: { patient_id: 'patient-1' }, error: null })
 
     const result = await rejectRequest('req-123')
 
@@ -221,13 +222,20 @@ describe('rejectRequest', () => {
     expect(result).toEqual({ error: 'Debes iniciar sesión' })
   })
 
-  it('does not send email on reject', async () => {
-    mockSupabase()
-    const resendSend = vi.fn()
+  it('sends email to patient on reject', async () => {
+    const { mockSingle } = mockSupabase()
+    mockSingle.mockResolvedValue({ data: { patient_id: 'patient-1' }, error: null })
+    const resendSend = vi.fn().mockResolvedValue({ data: { id: 'email-1' } })
     vi.mocked(getResendClient).mockResolvedValue({ emails: { send: resendSend } } as never)
+    vi.mocked(createAdminSupabase).mockReturnValue({
+      auth: { admin: { getUserById: vi.fn().mockResolvedValue({ data: { user: { id: 'patient-1', email: 'patient@example.com' } }, error: null }) } },
+    } as never)
 
     await rejectRequest('req-123')
 
-    expect(resendSend).not.toHaveBeenCalled()
+    expect(resendSend).toHaveBeenCalledTimes(1)
+    expect(resendSend).toHaveBeenCalledWith(
+      expect.objectContaining({ to: 'patient@example.com', subject: expect.stringContaining('rechazada') })
+    )
   })
 })

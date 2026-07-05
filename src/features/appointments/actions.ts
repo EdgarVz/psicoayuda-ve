@@ -129,6 +129,16 @@ export async function rejectRequest(requestId: string): Promise<{ error?: string
     return { error: 'Debes iniciar sesión' }
   }
 
+  const { data: request } = await supabase
+    .from('appointment_requests')
+    .select('patient_id')
+    .eq('id', requestId)
+    .single()
+
+  if (!request) {
+    return { error: 'Solicitud no encontrada' }
+  }
+
   const { error } = await supabase
     .from('appointment_requests')
     .update({ status: 'rejected' })
@@ -138,6 +148,22 @@ export async function rejectRequest(requestId: string): Promise<{ error?: string
   if (error) {
     logger.error('Failed to reject appointment request', error)
     return { error: 'Error al rechazar la solicitud.' }
+  }
+
+  try {
+    const resend = await getResendClient()
+    const admin = createAdminSupabase()
+    const { data: patientUser } = await admin.auth.admin.getUserById(request.patient_id)
+    if (patientUser?.user?.email && resend) {
+      await resend.emails.send({
+        from: 'PsicoAyuda VE <notificaciones@psicoayuda.org.ve>',
+        to: patientUser.user.email,
+        subject: 'Cita rechazada - PsicoAyuda VE',
+        html: '<p>Tu solicitud de cita ha sido rechazada.</p><p>Puedes intentar contactar con otro psicólogo disponible en la plataforma.</p>',
+      })
+    }
+  } catch (e) {
+    logger.warn('Error enviando notificación de cita rechazada', { error: e })
   }
 
   revalidatePath('/dashboard')

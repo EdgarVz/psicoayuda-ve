@@ -11,7 +11,7 @@ export function PatientDashboard({ requests, stats }: PatientDashboardProps) {
   return (
     <div>
       <h2 className="text-xl font-semibold mb-1">Mis espacios</h2>
-      <p className="text-muted text-sm mb-6">Seguimiento de tus solicitudes de ayuda</p>
+      <p className="text-muted-foreground text-sm mb-6">Seguimiento de tus solicitudes de ayuda</p>
       <StatsCards stats={stats} />
       <RequestsList requests={requests} />
     </div>

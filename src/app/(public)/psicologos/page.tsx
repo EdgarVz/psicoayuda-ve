@@ -21,7 +21,7 @@ export default async function PsicologosPage({
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
       <h1 className="text-2xl font-semibold mb-2">Psicólogos disponibles</h1>
-      <p className="text-muted mb-8">Selecciona una especialidad para filtrar</p>
+      <p className="text-muted-foreground mb-8">Selecciona una especialidad para filtrar</p>
 
       <CatalogClient initialPsychologists={psychologists} initialSpecialties={specialties ?? []} />
     </div>

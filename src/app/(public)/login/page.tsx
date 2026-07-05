@@ -15,12 +15,12 @@ export default function LoginPage() {
           <span className="text-3xl">🔑</span>
         </div>
         <h1 className="text-2xl font-semibold mb-2">Bienvenido de vuelta</h1>
-        <p className="text-muted">Ingresa tu correo para recibir un enlace mágico</p>
+        <p className="text-muted-foreground">Ingresa tu correo para recibir un enlace mágico</p>
       </div>
 
       <MagicLinkForm />
 
-      <p className="text-center text-sm text-muted mt-8">
+      <p className="text-center text-sm text-muted-foreground mt-8">
         ¿Eres psicólogo?{' '}
         <Link href="/registro-psicologo" className="text-primary hover:underline">
           Regístrate aquí

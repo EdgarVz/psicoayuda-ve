@@ -5,6 +5,7 @@ import { createAdminSupabase } from '@/lib/supabase/admin'
 import { withRateLimit } from '@/lib/rate-limit'
 import { psychologistRegistrationSchema, type PsychologistRegistrationInput } from './schemas'
 import { logger } from '@/lib/logger'
+import { getResendClient } from '@/lib/resend'
 import { revalidatePath } from 'next/cache'
 
 export async function checkExistingProfile(): Promise<{ exists: boolean }> {
@@ -56,12 +57,28 @@ async function registerPsychologistImpl(
       license_number: parsed.data.licenseNumber,
       specialties: parsed.data.specialties,
       languages: parsed.data.languages,
+      biography: parsed.data.biography,
+      availability: { days: parsed.data.availabilityDays, hours: parsed.data.availabilityHours },
       whatsapp_link: parsed.data.whatsappLink,
     })
 
   if (insertError) {
     logger.error('register_psychologist insert failed', insertError, { userId: user.id })
     return { error: 'Error al crear el perfil de psicólogo. El número de colegiatura podría ya estar registrado.' }
+  }
+
+  try {
+    const resend = await getResendClient()
+    if (resend && user.email) {
+      await resend.emails.send({
+        from: 'PsicoAyuda VE <notificaciones@psicoayuda.org.ve>',
+        to: user.email,
+        subject: 'Registro recibido - PsicoAyuda VE',
+        html: '<p>Hemos recibido tu solicitud de registro como psicólogo.</p><p>El equipo administrativo revisará tu información y te notificaremos cuando sea aprobada.</p><p>Gracias por sumarte a PsicoAyuda VE 🌱</p>',
+      })
+    }
+  } catch (e) {
+    logger.warn('Error enviando notificación de registro', { error: e })
   }
 
   revalidatePath('/dashboard')

@@ -33,7 +33,7 @@ export function PendingVerification({ psychologists }: PendingVerificationProps)
 
   if (psychologists.length === 0) {
     return (
-      <p className="text-muted text-center py-8">No hay psicólogos pendientes de verificación</p>
+      <p className="text-muted-foreground text-center py-8">No hay psicólogos pendientes de verificación</p>
     )
   }
 
@@ -41,7 +41,7 @@ export function PendingVerification({ psychologists }: PendingVerificationProps)
     <div>
       <table className="w-full">
         <thead>
-          <tr className="border-b border-border text-left text-sm text-muted">
+          <tr className="border-b border-border text-left text-sm text-muted-foreground">
             <th className="pb-3 font-medium">Psicólogo</th>
             <th className="pb-3 font-medium">Colegiatura</th>
             <th className="pb-3 font-medium">Documento</th>
@@ -53,12 +53,12 @@ export function PendingVerification({ psychologists }: PendingVerificationProps)
             <tr key={psy.id} className="border-b border-border">
               <td className="py-3">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-background-alt flex items-center justify-center text-sm font-medium text-muted">
+                  <div className="w-10 h-10 rounded-full bg-background-alt flex items-center justify-center text-sm font-medium text-muted-foreground">
                     👩‍⚕️
                   </div>
                   <div>
                     <p className="font-medium">{psy.fullName}</p>
-                    <p className="text-sm text-muted">{psy.displayName}</p>
+                    <p className="text-sm text-muted-foreground">{psy.displayName}</p>
                   </div>
                 </div>
               </td>
@@ -72,7 +72,7 @@ export function PendingVerification({ psychologists }: PendingVerificationProps)
                     Ver documento
                   </button>
                 ) : (
-                  <span className="text-sm text-muted">Sin documento</span>
+                  <span className="text-sm text-muted-foreground">Sin documento</span>
                 )}
               </td>
               <td className="py-3">

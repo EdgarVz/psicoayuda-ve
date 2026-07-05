@@ -116,7 +116,7 @@ export function EditProfileForm({ initialData }: EditProfileFormProps) {
                 className={`px-4 py-2 rounded-full text-sm border transition-colors ${
                   isSelected
                     ? 'bg-primary/10 border-primary text-primary'
-                    : 'bg-white border-border hover:border-primary/50 text-muted'
+                    : 'bg-white border-border hover:border-primary/50 text-muted-foreground'
                 }`}
               >
                 {label}

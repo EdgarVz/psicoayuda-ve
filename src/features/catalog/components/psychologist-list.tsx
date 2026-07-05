@@ -22,8 +22,8 @@ export function PsychologistList({ psychologists, isLoading }: PsychologistListP
   if (psychologists.length === 0) {
     return (
       <div className="text-center py-16">
-        <p className="text-lg text-muted">No hay psicólogos disponibles en este momento</p>
-        <p className="text-sm text-muted-light mt-1">Vuelve a consultar más tarde</p>
+        <p className="text-lg text-muted-foreground">No hay psicólogos disponibles en este momento</p>
+        <p className="text-sm text-muted-foreground-light mt-1">Vuelve a consultar más tarde</p>
       </div>
     )
   }

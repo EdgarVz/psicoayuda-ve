@@ -11,7 +11,7 @@ export function PsychologistDashboard({ requests, stats }: PsychologistDashboard
   return (
     <div>
       <h2 className="text-xl font-semibold mb-1">Solicitudes recibidas</h2>
-      <p className="text-muted text-sm mb-6">Gestiona las solicitudes de ayuda de los pacientes</p>
+      <p className="text-muted-foreground text-sm mb-6">Gestiona las solicitudes de ayuda de los pacientes</p>
       <StatsCards stats={stats} />
       <RequestsList requests={requests} />
     </div>
