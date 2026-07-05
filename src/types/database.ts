@@ -86,6 +86,47 @@ export type Database = {
           },
         ]
       }
+      notifications: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          read_at: string | null
+          related_id: string | null
+          title: string
+          type: Database["public"]["Enums"]["notification_type"]
+          user_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: string
+          read_at?: string | null
+          related_id?: string | null
+          title: string
+          type: Database["public"]["Enums"]["notification_type"]
+          user_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          read_at?: string | null
+          related_id?: string | null
+          title?: string
+          type?: Database["public"]["Enums"]["notification_type"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -183,6 +224,12 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      notification_type:
+        | "request_received"
+        | "request_accepted"
+        | "request_rejected"
+        | "profile_verified"
+        | "profile_rejected"
       request_status: "pending" | "accepted" | "rejected"
       specialty:
         | "duelo"
@@ -323,6 +370,13 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      notification_type: [
+        "request_received",
+        "request_accepted",
+        "request_rejected",
+        "profile_verified",
+        "profile_rejected",
+      ],
       request_status: ["pending", "accepted", "rejected"],
       specialty: [
         "duelo",
