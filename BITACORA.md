@@ -608,6 +608,28 @@ Email → clic en enlace → /auth/callback#access_token=xxx → procesa token �
 
 ---
 
+## 2026-07-05 — Plan de robustez operativa
+
+### Sesión
+Brainstorming + diseño + plan de implementación para 5 áreas de robustez:
+1. **Notificaciones In-App** — tabla `notifications` + RLS + badge/dropdown en navbar + página de historial
+2. **RLS Policies** — policies para `appointment_requests` (psicólogo ve solo suyas, paciente ve solo suyas)
+3. **Loading States** — spinners + disabled en botones de formularios (accept/reject, solicitar cita, verify/reject psicólogo)
+4. **Onboarding** — página `/como-funciona` con FAQ accordion + empty states mejorados en dashboard
+5. **QA** — test E2E de flujo completo + page objects
+
+### Decisiones técnicas
+- Notificaciones In-App como tabla con polling en Server Component (sin Realtime)
+- `createNotification` usa admin client (bypass RLS), llamada desde Server Actions existentes
+- Resend ya está cableado para cuando se configure `RESEND_API_KEY`
+- Se usará TDD para toda implementación nueva
+
+### Artefactos creados
+- `docs/superpowers/specs/2026-07-05-robustez-notificaciones-rls-onboarding-design.md`
+- `docs/superpowers/plans/2026-07-05-robustez-implementation.md`
+
+---
+
 ## 2026-07-04 — Fix: catálogo mostraba "Usuario" en vez del nombre del psicólogo
 
 ### Problema
