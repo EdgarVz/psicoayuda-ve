@@ -56,6 +56,8 @@ async function registerPsychologistImpl(
       license_number: parsed.data.licenseNumber,
       specialties: parsed.data.specialties,
       languages: parsed.data.languages,
+      biography: parsed.data.biography,
+      availability: { days: parsed.data.availabilityDays, hours: parsed.data.availabilityHours },
       whatsapp_link: parsed.data.whatsappLink,
     })
 

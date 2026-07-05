@@ -30,7 +30,7 @@ export function PsychologistCard({ psychologist }: { psychologist: PsychologistC
 
       <div className="flex items-center gap-2 mt-3">
         <span className={`w-2 h-2 rounded-full ${psychologist.isAvailable ? 'bg-available' : 'bg-unavailable'}`} />
-        <span className="text-sm text-muted">
+        <span className="text-sm text-muted-foreground">
           {psychologist.isAvailable ? 'Disponible ahora' : 'No disponible'}
         </span>
       </div>
@@ -40,7 +40,7 @@ export function PsychologistCard({ psychologist }: { psychologist: PsychologistC
         className={`mt-3 inline-block text-sm px-4 py-2 rounded-radius-button font-medium transition-colors ${
           psychologist.isAvailable
             ? 'bg-primary text-white hover:bg-primary-light'
-            : 'bg-unavailable/20 text-muted cursor-not-allowed pointer-events-none'
+            : 'bg-unavailable/20 text-muted-foreground cursor-not-allowed pointer-events-none'
         }`}
       >
         {psychologist.isAvailable ? `Conectar con ${psychologist.displayName}` : 'No disponible temporalmente'}

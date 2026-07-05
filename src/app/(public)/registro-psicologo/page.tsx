@@ -15,7 +15,7 @@ export default async function RegistroPsicologoPage() {
     <div className="max-w-lg mx-auto px-4 py-16">
       <div className="text-center mb-8">
         <h1 className="text-2xl font-semibold mb-2">Regístrate como psicólogo</h1>
-        <p className="text-muted">
+        <p className="text-muted-foreground">
           Completa tus datos para aparecer en nuestro directorio de psicólogos voluntarios
         </p>
       </div>

@@ -73,7 +73,7 @@ export function RequestForm({ psychologistId, psychologistName }: RequestFormPro
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <p className="text-sm text-muted">
+      <p className="text-sm text-muted-foreground">
         Solicitando cita con <strong>{psychologistName}</strong>
       </p>
 
@@ -107,7 +107,7 @@ export function RequestForm({ psychologistId, psychologistName }: RequestFormPro
               className={`px-4 py-2 rounded-full text-sm border transition-colors ${
                 reasons.includes(value)
                   ? 'bg-primary/10 border-primary text-primary'
-                  : 'bg-white border-border hover:border-primary/50 text-muted'
+                  : 'bg-white border-border hover:border-primary/50 text-muted-foreground'
               }`}
             >
               {label}
@@ -139,7 +139,7 @@ export function RequestForm({ psychologistId, psychologistName }: RequestFormPro
             onChange={(e) => setConsent(e.target.checked)}
             className="mt-0.5 accent-primary"
           />
-          <span className="text-sm text-muted">
+          <span className="text-sm text-muted-foreground">
             Entiendo que esta plataforma es solo un medio de contacto y la atención ocurre fuera de ella, a través de WhatsApp.
           </span>
         </label>

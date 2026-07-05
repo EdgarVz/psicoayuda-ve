@@ -2,6 +2,7 @@
 
 import { createAdminSupabase } from '@/lib/supabase/admin'
 import { createServerSupabase } from '@/lib/supabase/server'
+import { getResendClient } from '@/lib/resend'
 import { logger } from '@/lib/logger'
 import { revalidatePath } from 'next/cache'
 import type { PendingPsychologist } from '@/features/admin/types'
@@ -37,6 +38,21 @@ export async function verifyPsychologist(profileId: string): Promise<{ error?: s
     return { error: 'Error al verificar psicólogo' }
   }
 
+  try {
+    const resend = await getResendClient()
+    const { data: userData } = await adminSupabase.auth.admin.getUserById(profileId)
+    if (userData?.user?.email && resend) {
+      await resend.emails.send({
+        from: 'PsicoAyuda VE <notificaciones@psicoayuda.org.ve>',
+        to: userData.user.email,
+        subject: 'Perfil verificado - PsicoAyuda VE',
+        html: '<p>Tu perfil como psicólogo ha sido verificado exitosamente.</p><p>Ya apareces en el catálogo de psicólogos disponible para los pacientes.</p>',
+      })
+    }
+  } catch (e) {
+    logger.warn('Error enviando notificación de verificación', { error: e })
+  }
+
   revalidatePath('/admin')
   revalidatePath('/psicologos')
   return {}
@@ -55,6 +71,21 @@ export async function rejectPsychologist(profileId: string): Promise<{ error?: s
   if (error) {
     logger.error('reject_psychologist failed', error, { profileId })
     return { error: 'Error al rechazar psicólogo' }
+  }
+
+  try {
+    const resend = await getResendClient()
+    const { data: userData } = await adminSupabase.auth.admin.getUserById(profileId)
+    if (userData?.user?.email && resend) {
+      await resend.emails.send({
+        from: 'PsicoAyuda VE <notificaciones@psicoayuda.org.ve>',
+        to: userData.user.email,
+        subject: 'Registro rechazado - PsicoAyuda VE',
+        html: '<p>Tu solicitud de registro como psicólogo no ha sido aprobada.</p><p>Si crees que hay un error, contacta con el equipo administrativo.</p>',
+      })
+    }
+  } catch (e) {
+    logger.warn('Error enviando notificación de rechazo', { error: e })
   }
 
   revalidatePath('/admin')

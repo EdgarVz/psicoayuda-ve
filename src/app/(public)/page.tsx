@@ -20,7 +20,7 @@ export default async function HomePage() {
           <h1 className="text-3xl md:text-4xl font-semibold mb-4 text-foreground">
             Un espacio para hablar<br />cuando más lo necesitas
           </h1>
-          <p className="text-muted text-lg mb-8 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-muted-foreground text-lg mb-8 max-w-2xl mx-auto leading-relaxed">
             Te conectamos con psicólogos voluntarios verificados en Venezuela.
             Gratuito, confidencial y sin complicaciones. No estás solo.
           </p>

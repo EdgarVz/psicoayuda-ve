@@ -40,7 +40,7 @@ export function PsychologistProfile({ psychologist }: PsychologistProfileProps) 
               className="object-cover"
             />
           ) : (
-            <div data-testid="avatar-fallback" className="w-full h-full flex items-center justify-center text-3xl text-muted">
+            <div data-testid="avatar-fallback" className="w-full h-full flex items-center justify-center text-3xl text-muted-foreground">
               👩‍⚕️
             </div>
           )}
@@ -55,10 +55,10 @@ export function PsychologistProfile({ psychologist }: PsychologistProfileProps) 
               </span>
             )}
           </div>
-          <p className="text-muted mt-0.5">{psychologist.displayName}</p>
+          <p className="text-muted-foreground mt-0.5">{psychologist.displayName}</p>
 
           {psychologist.yearsExperience && psychologist.yearsExperience > 0 && (
-            <p className="text-sm text-muted mt-1">{psychologist.yearsExperience} años de experiencia</p>
+            <p className="text-sm text-muted-foreground mt-1">{psychologist.yearsExperience} años de experiencia</p>
           )}
         </div>
 
@@ -157,7 +157,7 @@ export function PsychologistProfile({ psychologist }: PsychologistProfileProps) 
             </span>
           </Link>
         ) : (
-          <div className="w-full text-center px-6 py-4 rounded-radius-button font-semibold bg-unavailable/20 text-muted">
+          <div className="w-full text-center px-6 py-4 rounded-radius-button font-semibold bg-unavailable/20 text-muted-foreground">
             Vuelve pronto · {schedule ?? 'Horario: próximamente'}
           </div>
         )}

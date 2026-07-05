@@ -17,15 +17,15 @@ export function RequestStatus({ status, whatsappLink, psychologistName, requestI
           <span className="text-2xl">🌱</span>
         </div>
         <h2 className="text-xl font-semibold">Solicitud enviada</h2>
-        <p className="text-muted max-w-sm mx-auto">
+        <p className="text-muted-foreground max-w-sm mx-auto">
           Tu solicitud de cita con <strong>{psychologistName}</strong> ha sido enviada.
           Recibirás una notificación cuando sea aceptada.
         </p>
         <div className="bg-[#FAF6F1] rounded-radius-card p-4 text-sm text-left max-w-sm mx-auto">
-          <p className="font-medium text-muted mb-1">Psicólogo asignado</p>
+          <p className="font-medium text-muted-foreground mb-1">Psicólogo asignado</p>
           <p className="text-foreground">{psychologistName}</p>
           {requestId && (
-            <p className="text-muted mt-2 text-xs">Solicitud #{requestId.slice(0, 7).toUpperCase()}</p>
+            <p className="text-muted-foreground mt-2 text-xs">Solicitud #{requestId.slice(0, 7).toUpperCase()}</p>
           )}
         </div>
       </div>
@@ -41,7 +41,7 @@ export function RequestStatus({ status, whatsappLink, psychologistName, requestI
           </svg>
         </div>
         <h2 className="text-xl font-semibold">Solicitud aceptada</h2>
-        <p className="text-muted">
+        <p className="text-muted-foreground">
           <strong>{psychologistName}</strong> ha aceptado tu solicitud.
           Puedes contactarlo por WhatsApp para coordinar los detalles.
         </p>
@@ -62,7 +62,7 @@ export function RequestStatus({ status, whatsappLink, psychologistName, requestI
         </svg>
       </div>
       <h2 className="text-xl font-semibold">Solicitud no aceptada</h2>
-      <p className="text-muted max-w-sm mx-auto">
+      <p className="text-muted-foreground max-w-sm mx-auto">
         Lo sentimos, {psychologistName} no ha podido aceptar tu solicitud en este momento.
         Puedes buscar otro psicólogo disponible.
       </p>

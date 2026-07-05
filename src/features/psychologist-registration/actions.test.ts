@@ -64,6 +64,9 @@ const validInput: PsychologistRegistrationInput = {
   specialties: ['ansiedad'],
   languages: ['español'],
   whatsappLink: 'https://wa.me/584141234567',
+  biography: 'Psicóloga clínica con 8 años de experiencia en terapia individual y grupal.',
+  availabilityDays: ['monday', 'wednesday', 'friday'],
+  availabilityHours: '9:00 - 15:00',
   consentGranted: true,
 }
 

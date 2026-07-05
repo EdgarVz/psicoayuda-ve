@@ -30,7 +30,7 @@ export function MagicLinkForm() {
     return (
       <div className="text-center p-8 bg-background-alt rounded-radius-card">
         <p className="text-lg font-medium mb-2">Revisa tu correo</p>
-        <p className="text-muted">Te enviamos un enlace mágico para iniciar sesión.</p>
+        <p className="text-muted-foreground">Te enviamos un enlace mágico para iniciar sesión.</p>
       </div>
     )
   }

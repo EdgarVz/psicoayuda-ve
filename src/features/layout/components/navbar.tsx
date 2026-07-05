@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { signOut, clearAuthCookie } from '@/features/auth/actions'
@@ -10,6 +10,7 @@ interface NavbarProps {
 }
 
 export function Navbar({ isLoggedIn = false }: NavbarProps) {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const pathname = usePathname()
   const router = useRouter()
 
@@ -72,12 +73,78 @@ export function Navbar({ isLoggedIn = false }: NavbarProps) {
           )}
         </nav>
 
-        <button className="md:hidden flex flex-col gap-1.5 p-2" aria-label="Menú">
-          <span className="block w-5 h-0.5 bg-muted-foreground rounded" />
-          <span className="block w-5 h-0.5 bg-muted-foreground rounded" />
-          <span className="block w-5 h-0.5 bg-muted-foreground rounded" />
+        <button
+          className="md:hidden flex flex-col gap-1.5 p-2 items-center justify-center"
+          aria-label="Menú"
+          onClick={() => setMobileMenuOpen((prev) => !prev)}
+        >
+          {mobileMenuOpen ? (
+            <span className="block text-lg text-muted-foreground leading-none">✕</span>
+          ) : (
+            <>
+              <span className="block w-5 h-0.5 bg-muted-foreground rounded" />
+              <span className="block w-5 h-0.5 bg-muted-foreground rounded" />
+              <span className="block w-5 h-0.5 bg-muted-foreground rounded" />
+            </>
+          )}
         </button>
       </div>
+
+      {mobileMenuOpen && (
+        <div className="md:hidden border-b border-border bg-background px-4 py-4 space-y-3">
+          <Link
+            href="/psicologos"
+            className={`block text-sm transition-colors ${pathname === '/psicologos' ? 'text-primary font-medium' : 'text-muted-foreground hover:text-foreground'}`}
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            Psicólogos
+          </Link>
+          <Link
+            href="/registro-psicologo"
+            className={`block text-sm transition-colors ${pathname === '/registro-psicologo' ? 'text-primary font-medium' : 'text-muted-foreground hover:text-foreground'}`}
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            Soy Psicólogo
+          </Link>
+          {isLoggedIn ? (
+            <>
+              <Link
+                href="/dashboard"
+                className="block text-sm bg-primary text-white px-4 py-2 rounded-radius-button hover:bg-primary-dark transition-colors text-center"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Dashboard
+              </Link>
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false)
+                  handleLogout()
+                }}
+                className="block w-full text-sm text-danger hover:text-danger/80 transition-colors text-left"
+              >
+                Cerrar sesión
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="block text-sm text-muted-foreground hover:text-foreground transition-colors"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Ingresar
+              </Link>
+              <Link
+                href="/psicologos"
+                className="block text-sm bg-primary text-white px-4 py-2 rounded-radius-button hover:bg-primary-dark transition-colors text-center"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Buscar espacio
+              </Link>
+            </>
+          )}
+        </div>
+      )}
     </header>
   )
 }
