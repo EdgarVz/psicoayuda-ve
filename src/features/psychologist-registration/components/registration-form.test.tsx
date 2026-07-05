@@ -9,9 +9,10 @@ vi.mock('@/features/psychologist-registration/actions', () => ({
 describe('RegistrationForm', () => {
   it('renders the form fields', () => {
     render(<RegistrationForm />)
-    expect(screen.getByLabelText('Nombre completo')).toBeDefined()
-    expect(screen.getByLabelText('Número de colegiatura')).toBeDefined()
-    expect(screen.getByLabelText('Enlace de WhatsApp')).toBeDefined()
+    expect(screen.getByLabelText(/Nombre completo/)).toBeDefined()
+    expect(screen.getByLabelText(/Número de colegiatura/)).toBeDefined()
+    expect(screen.getByLabelText(/Enlace de WhatsApp/)).toBeDefined()
+    expect(screen.getByLabelText(/Sobre ti/)).toBeDefined()
   })
 
   it('renders specialty pills', () => {

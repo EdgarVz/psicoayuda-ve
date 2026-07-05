@@ -93,44 +93,59 @@ export async function rejectPsychologist(profileId: string): Promise<{ error?: s
 }
 
 export async function getPendingPsychologists(): Promise<PendingPsychologist[]> {
-  const adminSupabase = createAdminSupabase()
+  try {
+    const adminSupabase = createAdminSupabase()
 
-  const { data: profiles } = await adminSupabase
-    .from('profiles')
-    .select('id, display_name, avatar_url, created_at')
-    .eq('role', 'psychologist')
-    .order('created_at', { ascending: false })
+    const { data: profiles, error: profilesError } = await adminSupabase
+      .from('profiles')
+      .select('id, display_name, avatar_url, created_at')
+      .eq('role', 'psychologist')
+      .order('created_at', { ascending: false })
 
-  const profileIds = (profiles ?? []).map((p) => p.id)
-  if (profileIds.length === 0) return []
+    if (profilesError) {
+      logger.error('getPendingPsychologists profiles query failed', profilesError)
+      return []
+    }
 
-  const { data: psyProfiles } = await adminSupabase
-    .from('psychologist_profiles')
-    .select('id, full_name, license_number, license_document, license_verified')
-    .in('id', profileIds)
+    const profileIds = (profiles ?? []).map((p) => p.id)
+    if (profileIds.length === 0) return []
 
-  const pendingIds = new Set(
-    (psyProfiles ?? [])
-      .filter((p) => p.license_verified === false)
-      .map((p) => p.id)
-  )
+    const { data: psyProfiles, error: psyError } = await adminSupabase
+      .from('psychologist_profiles')
+      .select('id, full_name, license_number, license_document, license_verified')
+      .in('id', profileIds)
 
-  const psyById = new Map(
-    (psyProfiles ?? []).map((p) => [p.id, p])
-  )
+    if (psyError) {
+      logger.error('getPendingPsychologists psyProfiles query failed', psyError)
+      return []
+    }
 
-  return (profiles ?? [])
-    .filter((p) => pendingIds.has(p.id))
-    .map((row) => {
-      const psy = psyById.get(row.id)!
-      return {
-        id: row.id,
-        displayName: row.display_name,
-        avatarUrl: row.avatar_url,
-        createdAt: row.created_at,
-        fullName: psy.full_name,
-        licenseNumber: psy.license_number,
-        licenseDocument: psy.license_document,
-      }
-    })
+    const pendingIds = new Set(
+      (psyProfiles ?? [])
+        .filter((p) => !p.license_verified)
+        .map((p) => p.id)
+    )
+
+    const psyById = new Map(
+      (psyProfiles ?? []).map((p) => [p.id, p])
+    )
+
+    return (profiles ?? [])
+      .filter((p) => pendingIds.has(p.id))
+      .map((row) => {
+        const psy = psyById.get(row.id)!
+        return {
+          id: row.id,
+          displayName: row.display_name,
+          avatarUrl: row.avatar_url,
+          createdAt: row.created_at,
+          fullName: psy.full_name,
+          licenseNumber: psy.license_number,
+          licenseDocument: psy.license_document,
+        }
+      })
+  } catch (e) {
+    logger.error('getPendingPsychologists unexpected error', { error: e })
+    return []
+  }
 }

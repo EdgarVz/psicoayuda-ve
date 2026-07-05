@@ -133,7 +133,7 @@ export function RegistrationForm({ userLoggedIn = false }: RegistrationFormProps
     <form onSubmit={handleSubmit} className="space-y-6">
       <div>
         <label htmlFor="fullName" className="block text-sm font-medium mb-1">
-          Nombre completo
+          Nombre completo <span className="text-destructive">*</span>
         </label>
         <input
           id="fullName"
@@ -144,11 +144,12 @@ export function RegistrationForm({ userLoggedIn = false }: RegistrationFormProps
           placeholder="Tu nombre completo"
           required
         />
+        <p className="text-xs text-muted-foreground mt-1">Mínimo 3 caracteres</p>
       </div>
 
       <div>
         <label htmlFor="licenseNumber" className="block text-sm font-medium mb-1">
-          Número de colegiatura
+          Número de colegiatura <span className="text-destructive">*</span>
         </label>
         <input
           id="licenseNumber"
@@ -159,11 +160,12 @@ export function RegistrationForm({ userLoggedIn = false }: RegistrationFormProps
           placeholder="Ej: 12345"
           required
         />
+        <p className="text-xs text-muted-foreground mt-1">Mínimo 4 caracteres</p>
       </div>
 
       <div>
         <label htmlFor="whatsappLink" className="block text-sm font-medium mb-1">
-          Enlace de WhatsApp
+          Enlace de WhatsApp <span className="text-destructive">*</span>
         </label>
         <input
           id="whatsappLink"
@@ -179,7 +181,7 @@ export function RegistrationForm({ userLoggedIn = false }: RegistrationFormProps
 
       <div>
         <label htmlFor="biography" className="block text-sm font-medium mb-1">
-          Sobre ti
+          Sobre ti <span className="text-destructive">*</span>
         </label>
         <textarea
           id="biography"
@@ -189,11 +191,12 @@ export function RegistrationForm({ userLoggedIn = false }: RegistrationFormProps
           placeholder="Cuéntanos sobre tu experiencia, enfoque terapéutico y motivación para unirte"
           required
         />
+        <p className="text-xs text-muted-foreground mt-1">{biography.length}/1000 caracteres</p>
       </div>
 
       <fieldset>
         <legend className="text-sm font-medium mb-2">
-          Idiomas de atención
+          Idiomas de atención <span className="text-destructive">*</span>
         </legend>
         <div className="flex flex-wrap gap-2">
           {['español', 'inglés', 'portugués', 'francés'].map((lang) => (
@@ -215,7 +218,7 @@ export function RegistrationForm({ userLoggedIn = false }: RegistrationFormProps
 
       <fieldset>
         <legend className="text-sm font-medium mb-2">
-          Disponibilidad
+          Disponibilidad <span className="text-destructive">*</span>
         </legend>
         <div className="space-y-3">
           <div className="flex flex-wrap gap-2">
@@ -249,12 +252,13 @@ export function RegistrationForm({ userLoggedIn = false }: RegistrationFormProps
             placeholder="Ej: 9:00 - 15:00"
             required
           />
+          <p className="text-xs text-muted-foreground mt-1">Ej: 9:00 - 15:00</p>
         </div>
       </fieldset>
 
       <fieldset>
         <legend className="text-sm font-medium mb-2">
-          Especialidades
+          Especialidades <span className="text-destructive">*</span>
         </legend>
         <div className="flex flex-wrap gap-2">
           {Object.entries(SPECIALTY_LABELS).map(([value, label]) => (
