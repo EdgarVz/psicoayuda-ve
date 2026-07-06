@@ -628,6 +628,31 @@ Brainstorming + diseño + plan de implementación para 5 áreas de robustez:
 - `docs/superpowers/specs/2026-07-05-robustez-notificaciones-rls-onboarding-design.md`
 - `docs/superpowers/plans/2026-07-05-robustez-implementation.md`
 
+### Implementación (worktree `feat/robustez-notificaciones-rls`)
+Los 10 tasks ejecutados con subagent-driven development + TDD:
+
+| Task | Archivos | Tests |
+|------|----------|-------|
+| 1. DB Migration | `notifications` table + enum + RLS | 175/175 |
+| 2. Types & Schemas | `types.ts`, `schemas.ts` + tests | 182/182 |
+| 3. Actions & Queries | `actions.ts`, `queries.ts` + tests | 198/198 |
+| 4. Wire notifications | 6 Server Actions modificados | 198/198 |
+| 5. UI Badge + Dropdown | `NotificationItem`, `NotificationDropdown`, Navbar | 205/205 |
+| 6. Notification list page | `/dashboard/notificaciones` con paginación | 206/206 |
+| 7. Loading states | spinners en todos los botones de acción | 206/206 |
+| 8. Onboarding | FAQ accordion + `/como-funciona` + empty states | 209/209 |
+| 9. E2E | `full-flow.spec.ts` (7 tests) | 7/7 E2E |
+| 10. Verificación | lint + tsc + build + test + E2E | ✅ |
+
+### Checks finales
+| Check | Resultado |
+|-------|-----------|
+| `npm run lint` | ✅ 0 errores, 0 warnings |
+| `npx tsc --noEmit` | ✅ |
+| `npm run build` | ✅ 14 rutas + Proxy |
+| `npm test` | ✅ 209/209 (42 suites) |
+| E2E full-flow | ✅ 7/7 passed |
+
 ---
 
 ## 2026-07-04 — Fix: catálogo mostraba "Usuario" en vez del nombre del psicólogo
