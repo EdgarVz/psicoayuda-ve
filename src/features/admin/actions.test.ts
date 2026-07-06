@@ -32,6 +32,10 @@ vi.mock('next/cache', () => ({
   revalidatePath: vi.fn(),
 }))
 
+vi.mock('@/features/notifications/actions', () => ({
+  createNotification: vi.fn().mockResolvedValue(undefined),
+}))
+
 describe('admin actions', () => {
   beforeEach(() => {
     vi.clearAllMocks()

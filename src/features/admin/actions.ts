@@ -5,6 +5,7 @@ import { createServerSupabase } from '@/lib/supabase/server'
 import { getResendClient } from '@/lib/resend'
 import { logger } from '@/lib/logger'
 import { revalidatePath } from 'next/cache'
+import { createNotification } from '@/features/notifications/actions'
 import type { PendingPsychologist } from '@/features/admin/types'
 
 async function checkAdminAuth(): Promise<{ error?: string } | { userId: string }> {
@@ -53,6 +54,14 @@ export async function verifyPsychologist(profileId: string): Promise<{ error?: s
     logger.warn('Error enviando notificación de verificación', { error: e })
   }
 
+  await createNotification({
+    userId: profileId,
+    type: 'profile_verified',
+    title: 'Perfil verificado',
+    body: 'Tu perfil como psicólogo ha sido verificado. Ya apareces en el catálogo.',
+    relatedId: profileId,
+  })
+
   revalidatePath('/admin')
   revalidatePath('/psicologos')
   return {}
@@ -87,6 +96,14 @@ export async function rejectPsychologist(profileId: string): Promise<{ error?: s
   } catch (e) {
     logger.warn('Error enviando notificación de rechazo', { error: e })
   }
+
+  await createNotification({
+    userId: profileId,
+    type: 'profile_rejected',
+    title: 'Registro rechazado',
+    body: 'Tu solicitud de registro como psicólogo no fue aprobada. Contacta al equipo administrativo si crees que hay un error.',
+    relatedId: profileId,
+  })
 
   revalidatePath('/admin')
   return {}
