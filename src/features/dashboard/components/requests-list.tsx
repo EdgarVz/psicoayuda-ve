@@ -7,10 +7,10 @@ import type { PatientRequestView, PsychologistRequestView } from '@/features/das
 
 interface RequestsListProps {
   requests: PatientRequestView[] | PsychologistRequestView[]
-  _role?: 'patient' | 'psychologist'
+  role?: 'patient' | 'psychologist'
 }
 
-export function RequestsList({ requests }: RequestsListProps) {
+export function RequestsList({ requests, role }: RequestsListProps) {
   const [filter, setFilter] = useState<'all' | 'pending' | 'accepted'>('all')
   const [loadingId, setLoadingId] = useState<string | null>(null)
 
@@ -137,9 +137,15 @@ export function RequestsList({ requests }: RequestsListProps) {
         ))}
 
         {filtered.length === 0 && (
-          <div className="text-center py-8">
-            <p className="text-muted-foreground">No hay solicitudes en esta categoría</p>
-            <p className="text-sm text-muted-foreground mt-2">Mientras tanto, revisa tu disponibilidad o actualiza tu perfil para que los pacientes te encuentren más fácil.</p>
+          <div className="text-center py-12 bg-white border border-border rounded-radius-card">
+            <p className="text-lg font-medium text-foreground mb-2">
+              No hay solicitudes {filter !== 'all' ? (filter === 'pending' ? 'pendientes' : 'aceptadas') : ''}
+            </p>
+            <p className="text-sm text-muted-foreground max-w-md mx-auto">
+              {role === 'psychologist'
+                ? 'Aún no has recibido solicitudes. Asegúrate de que tu perfil esté completo para que los pacientes te encuentren.'
+                : 'No has enviado ninguna solicitud aún. Explora nuestro catálogo de psicólogos y da el primer paso.'}
+            </p>
           </div>
         )}
       </div>

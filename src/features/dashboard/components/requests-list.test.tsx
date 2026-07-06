@@ -92,6 +92,6 @@ describe('RequestsList (psychologist view)', () => {
 describe('RequestsList (empty state)', () => {
   it('shows empty message when no requests match filter', () => {
     render(<RequestsList requests={[]}  />)
-    expect(screen.getByText('No hay solicitudes en esta categoría')).toBeDefined()
+    expect(screen.getByText(/No hay solicitudes/)).toBeDefined()
   })
 })
