@@ -37,6 +37,10 @@ vi.mock('@/lib/logger', () => ({
   logger: { error: vi.fn(), warn: vi.fn(), info: vi.fn() },
 }))
 
+vi.mock('@/features/notifications/actions', () => ({
+  createNotification: vi.fn().mockResolvedValue(undefined),
+}))
+
 function makeGoodChain() {
   const chain: Record<string, ReturnType<typeof vi.fn>> = {}
   chain.select = vi.fn(() => chain)

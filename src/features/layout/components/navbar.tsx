@@ -4,12 +4,16 @@ import { useCallback, useState } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { signOut, clearAuthCookie } from '@/features/auth/actions'
+import type { NotificationRow } from '@/features/notifications/types'
+import { NotificationDropdown } from '@/features/notifications/components/notification-dropdown'
 
 interface NavbarProps {
   isLoggedIn?: boolean
+  unreadCount?: number
+  recentNotifications?: NotificationRow[]
 }
 
-export function Navbar({ isLoggedIn = false }: NavbarProps) {
+export function Navbar({ isLoggedIn = false, unreadCount = 0, recentNotifications = [] }: NavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const pathname = usePathname()
   const router = useRouter()
@@ -28,6 +32,12 @@ export function Navbar({ isLoggedIn = false }: NavbarProps) {
         </Link>
 
         <nav className="hidden md:flex items-center gap-6">
+          <Link
+            href="/como-funciona"
+            className={`text-sm transition-colors ${pathname === '/como-funciona' ? 'text-primary font-medium' : 'text-muted-foreground hover:text-foreground'}`}
+          >
+            ¿Cómo funciona?
+          </Link>
           <Link
             href="/psicologos"
             className={`text-sm transition-colors ${pathname === '/psicologos' ? 'text-primary font-medium' : 'text-muted-foreground hover:text-foreground'}`}
@@ -48,6 +58,10 @@ export function Navbar({ isLoggedIn = false }: NavbarProps) {
               >
                 Dashboard
               </Link>
+              <NotificationDropdown
+                initialCount={unreadCount}
+                initialNotifications={recentNotifications}
+              />
               <button
                 onClick={handleLogout}
                 className="text-sm text-danger hover:text-danger/80 transition-colors"
@@ -93,6 +107,13 @@ export function Navbar({ isLoggedIn = false }: NavbarProps) {
       {mobileMenuOpen && (
         <div className="md:hidden border-b border-border bg-background px-4 py-4 space-y-3">
           <Link
+            href="/como-funciona"
+            className={`block text-sm transition-colors ${pathname === '/como-funciona' ? 'text-primary font-medium' : 'text-muted-foreground hover:text-foreground'}`}
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            ¿Cómo funciona?
+          </Link>
+          <Link
             href="/psicologos"
             className={`block text-sm transition-colors ${pathname === '/psicologos' ? 'text-primary font-medium' : 'text-muted-foreground hover:text-foreground'}`}
             onClick={() => setMobileMenuOpen(false)}
@@ -115,6 +136,12 @@ export function Navbar({ isLoggedIn = false }: NavbarProps) {
               >
                 Dashboard
               </Link>
+              <div className="flex justify-center">
+                <NotificationDropdown
+                  initialCount={unreadCount}
+                  initialNotifications={recentNotifications}
+                />
+              </div>
               <button
                 onClick={() => {
                   setMobileMenuOpen(false)

@@ -21,6 +21,10 @@ vi.mock('next/cache', () => ({
   revalidatePath: vi.fn(),
 }))
 
+vi.mock('@/features/notifications/actions', () => ({
+  createNotification: vi.fn().mockResolvedValue(undefined),
+}))
+
 import { createServerSupabase } from '@/lib/supabase/server'
 import { createAdminSupabase } from '@/lib/supabase/admin'
 import { getResendClient } from '@/lib/resend'

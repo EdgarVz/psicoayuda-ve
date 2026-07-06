@@ -7,6 +7,7 @@ import { psychologistRegistrationSchema, type PsychologistRegistrationInput } fr
 import { logger } from '@/lib/logger'
 import { getResendClient } from '@/lib/resend'
 import { revalidatePath } from 'next/cache'
+import { createNotification } from '@/features/notifications/actions'
 
 export async function checkExistingProfile(): Promise<{ exists: boolean }> {
   try {
@@ -80,6 +81,13 @@ async function registerPsychologistImpl(
   } catch (e) {
     logger.warn('Error enviando notificación de registro', { error: e })
   }
+
+  await createNotification({
+    userId: user.id,
+    type: 'profile_verified',
+    title: 'Registro recibido',
+    body: 'Hemos recibido tu solicitud de registro como psicólogo. Te notificaremos cuando sea revisada.',
+  })
 
   revalidatePath('/dashboard')
   return {}
