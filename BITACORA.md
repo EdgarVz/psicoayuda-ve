@@ -655,7 +655,16 @@ Los 10 tasks ejecutados con subagent-driven development + TDD:
 
 ---
 
-## 2026-07-06 — Fix: filtro catálogo + admin ver solicitudes
+## 2026-07-06 — Fix: dashboard psicólogo vacío + catálogo + admin solicitudes
+
+### Fix 1: Dashboard psicólogo no mostraba solicitudes
+**Causa:** `getPsychologistRequests` usaba `profiles!inner` (join anidado) pero `appointment_requests` tiene dos FKs a `profiles` (`patient_id` y `psychologist_id`). PostgREST no resolvía la ambigüedad y retornaba vacío.
+
+**Fix:** Refactorizado al mismo patrón que `getPatientRequests` — query separada de `appointment_requests` + query separada de `profiles` para nombres de pacientes + merge en JS. Se eliminó `NestedPatientProfile`.
+
+**Email:** `RESEND_API_KEY` configurada pero dominio `psicoayuda.org.ve` no verificado en Resend. Usar `onboarding@resend.dev` para dev o verificar en https://resend.com/domains.
+
+### Fix 2: Filtro de especialidad en `/psicologos`
 
 ### Fix 1: Filtro de especialidad en `/psicologos`
 **Causa:** `useState(initialPsychologists)` en `catalog-client.tsx` ignoraba el nuevo prop al re-renderizar del servidor tras cambiar `searchParams`.

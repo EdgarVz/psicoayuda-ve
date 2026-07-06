@@ -62,22 +62,27 @@ function mockPatientData() {
 }
 
 function mockPsychologistData() {
-  const mockOrder = vi.fn().mockResolvedValue({
-    data: [
-      {
-        id: 'req-1',
-        status: 'pending',
-        reason: ['ansiedad'],
-        patient_age: 30,
-        created_at: '2026-06-29T12:00:00Z',
-        profiles: { display_name: 'Paciente A' },
-      },
-    ],
+  let callCount = 0
+  const mockOrder = vi.fn().mockImplementation(() => {
+    callCount++
+    if (callCount === 1) {
+      return Promise.resolve({
+        data: [{ id: 'req-1', status: 'pending', reason: ['ansiedad'], patient_age: 30, created_at: '2026-06-29T12:00:00Z', patient_id: 'patient-1' }],
+        error: null,
+      })
+    }
+    return Promise.resolve({ data: [] as never[], error: null })
+  })
+
+  const mockIn = vi.fn().mockResolvedValue({
+    data: [{ id: 'patient-1', display_name: 'Paciente A' }],
     error: null,
   })
 
-  const mockEq = vi.fn(() => ({ order: mockOrder }))
-  const mockSelect = vi.fn(() => ({ eq: mockEq }))
+  const mockSelect = vi.fn()
+  mockSelect.mockReturnValueOnce({ eq: vi.fn(() => ({ order: mockOrder })) })
+  mockSelect.mockReturnValueOnce({ in: mockIn })
+
   const mockFrom = vi.fn(() => ({ select: mockSelect }))
 
   vi.mocked(createServerSupabase).mockResolvedValue({ from: mockFrom } as never)
