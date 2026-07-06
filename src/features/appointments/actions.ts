@@ -7,6 +7,7 @@ import { withRateLimit } from '@/lib/rate-limit'
 import { getResendClient } from '@/lib/resend'
 import { appointmentRequestSchema, type AppointmentRequestInput } from './schemas'
 import { logger } from '@/lib/logger'
+import { createNotification } from '@/features/notifications/actions'
 
 async function submitRequestImpl(input: AppointmentRequestInput): Promise<
   { data: { id: string } } | { error: string }
@@ -57,6 +58,14 @@ async function submitRequestImpl(input: AppointmentRequestInput): Promise<
   } catch (e) {
     logger.warn('Error enviando notificación de nueva solicitud', { error: e })
   }
+
+  await createNotification({
+    userId: parsed.data.psychologist_id,
+    type: 'request_received',
+    title: 'Nueva solicitud de ayuda',
+    body: 'Un paciente ha solicitado una cita contigo. Revisa tu panel para más detalles.',
+    relatedId: data.id,
+  })
 
   revalidatePath('/dashboard')
   return { data: { id: data.id } }
@@ -117,6 +126,14 @@ export async function acceptRequest(requestId: string): Promise<{ error?: string
     logger.warn('Error enviando notificación de cita aceptada', { error: e })
   }
 
+  await createNotification({
+    userId: request.patient_id,
+    type: 'request_accepted',
+    title: 'Solicitud aceptada',
+    body: 'Tu solicitud de cita fue aceptada. Ya puedes contactar al psicólogo vía WhatsApp.',
+    relatedId: requestId,
+  })
+
   revalidatePath('/dashboard')
   return {}
 }
@@ -165,6 +182,14 @@ export async function rejectRequest(requestId: string): Promise<{ error?: string
   } catch (e) {
     logger.warn('Error enviando notificación de cita rechazada', { error: e })
   }
+
+  await createNotification({
+    userId: request.patient_id,
+    type: 'request_rejected',
+    title: 'Solicitud rechazada',
+    body: 'Tu solicitud de cita fue rechazada. Puedes intentar con otro psicólogo disponible.',
+    relatedId: requestId,
+  })
 
   revalidatePath('/dashboard')
   return {}

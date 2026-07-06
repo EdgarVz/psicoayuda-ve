@@ -6,10 +6,6 @@ interface NestedPsychologistProfile {
   whatsapp_link: string | null
 }
 
-interface NestedPatientProfile {
-  display_name: string
-}
-
 export async function getPatientRequests(userId: string): Promise<PatientRequestView[]> {
   const supabase = await createServerSupabase()
 
@@ -54,24 +50,32 @@ export async function getPatientRequests(userId: string): Promise<PatientRequest
 export async function getPsychologistRequests(userId: string): Promise<PsychologistRequestView[]> {
   const supabase = await createServerSupabase()
 
-  const { data } = await supabase
+  const { data: requests } = await supabase
     .from('appointment_requests')
-    .select(`
-      id,
-      status,
-      reason,
-      patient_age,
-      created_at,
-      profiles!inner (
-        display_name
-      )
-    `)
+    .select('id, status, reason, patient_age, created_at, patient_id')
     .eq('psychologist_id', userId)
     .order('created_at', { ascending: false })
 
-  return (data ?? []).map((row) => ({
+  const rows = requests ?? []
+
+  const patientIds = [...new Set(rows.map((r) => r.patient_id))] as string[]
+
+  const nameByPatientId = new Map<string, string>()
+
+  if (patientIds.length > 0) {
+    const { data: patients } = await supabase
+      .from('profiles')
+      .select('id, display_name')
+      .in('id', patientIds)
+
+    for (const p of (patients ?? []) as { id: string; display_name: string }[]) {
+      nameByPatientId.set(p.id, p.display_name)
+    }
+  }
+
+  return rows.map((row) => ({
     id: row.id,
-    patientName: (row.profiles as unknown as NestedPatientProfile).display_name,
+    patientName: nameByPatientId.get(row.patient_id) ?? 'Desconocido',
     patientAge: row.patient_age,
     reason: row.reason,
     status: row.status,

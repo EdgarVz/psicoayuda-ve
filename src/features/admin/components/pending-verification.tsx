@@ -12,6 +12,7 @@ interface PendingVerificationProps {
 
 export function PendingVerification({ psychologists }: PendingVerificationProps) {
   const [selected, setSelected] = useState<PendingPsychologist | null>(null)
+  const [loadingId, setLoadingId] = useState<string | null>(null)
 
   async function handleVerify(id: string) {
     const result = await verifyPsychologist(id)
@@ -78,15 +79,37 @@ export function PendingVerification({ psychologists }: PendingVerificationProps)
               <td className="py-3">
                 <div className="flex gap-2">
                   <button
-                    onClick={() => handleVerify(psy.id)}
-                    className="text-sm bg-available text-white px-3 py-1.5 rounded-radius-button hover:opacity-90 transition-opacity"
+                    onClick={async () => {
+                      setLoadingId(psy.id)
+                      await handleVerify(psy.id)
+                      setLoadingId(null)
+                    }}
+                    disabled={loadingId === psy.id}
+                    className="text-sm bg-available text-white px-3 py-1.5 rounded-radius-button hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-1"
                   >
+                    {loadingId === psy.id ? (
+                      <svg className="animate-spin h-3 w-3" viewBox="0 0 24 24" fill="none">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                      </svg>
+                    ) : null}
                     Verificar
                   </button>
                   <button
-                    onClick={() => handleReject(psy.id)}
-                    className="text-sm bg-danger text-white px-3 py-1.5 rounded-radius-button hover:opacity-90 transition-opacity"
+                    onClick={async () => {
+                      setLoadingId(psy.id)
+                      await handleReject(psy.id)
+                      setLoadingId(null)
+                    }}
+                    disabled={loadingId === psy.id}
+                    className="text-sm bg-danger text-white px-3 py-1.5 rounded-radius-button hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-1"
                   >
+                    {loadingId === psy.id ? (
+                      <svg className="animate-spin h-3 w-3" viewBox="0 0 24 24" fill="none">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                      </svg>
+                    ) : null}
                     Rechazar
                   </button>
                 </div>
@@ -102,6 +125,7 @@ export function PendingVerification({ psychologists }: PendingVerificationProps)
           onClose={() => setSelected(null)}
           onVerify={handleVerify}
           onReject={handleReject}
+          loadingId={loadingId}
         />
       )}
     </div>

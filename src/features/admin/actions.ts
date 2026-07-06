@@ -5,7 +5,8 @@ import { createServerSupabase } from '@/lib/supabase/server'
 import { getResendClient } from '@/lib/resend'
 import { logger } from '@/lib/logger'
 import { revalidatePath } from 'next/cache'
-import type { PendingPsychologist } from '@/features/admin/types'
+import { createNotification } from '@/features/notifications/actions'
+import type { PendingPsychologist, AdminAppointmentRequest } from '@/features/admin/types'
 
 async function checkAdminAuth(): Promise<{ error?: string } | { userId: string }> {
   try {
@@ -53,6 +54,14 @@ export async function verifyPsychologist(profileId: string): Promise<{ error?: s
     logger.warn('Error enviando notificación de verificación', { error: e })
   }
 
+  await createNotification({
+    userId: profileId,
+    type: 'profile_verified',
+    title: 'Perfil verificado',
+    body: 'Tu perfil como psicólogo ha sido verificado. Ya apareces en el catálogo.',
+    relatedId: profileId,
+  })
+
   revalidatePath('/admin')
   revalidatePath('/psicologos')
   return {}
@@ -87,6 +96,14 @@ export async function rejectPsychologist(profileId: string): Promise<{ error?: s
   } catch (e) {
     logger.warn('Error enviando notificación de rechazo', { error: e })
   }
+
+  await createNotification({
+    userId: profileId,
+    type: 'profile_rejected',
+    title: 'Registro rechazado',
+    body: 'Tu solicitud de registro como psicólogo no fue aprobada. Contacta al equipo administrativo si crees que hay un error.',
+    relatedId: profileId,
+  })
 
   revalidatePath('/admin')
   return {}
@@ -146,6 +163,55 @@ export async function getPendingPsychologists(): Promise<PendingPsychologist[]> 
       })
   } catch (e) {
     logger.error('getPendingPsychologists unexpected error', { error: e })
+    return []
+  }
+}
+
+export async function getAllAppointmentRequests(): Promise<AdminAppointmentRequest[]> {
+  try {
+    const adminSupabase = createAdminSupabase()
+
+    const { data: requests, error: reqError } = await adminSupabase
+      .from('appointment_requests')
+      .select('id, patient_id, psychologist_id, reason, status, created_at')
+      .order('created_at', { ascending: false })
+
+    if (reqError) {
+      logger.error('getAllAppointmentRequests failed', reqError)
+      return []
+    }
+
+    const allIds = new Set<string>()
+    for (const r of requests ?? []) {
+      allIds.add(r.patient_id)
+      allIds.add(r.psychologist_id)
+    }
+
+    const ids = [...allIds] as string[]
+    if (ids.length === 0) return []
+
+    const { data: profiles, error: profError } = await adminSupabase
+      .from('profiles')
+      .select('id, display_name')
+      .in('id', ids)
+
+    if (profError) {
+      logger.error('getAllAppointmentRequests profiles query failed', profError)
+      return []
+    }
+
+    const nameById = new Map((profiles ?? []).map((p) => [p.id, p.display_name]))
+
+    return (requests ?? []).map((row) => ({
+      id: row.id,
+      patientName: nameById.get(row.patient_id) ?? 'Desconocido',
+      psychologistName: nameById.get(row.psychologist_id) ?? 'Desconocido',
+      reason: row.reason,
+      status: row.status ?? 'pending',
+      createdAt: row.created_at ?? '',
+    }))
+  } catch (e) {
+    logger.error('getAllAppointmentRequests unexpected error', { error: e })
     return []
   }
 }

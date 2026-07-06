@@ -14,7 +14,6 @@ interface CatalogClientProps {
 export function CatalogClient({ initialPsychologists, initialSpecialties }: CatalogClientProps) {
   const router = useRouter()
   const [selectedSpecialties, setSelectedSpecialties] = useState<string[]>(initialSpecialties)
-  const [psychologists] = useState(initialPsychologists)
 
   function handleSpecialtyChange(specialties: string[]) {
     setSelectedSpecialties(specialties)
@@ -27,7 +26,7 @@ export function CatalogClient({ initialPsychologists, initialSpecialties }: Cata
     <>
       <SpecialtyFilter selected={selectedSpecialties} onChange={handleSpecialtyChange} />
       <div className="mt-6">
-        <PsychologistList psychologists={psychologists} />
+        <PsychologistList psychologists={initialPsychologists} />
       </div>
     </>
   )

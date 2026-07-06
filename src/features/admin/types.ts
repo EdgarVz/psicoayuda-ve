@@ -7,3 +7,12 @@ export interface PendingPsychologist {
   avatarUrl: string | null
   createdAt: string
 }
+
+export interface AdminAppointmentRequest {
+  id: string
+  patientName: string
+  psychologistName: string | null
+  reason: string[]
+  status: string
+  createdAt: string
+}

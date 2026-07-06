@@ -7,11 +7,12 @@ import type { PatientRequestView, PsychologistRequestView } from '@/features/das
 
 interface RequestsListProps {
   requests: PatientRequestView[] | PsychologistRequestView[]
-  _role?: 'patient' | 'psychologist'
+  role?: 'patient' | 'psychologist'
 }
 
-export function RequestsList({ requests }: RequestsListProps) {
+export function RequestsList({ requests, role }: RequestsListProps) {
   const [filter, setFilter] = useState<'all' | 'pending' | 'accepted'>('all')
+  const [loadingId, setLoadingId] = useState<string | null>(null)
 
   const filtered = requests.filter((r) => {
     if (filter === 'all') return true
@@ -74,15 +75,37 @@ export function RequestsList({ requests }: RequestsListProps) {
                 {req.status === 'pending' && (
                   <div className="flex gap-2 mt-3">
                     <button
-                      onClick={() => acceptRequest(req.id)}
-                      className="text-sm bg-available text-white px-4 py-1.5 rounded-radius-button hover:opacity-90 transition-opacity"
+                      onClick={async () => {
+                        setLoadingId(req.id)
+                        await acceptRequest(req.id)
+                        setLoadingId(null)
+                      }}
+                      disabled={loadingId === req.id}
+                      className="text-sm bg-available text-white px-4 py-1.5 rounded-radius-button hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-1"
                     >
+                      {loadingId === req.id ? (
+                        <svg className="animate-spin h-3 w-3" viewBox="0 0 24 24" fill="none">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                        </svg>
+                      ) : null}
                       Aceptar
                     </button>
                     <button
-                      onClick={() => rejectRequest(req.id)}
-                      className="text-sm bg-danger text-white px-4 py-1.5 rounded-radius-button hover:opacity-90 transition-opacity"
+                      onClick={async () => {
+                        setLoadingId(req.id)
+                        await rejectRequest(req.id)
+                        setLoadingId(null)
+                      }}
+                      disabled={loadingId === req.id}
+                      className="text-sm bg-danger text-white px-4 py-1.5 rounded-radius-button hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-1"
                     >
+                      {loadingId === req.id ? (
+                        <svg className="animate-spin h-3 w-3" viewBox="0 0 24 24" fill="none">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                        </svg>
+                      ) : null}
                       Rechazar
                     </button>
                   </div>
@@ -114,9 +137,15 @@ export function RequestsList({ requests }: RequestsListProps) {
         ))}
 
         {filtered.length === 0 && (
-          <div className="text-center py-8">
-            <p className="text-muted-foreground">No hay solicitudes en esta categoría</p>
-            <p className="text-sm text-muted-foreground mt-2">Mientras tanto, revisa tu disponibilidad o actualiza tu perfil para que los pacientes te encuentren más fácil.</p>
+          <div className="text-center py-12 bg-white border border-border rounded-radius-card">
+            <p className="text-lg font-medium text-foreground mb-2">
+              No hay solicitudes {filter !== 'all' ? (filter === 'pending' ? 'pendientes' : 'aceptadas') : ''}
+            </p>
+            <p className="text-sm text-muted-foreground max-w-md mx-auto">
+              {role === 'psychologist'
+                ? 'Aún no has recibido solicitudes. Asegúrate de que tu perfil esté completo para que los pacientes te encuentren.'
+                : 'No has enviado ninguna solicitud aún. Explora nuestro catálogo de psicólogos y da el primer paso.'}
+            </p>
           </div>
         )}
       </div>
