@@ -655,6 +655,33 @@ Los 10 tasks ejecutados con subagent-driven development + TDD:
 
 ---
 
+## 2026-07-06 — Fix: filtro catálogo + admin ver solicitudes
+
+### Fix 1: Filtro de especialidad en `/psicologos`
+**Causa:** `useState(initialPsychologists)` en `catalog-client.tsx` ignoraba el nuevo prop al re-renderizar del servidor tras cambiar `searchParams`.
+
+**Fix:** Eliminado `useState`, usa `initialPsychologists` directamente del prop.
+
+### Fix 2: Admin no veía solicitudes de cita
+**Causa:** Página `/admin` solo tenía la sección de verificaciones de psicólogos. Nunca se implementó la vista de solicitudes de cita. RLS bloqueaba queries de admins.
+
+**Fix:**
+- `types.ts`: nuevo tipo `AdminAppointmentRequest`
+- `actions.ts`: nueva `getAllAppointmentRequests()` con admin client (bypass RLS)
+- Nuevo componente `appointment-requests-table.tsx` (tabla con paciente, psicólogo, motivo, estado, fecha)
+- `admin/page.tsx`: nueva sección "Solicitudes de cita"
+- Instalado `@testing-library/user-event` que faltaba (3 suites fallaban)
+
+### Checks
+| Check | Resultado |
+|-------|-----------|
+| `npm run lint` | ✅ |
+| `npx tsc --noEmit` | ✅ (solo preexistentes) |
+| `npm run build` | ✅ 14 rutas + Proxy |
+| `npm test` | ✅ 209/209 (42 suites) |
+
+---
+
 ## 2026-07-05 — UI: mostrar mínimo de caracteres en "Sobre ti"
 
 ### Cambio
