@@ -1,5 +1,4 @@
 import { describe, it, expect } from 'vitest'
-import type { NotificationRow } from './types'
 import type { Database } from '@/types/database'
 
 describe('NotificationRow type', () => {
