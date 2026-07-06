@@ -691,6 +691,25 @@ Los 10 tasks ejecutados con subagent-driven development + TDD:
 
 ---
 
+## 2026-07-06 — Fix: discrepancias doc-código y deuda técnica
+
+### Cambios
+- `src/proxy.ts`: agregado `/como-funciona` a `publicPaths` y `api/auth` al matcher exclusion
+- `src/middleware.test.ts`: nuevo test para ruta pública `/como-funciona`
+- `docs/superpowers/plans/2026-07-01-four-features.md`: marcados todos los checkboxes como `[x]`
+- `docs/superpowers/plans/2026-07-05-robustez-implementation.md`: marcados todos los checkboxes como `[x]`
+- Rama `feat/robustez-notificaciones-rls` eliminada (local + remoto + worktree Paseo)
+
+### Checks
+| Check | Resultado |
+|-------|-----------|
+| `npm run lint` | ✅ |
+| `npx tsc --noEmit` | ✅ |
+| `npm run build` | ✅ 14 rutas + Proxy |
+| `npm test` | ✅ 210/210 (42 suites) |
+
+---
+
 ## 2026-07-05 — UI: mostrar mínimo de caracteres en "Sobre ti"
 
 ### Cambio

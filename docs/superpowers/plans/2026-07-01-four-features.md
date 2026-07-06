@@ -1,6 +1,6 @@
 # Four Features Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Implement rate limiting integration, WhatsApp link post-approval, edit psychologist profile, and E2E tests with network mocks.
 
@@ -20,11 +20,11 @@
 - Modify: `src/features/appointments/actions.ts` — wrap `submitRequest`
 - Modify: `src/features/psychologist/actions.ts` — wrap `updatePsychologistProfile` (will be created in Task 3)
 
-- [ ] **Step 1: Read existing rate-limit.ts**
+- [x] **Step 1: Read existing rate-limit.ts**
 
 Read `src/lib/rate-limit.ts` to understand current implementation.
 
-- [ ] **Step 2: Write rate-limit.test.ts**
+- [x] **Step 2: Write rate-limit.test.ts**
 
 ```typescript
 import { describe, it, expect, vi, beforeEach } from 'vitest'
@@ -85,7 +85,7 @@ describe('withRateLimit', () => {
 Run: `npx vitest run src/lib/rate-limit.test.ts`
 Expected: FAIL (rate-limit.ts doesn't export `withRateLimit` yet)
 
-- [ ] **Step 3: Add `withRateLimit` to rate-limit.ts**
+- [x] **Step 3: Add `withRateLimit` to rate-limit.ts**
 
 ```typescript
 import { logger } from '@/lib/logger'
@@ -144,12 +144,12 @@ export function withRateLimit<T extends (...args: unknown[]) => unknown>(
 }
 ```
 
-- [ ] **Step 4: Run tests to verify**
+- [x] **Step 4: Run tests to verify**
 
 Run: `npx vitest run src/lib/rate-limit.test.ts`
 Expected: PASS
 
-- [ ] **Step 5: Wrap registerPsychologist with rate limit**
+- [x] **Step 5: Wrap registerPsychologist with rate limit**
 
 In `src/features/psychologist-registration/actions.ts`, add at top:
 
@@ -170,7 +170,7 @@ export const registerPsychologist = withRateLimit(
 
 Note: Keep the original function body, just wrap the export.
 
-- [ ] **Step 6: Wrap sendMagicLink with rate limit**
+- [x] **Step 6: Wrap sendMagicLink with rate limit**
 
 In `src/features/auth/actions.ts`, wrap `sendMagicLink`:
 
@@ -189,7 +189,7 @@ export const sendMagicLink = withRateLimit(
 )
 ```
 
-- [ ] **Step 7: Wrap submitRequest with rate limit**
+- [x] **Step 7: Wrap submitRequest with rate limit**
 
 In `src/features/appointments/actions.ts`, wrap `submitRequest`:
 
@@ -246,12 +246,12 @@ export const submitRequest = withRateLimit(
 )
 ```
 
-- [ ] **Step 8: Run all tests**
+- [x] **Step 8: Run all tests**
 
 Run: `npm test`
 Expected: All 165+ existing tests pass + new rate-limit tests pass
 
-- [ ] **Step 9: Commit**
+- [x] **Step 9: Commit**
 
 ```bash
 git add src/lib/rate-limit.ts src/lib/rate-limit.test.ts src/features/psychologist-registration/actions.ts src/features/auth/actions.ts src/features/appointments/actions.ts
@@ -269,12 +269,12 @@ git commit -m "feat: integrate rate limiting into Server Actions"
 - Create: `src/features/appointments/components/whatsapp-button.tsx`
 - Create: `src/features/appointments/components/request-status.test.tsx` (update/expand)
 
-- [ ] **Step 1: Read current request-status.tsx and solicitud page**
+- [x] **Step 1: Read current request-status.tsx and solicitud page**
 
 Read `src/features/appointments/components/request-status.tsx` to understand current rendering.
 Read `src/app/(auth)/solicitud/[id]/page.tsx` to understand data flow.
 
-- [ ] **Step 2: Create whatsapp-button.tsx**
+- [x] **Step 2: Create whatsapp-button.tsx**
 
 ```typescript
 'use client'
@@ -320,11 +320,11 @@ export function WhatsAppButton({ whatsappLink }: WhatsAppButtonProps) {
 }
 ```
 
-- [ ] **Step 3: Update request-status.tsx to show WhatsApp button on accepted**
+- [x] **Step 3: Update request-status.tsx to show WhatsApp button on accepted**
 
 In `request-status.tsx`, import and render `WhatsAppButton` when status is 'accepted'. Pass `whatsappLink` as a prop from the parent page.
 
-- [ ] **Step 4: Update solicitud/[id]/page.tsx to query whatsapp_link**
+- [x] **Step 4: Update solicitud/[id]/page.tsx to query whatsapp_link**
 
 The page already queries `appointment_requests`. When status is 'accepted', also query `psychologist_profiles.whatsapp_link` using `createServerSupabase()` (the RLS policy `whatsapp_on_accepted` will allow it since the patient has an accepted request).
 
@@ -344,16 +344,16 @@ if (request.status === 'accepted') {
 }
 ```
 
-- [ ] **Step 5: Write/update test for request-status.tsx**
+- [x] **Step 5: Write/update test for request-status.tsx**
 
 Update `src/features/appointments/components/request-status.test.tsx` (or create if doesn't exist) to test that WhatsApp button appears when status is 'accepted' and `whatsappLink` is provided.
 
-- [ ] **Step 6: Run tests**
+- [x] **Step 6: Run tests**
 
 Run: `npm test`
 Expected: PASS
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add src/features/appointments/components/ src/app/\(auth\)/solicitud/
@@ -372,7 +372,7 @@ git commit -m "feat: show WhatsApp link on accepted appointment request"
 - Modify: `src/app/(auth)/dashboard/page.tsx` (add nav link)
 - Create: `src/features/psychologist/components/edit-profile-form.test.tsx`
 
-- [ ] **Step 1: Create psychologist schemas.ts**
+- [x] **Step 1: Create psychologist schemas.ts**
 
 ```typescript
 import { z } from 'zod'
@@ -397,7 +397,7 @@ export const PsychologistProfileUpdateSchema = z.object({
 export type PsychologistProfileUpdateInput = z.infer<typeof PsychologistProfileUpdateSchema>
 ```
 
-- [ ] **Step 2: Create psychologist actions.ts**
+- [x] **Step 2: Create psychologist actions.ts**
 
 ```typescript
 'use server'
@@ -467,7 +467,7 @@ export const updatePsychologistProfile = withRateLimit(
 )
 ```
 
-- [ ] **Step 3: Create edit-profile-form.tsx**
+- [x] **Step 3: Create edit-profile-form.tsx**
 
 ```typescript
 'use client'
@@ -666,7 +666,7 @@ export function EditProfileForm({ initialData }: EditProfileFormProps) {
 }
 ```
 
-- [ ] **Step 4: Create page.tsx for editar-perfil**
+- [x] **Step 4: Create page.tsx for editar-perfil**
 
 ```typescript
 import { createServerSupabase } from '@/lib/supabase/server'
@@ -714,11 +714,11 @@ export default async function EditarPerfilPage() {
 }
 ```
 
-- [ ] **Step 5: Add nav link in dashboard page**
+- [x] **Step 5: Add nav link in dashboard page**
 
 In `src/app/(auth)/dashboard/page.tsx`, add a link to `/dashboard/editar-perfil` in the psychologist dashboard section.
 
-- [ ] **Step 6: Create edit-profile-form.test.tsx**
+- [x] **Step 6: Create edit-profile-form.test.tsx**
 
 Test form renders with initial data, toggle specialty works, submit calls action.
 
@@ -767,12 +767,12 @@ describe('EditProfileForm', () => {
 })
 ```
 
-- [ ] **Step 7: Run all tests**
+- [x] **Step 7: Run all tests**
 
 Run: `npm test`
 Expected: PASS
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 git add src/features/psychologist/ src/app/\(auth\)/dashboard/editar-perfil/
@@ -794,7 +794,7 @@ git commit -m "feat: add edit psychologist profile page"
 - Create: `e2e/request-status.spec.ts`
 - Modify: `e2e/smoke.spec.ts` (refactor or keep as-is)
 
-- [ ] **Step 1: Create fixtures**
+- [x] **Step 1: Create fixtures**
 
 Create `e2e/fixtures/psychologists.json`:
 
@@ -862,7 +862,7 @@ Create `e2e/fixtures/requests.json`:
 }
 ```
 
-- [ ] **Step 2: Create catalog.spec.ts**
+- [x] **Step 2: Create catalog.spec.ts**
 
 ```typescript
 import { test, expect } from '@playwright/test'
@@ -888,7 +888,7 @@ test.describe('Catalog', () => {
 })
 ```
 
-- [ ] **Step 3: Create registration.spec.ts**
+- [x] **Step 3: Create registration.spec.ts**
 
 ```typescript
 import { test, expect } from '@playwright/test'
@@ -912,7 +912,7 @@ test.describe('Psychologist Registration', () => {
 })
 ```
 
-- [ ] **Step 4: Create login.spec.ts**
+- [x] **Step 4: Create login.spec.ts**
 
 ```typescript
 import { test, expect } from '@playwright/test'
@@ -934,7 +934,7 @@ test.describe('Login', () => {
 })
 ```
 
-- [ ] **Step 5: Create request-status.spec.ts**
+- [x] **Step 5: Create request-status.spec.ts**
 
 ```typescript
 import { test, expect } from '@playwright/test'
@@ -964,16 +964,16 @@ test.describe('Request Status', () => {
 })
 ```
 
-- [ ] **Step 6: Configure Playwright to handle the mocked sessions**
+- [x] **Step 6: Configure Playwright to handle the mocked sessions**
 
 Update `playwright.config.ts` if needed. The tests should work with mock routes and don't require Supabase running.
 
-- [ ] **Step 7: Run E2E tests**
+- [x] **Step 7: Run E2E tests**
 
 Run: `npm run test:e2e`
 Expected: PASS (or at minimum, the mocked tests pass; some existing tests may fail without Supabase running — adjust accordingly)
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 git add e2e/
@@ -989,10 +989,10 @@ git commit -m "test(e2e): add network-mocked E2E tests for catalog, registration
 - Modify: `SMOKE-TEST.md` — update coverage table
 - Modify: `ARCHITECTURE.md` — add `/dashboard/editar-perfil` route
 
-- [ ] **Update BITACORA.md** with new session entry
-- [ ] **Update SMOKE-TEST.md**:
+- [x] **Update BITACORA.md** with new session entry
+- [x] **Update SMOKE-TEST.md**:
   - Item 8: WhatsApp link → 🔵 Unit test + ✅ E2E
   - Item 12: Rate limiting → 🔵 Unit test
   - Add: Rate limiting for Server Actions
   - Add: Edit profile from dashboard
-- [ ] **Update ARCHITECTURE.md**: add `/dashboard/editar-perfil` to route list
+- [x] **Update ARCHITECTURE.md**: add `/dashboard/editar-perfil` to route list

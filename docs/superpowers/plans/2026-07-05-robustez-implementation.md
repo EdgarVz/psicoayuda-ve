@@ -1,6 +1,6 @@
 # Robustez Operativa — Plan de Implementación
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Implementar 5 áreas de robustez: notificaciones In-App, RLS policies, loading states, onboarding/FAQ, y test E2E de flujo completo.
 
@@ -15,7 +15,7 @@
 **Files:**
 - Create: `supabase/migrations/20260705000001_add_rls_and_notifications.sql`
 
-- [ ] **Step 1: Crear migration con enum, tabla, y RLS**
+- [x] **Step 1: Crear migration con enum, tabla, y RLS**
 
 ```sql
 -- 1. Enum notification_type
@@ -78,19 +78,19 @@ CREATE POLICY "user_update_notifications" ON public.notifications
 -- No se necesita DELETE: se limpian con DELETE CASCADE al eliminar perfil
 ```
 
-- [ ] **Step 2: Aplicar migration vía MCP**
+- [x] **Step 2: Aplicar migration vía MCP**
 
 ```bash
 # Usar apply_migration tool con el contenido SQL de arriba
 ```
 
-- [ ] **Step 3: Regenerar types de TypeScript**
+- [x] **Step 3: Regenerar types de TypeScript**
 
 Run: `npx supabase gen types typescript --project-id iptavlxqdzmxlpsopofw > src/types/database.ts`
 
-- [ ] **Step 4: Verificar que `src/types/database.ts` contiene la nueva tabla y enum**
+- [x] **Step 4: Verificar que `src/types/database.ts` contiene la nueva tabla y enum**
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add supabase/migrations/20260705000001_add_rls_and_notifications.sql src/types/database.ts
@@ -105,7 +105,7 @@ git commit -m "feat: add notifications table and RLS policies"
 - Create: `src/features/notifications/types.ts`
 - Create: `src/features/notifications/schemas.ts`
 
-- [ ] **Step 1: Crear `src/features/notifications/types.ts`**
+- [x] **Step 1: Crear `src/features/notifications/types.ts`**
 
 ```typescript
 import type { Database } from '@/types/database'
@@ -119,7 +119,7 @@ export interface NotificationWithMeta extends NotificationRow {
 }
 ```
 
-- [ ] **Step 2: Crear `src/features/notifications/schemas.ts`**
+- [x] **Step 2: Crear `src/features/notifications/schemas.ts`**
 
 ```typescript
 import { z } from 'zod'
@@ -147,7 +147,7 @@ export const markAsReadSchema = z.object({
 export type MarkAsReadInput = z.infer<typeof markAsReadSchema>
 ```
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add src/features/notifications/types.ts src/features/notifications/schemas.ts
@@ -162,7 +162,7 @@ git commit -m "feat: add notification types and schemas"
 - Create: `src/features/notifications/actions.ts`
 - Create: `src/features/notifications/queries.ts`
 
-- [ ] **Step 1: Crear `src/features/notifications/actions.ts`**
+- [x] **Step 1: Crear `src/features/notifications/actions.ts`**
 
 ```typescript
 'use server'
@@ -242,7 +242,7 @@ export async function markAllAsRead(): Promise<{ error?: string }> {
 }
 ```
 
-- [ ] **Step 2: Crear `src/features/notifications/queries.ts`**
+- [x] **Step 2: Crear `src/features/notifications/queries.ts`**
 
 ```typescript
 import { createServerSupabase } from '@/lib/supabase/server'
@@ -330,7 +330,7 @@ export async function getAllNotifications(page = 1, pageSize = 20): Promise<{
 }
 ```
 
-- [ ] **Step 3: Escribir tests**
+- [x] **Step 3: Escribir tests**
 
 Create `src/features/notifications/actions.test.ts`:
 
@@ -461,7 +461,7 @@ describe('getAllNotifications', () => {
 })
 ```
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add src/features/notifications/
@@ -477,7 +477,7 @@ git commit -m "feat: add notification actions and queries"
 - Modify: `src/features/admin/actions.ts`
 - Modify: `src/features/psychologist-registration/actions.ts`
 
-- [ ] **Step 1: Agregar `createNotification` después de cada email en `src/features/appointments/actions.ts`**
+- [x] **Step 1: Agregar `createNotification` después de cada email en `src/features/appointments/actions.ts`**
 
 Importar:
 ```typescript
@@ -517,7 +517,7 @@ En `rejectRequest`, después del bloque de email (después de línea 167):
   })
 ```
 
-- [ ] **Step 2: Agregar notificaciones en `src/features/admin/actions.ts`**
+- [x] **Step 2: Agregar notificaciones en `src/features/admin/actions.ts`**
 
 Importar:
 ```typescript
@@ -546,7 +546,7 @@ En `rejectPsychologist`, después del bloque de email (después de línea 89):
   })
 ```
 
-- [ ] **Step 3: Agregar notificaciones en `src/features/psychologist-registration/actions.ts`**
+- [x] **Step 3: Agregar notificaciones en `src/features/psychologist-registration/actions.ts`**
 
 Importar:
 ```typescript
@@ -563,11 +563,11 @@ En `registerPsychologistImpl`, después del bloque de email (después de línea 
   })
 ```
 
-- [ ] **Step 4: Ejecutar tests existentes para verificar que no se rompen**
+- [x] **Step 4: Ejecutar tests existentes para verificar que no se rompen**
 
 Run: `npm test` — los tests mockean `createServerSupabase`/`getUser` y no deberían fallar. Si fallan por el nuevo import, ajustar mocks.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/features/appointments/actions.ts src/features/admin/actions.ts src/features/psychologist-registration/actions.ts
@@ -585,7 +585,7 @@ git commit -m "feat: wire in-app notifications into existing actions"
 - Modify: `src/features/layout/components/navbar.tsx`
 - Modify: `src/app/(public)/layout.tsx`
 
-- [ ] **Step 1: Crear `src/features/notifications/components/notification-item.tsx`**
+- [x] **Step 1: Crear `src/features/notifications/components/notification-item.tsx`**
 
 ```typescript
 'use client'
@@ -642,7 +642,7 @@ export function NotificationItem({ notification, onMarkAsRead }: NotificationIte
 }
 ```
 
-- [ ] **Step 2: Crear `src/features/notifications/components/notification-dropdown.tsx`**
+- [x] **Step 2: Crear `src/features/notifications/components/notification-dropdown.tsx`**
 
 ```typescript
 'use client'
@@ -744,7 +744,7 @@ export function NotificationDropdown({ initialCount, initialNotifications }: Not
 }
 ```
 
-- [ ] **Step 3: Modificar `navbar.tsx` para incluir badge de notificaciones cuando `isLoggedIn`**
+- [x] **Step 3: Modificar `navbar.tsx` para incluir badge de notificaciones cuando `isLoggedIn`**
 
 Agregar prop `unreadCount` y `recentNotifications` a la interfaz `NavbarProps`:
 
@@ -784,7 +784,7 @@ Agregar link "¿Cómo funciona?" tanto en desktop como mobile nav, antes de "Psi
 </Link>
 ```
 
-- [ ] **Step 4: Modificar `src/app/(public)/layout.tsx` para pasar notificaciones al Navbar**
+- [x] **Step 4: Modificar `src/app/(public)/layout.tsx` para pasar notificaciones al Navbar**
 
 ```typescript
 import { getUnreadCount, getRecentNotifications } from '@/features/notifications/queries'
@@ -815,7 +815,7 @@ export default async function PublicLayout({ children }: { children: React.React
 }
 ```
 
-- [ ] **Step 5: También modificar `src/app/(auth)/layout.tsx` para pasar notificaciones**
+- [x] **Step 5: También modificar `src/app/(auth)/layout.tsx` para pasar notificaciones**
 
 Reemplazar contenido con:
 ```typescript
@@ -848,7 +848,7 @@ export default async function AuthLayout({ children }: { children: React.ReactNo
 }
 ```
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add src/features/notifications/components/ src/features/layout/components/navbar.tsx src/app/(public)/layout.tsx src/app/(auth)/layout.tsx
@@ -863,7 +863,7 @@ git commit -m "feat: add notification badge and dropdown to navbar"
 - Create: `src/app/(auth)/dashboard/notificaciones/page.tsx`
 - Create: `src/features/notifications/components/notification-list.tsx`
 
-- [ ] **Step 1: Crear `src/features/notifications/components/notification-list.tsx`**
+- [x] **Step 1: Crear `src/features/notifications/components/notification-list.tsx`**
 
 ```typescript
 'use client'
@@ -956,7 +956,7 @@ export function NotificationList() {
 }
 ```
 
-- [ ] **Step 2: Crear `src/app/(auth)/dashboard/notificaciones/page.tsx`**
+- [x] **Step 2: Crear `src/app/(auth)/dashboard/notificaciones/page.tsx`**
 
 ```typescript
 import { NotificationList } from '@/features/notifications/components/notification-list'
@@ -970,7 +970,7 @@ export default function NotificacionesPage() {
 }
 ```
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add src/app/(auth)/dashboard/notificaciones/page.tsx src/features/notifications/components/notification-list.tsx
@@ -986,7 +986,7 @@ git commit -m "feat: add full notifications page with pagination"
 - Modify: `src/features/appointments/components/requests-list.tsx`
 - Modify: `src/features/admin/components/pending-verification.tsx`
 
-- [ ] **Step 1: Agregar loading a `request-form.tsx`**
+- [x] **Step 1: Agregar loading a `request-form.tsx`**
 
 Ya tiene `useState<FormState>` + `disabled` + texto "Enviando..." ✅ — solo falta agregar un spinner visual al botón submit cuando `state === 'submitting'`.
 
@@ -1003,7 +1003,7 @@ Cambiar el texto del botón (línea 160):
 ) : 'Enviar solicitud'}
 ```
 
-- [ ] **Step 2: Agregar loading a botones accept/reject en `requests-list.tsx`**
+- [x] **Step 2: Agregar loading a botones accept/reject en `requests-list.tsx`**
 
 El componente `RequestsList` usa `useState`. Agregar estado `loadingId` para trackear qué solicitud se está procesando:
 
@@ -1054,7 +1054,7 @@ Modificar los botones accept/reject (líneas 76-87):
 )}
 ```
 
-- [ ] **Step 3: Agregar loading a botones verify/reject en `pending-verification.tsx`**
+- [x] **Step 3: Agregar loading a botones verify/reject en `pending-verification.tsx`**
 
 ```typescript
 const [loadingId, setLoadingId] = useState<string | null>(null)
@@ -1099,7 +1099,7 @@ Modificar botones (líneas 80-91):
 </button>
 ```
 
-- [ ] **Step 4: También agregar loading a botones en `verification-detail.tsx`**
+- [x] **Step 4: También agregar loading a botones en `verification-detail.tsx`**
 
 Pasar `loadingId` como prop al dialog:
 ```typescript
@@ -1157,11 +1157,11 @@ Actualizar llamada en `pending-verification.tsx` para pasar `loadingId`:
 )}
 ```
 
-- [ ] **Step 5: Verificar que los tests existentes pasen**
+- [x] **Step 5: Verificar que los tests existentes pasen**
 
 Run: `npm test` — ajustar tests si es necesario
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add src/features/appointments/components/request-form.tsx src/features/appointments/components/requests-list.tsx src/features/admin/components/pending-verification.tsx src/features/admin/components/verification-detail.tsx
@@ -1177,7 +1177,7 @@ git commit -m "feat: add loading states to all action buttons"
 - Create: `src/app/(public)/como-funciona/page.tsx`
 - Modify: `src/features/dashboard/components/requests-list.tsx` (empty states mejorados)
 
-- [ ] **Step 1: Crear `src/features/onboarding/components/faq-accordion.tsx`**
+- [x] **Step 1: Crear `src/features/onboarding/components/faq-accordion.tsx`**
 
 ```typescript
 'use client'
@@ -1232,7 +1232,7 @@ export function FaqAccordion({ items }: FaqAccordionProps) {
 }
 ```
 
-- [ ] **Step 2: Crear `src/app/(public)/como-funciona/page.tsx`**
+- [x] **Step 2: Crear `src/app/(public)/como-funciona/page.tsx`**
 
 ```typescript
 import { FaqAccordion } from '@/features/onboarding/components/faq-accordion'
@@ -1282,7 +1282,7 @@ export default function ComoFuncionaPage() {
 }
 ```
 
-- [ ] **Step 3: Mejorar empty states en `requests-list.tsx`**
+- [x] **Step 3: Mejorar empty states en `requests-list.tsx`**
 
 Reemplazar el empty state actual (líneas 116-121) con mensajes diferenciados según el rol. Agregar prop `role`:
 
@@ -1318,7 +1318,7 @@ Actualizar llamadas a `<RequestsList>` en `psychologist-dashboard.tsx` y `patien
 <RequestsList requests={requests} role="patient" />
 ```
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add src/features/onboarding/ src/app/(public)/como-funciona/ src/features/dashboard/components/requests-list.tsx src/features/dashboard/components/psychologist-dashboard.tsx src/features/dashboard/components/patient-dashboard.tsx
@@ -1333,7 +1333,7 @@ git commit -m "feat: add onboarding FAQ page and improved empty states"
 - Create: `e2e/full-flow.spec.ts`
 - Create: `e2e/fixtures/full-flow-data.ts`
 
-- [ ] **Step 1: Crear `e2e/fixtures/full-flow-data.ts`**
+- [x] **Step 1: Crear `e2e/fixtures/full-flow-data.ts`**
 
 ```typescript
 import type { Specialty } from '@/features/appointments/types'
@@ -1365,7 +1365,7 @@ export const TEST_REQUEST = {
 }
 ```
 
-- [ ] **Step 2: Crear `e2e/full-flow.spec.ts`**
+- [x] **Step 2: Crear `e2e/full-flow.spec.ts`**
 
 ```typescript
 import { test, expect } from '@playwright/test'
@@ -1423,12 +1423,12 @@ test.describe('Full flow: patient requests and psychologist accepts', () => {
 })
 ```
 
-- [ ] **Step 3: Ejecutar tests E2E**
+- [x] **Step 3: Ejecutar tests E2E**
 
 Run: `npx playwright test e2e/full-flow.spec.ts`
 Expected: Tests pasan o fallan por auth (Magic Link es asíncrono por email)
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add e2e/full-flow.spec.ts e2e/fixtures/full-flow-data.ts
@@ -1439,18 +1439,18 @@ git commit -m "test: add E2E full flow and FAQ page tests"
 
 ### Task 10: Verificación final
 
-- [ ] **Step 1: Ejecutar lint**
+- [x] **Step 1: Ejecutar lint**
 
 Run: `npm run lint` — verificar que no haya errores
 
-- [ ] **Step 2: Ejecutar type check**
+- [x] **Step 2: Ejecutar type check**
 
 Run: `npx tsc --noEmit` — verificar tipos
 
-- [ ] **Step 3: Ejecutar tests unitarios**
+- [x] **Step 3: Ejecutar tests unitarios**
 
 Run: `npm test` — verificar 174+ tests pasan
 
-- [ ] **Step 4: Ejecutar build**
+- [x] **Step 4: Ejecutar build**
 
 Run: `npm run build` — verificar build exitoso (12 rutas + Proxy)

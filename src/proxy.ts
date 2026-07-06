@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server'
 
-const publicPaths = ['/', '/psicologos', '/psicologo/', '/login', '/registro-psicologo', '/auth/callback']
+const publicPaths = ['/', '/psicologos', '/psicologo/', '/login', '/registro-psicologo', '/como-funciona', '/auth/callback']
 
 function isPublicPath(pathname: string): boolean {
   return publicPaths.some(p => {
@@ -67,5 +67,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|api/auth).*)'],
 }

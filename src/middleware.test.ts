@@ -87,4 +87,15 @@ describe('proxy', () => {
     expect(mockRedirect).not.toHaveBeenCalled()
     expect(mockNext).toHaveBeenCalled()
   })
+
+  it('passes through /como-funciona without auth cookie', async () => {
+    const req = createRequest('/como-funciona')
+    const headers = new Headers()
+    mockNext.mockReturnValue({ headers })
+
+    await proxy(req as never)
+
+    expect(mockRedirect).not.toHaveBeenCalled()
+    expect(mockNext).toHaveBeenCalled()
+  })
 })
