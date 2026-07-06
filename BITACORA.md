@@ -655,6 +655,13 @@ Los 10 tasks ejecutados con subagent-driven development + TDD:
 
 ---
 
+## 2026-07-05 — UI: mostrar mínimo de caracteres en "Sobre ti"
+
+### Cambio
+`src/features/psychologist-registration/components/registration-form.tsx`: agregado `(mín. 10)` al contador de caracteres del campo `biography` cuando está por debajo del mínimo.
+
+---
+
 ## 2026-07-04 — Fix: catálogo mostraba "Usuario" en vez del nombre del psicólogo
 
 ### Problema

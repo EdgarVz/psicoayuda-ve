@@ -191,7 +191,7 @@ export function RegistrationForm({ userLoggedIn = false }: RegistrationFormProps
           placeholder="Cuéntanos sobre tu experiencia, enfoque terapéutico y motivación para unirte"
           required
         />
-        <p className="text-xs text-muted-foreground mt-1">{biography.length}/1000 caracteres</p>
+        <p className="text-xs text-muted-foreground mt-1">{biography.length}/1000 caracteres {biography.length < 10 && '(mín. 10)'}</p>
       </div>
 
       <fieldset>
