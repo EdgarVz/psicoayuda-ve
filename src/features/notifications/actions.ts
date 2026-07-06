@@ -3,6 +3,8 @@
 import { createAdminSupabase } from '@/lib/supabase/admin'
 import { createServerSupabase } from '@/lib/supabase/server'
 import { createNotificationSchema, type CreateNotificationInput } from './schemas'
+import { getAllNotifications, getUnreadCount, getRecentNotifications } from './queries'
+import type { NotificationRow } from './types'
 import { logger } from '@/lib/logger'
 
 export async function createNotification(input: CreateNotificationInput): Promise<void> {
@@ -68,4 +70,19 @@ export async function markAllAsRead(): Promise<{ error?: string }> {
   }
 
   return {}
+}
+
+export async function getAllNotificationsAction(
+  page = 1,
+  pageSize = 20,
+): Promise<{ notifications: NotificationRow[]; total: number }> {
+  return getAllNotifications(page, pageSize)
+}
+
+export async function refreshNotifications(): Promise<{ count: number; notifications: NotificationRow[] }> {
+  const [count, notifications] = await Promise.all([
+    getUnreadCount(),
+    getRecentNotifications(),
+  ])
+  return { count, notifications }
 }
