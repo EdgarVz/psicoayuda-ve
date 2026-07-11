@@ -758,3 +758,26 @@ Al registrar un psicólogo nuevo, el `profiles.display_name` quedaba como "Usuar
 ### Commit
 `8061815` — `docs: align ARCHITECTURE/DESIGN with code, add ADR 003, refactor CSP`
 Branch: `fix/doc-alignment-adr` (worktree local, sin push)
+
+## 2026-07-11 — Housekeeping E: queries, deps, env example (chore/housekeeping-e)
+
+### Cambios
+
+| Prioridad | Archivo | Cambio |
+|-----------|---------|--------|
+| E — Refactor | `src/features/dashboard/queries.ts` | `getPatientRequests`: 3 queries planas reemplazadas por 1 nested `.select()` con FK join `profiles!psychologist_id (display_name, psychologist_profiles (whatsapp_link))` |
+| E — Tests | `src/features/dashboard/queries.test.ts` | Mock actualizado a nested shape, mismo contrato de salida verificado |
+| E — Deps | `package.json` | `@testing-library/user-event ^14.6.1` ya declarado en devDependencies, sin discrepancia |
+| E — Env | `.env.example` | Creado con las 6 variables del esquema (`src/lib/env.ts`): SUPABASE_SERVICE_ROLE_KEY, RESEND_API_KEY, SENTRY_DSN, NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, NEXT_PUBLIC_SITE_URL |
+
+### Verificación
+| Check | Resultado |
+|-------|-----------|
+| `npm run lint` | ✅ |
+| `npx tsc --noEmit` | ✅ |
+| `npm run build` | ✅ 14 rutas + Proxy |
+| `npm test` | ✅ 217/217 (43 suites) |
+
+### Commit
+`chore: housekeeping — patient requests query, deps, env example`
+Branch: `chore/housekeeping-e`
