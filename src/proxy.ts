@@ -2,6 +2,30 @@ import { type NextRequest, NextResponse } from 'next/server'
 
 const publicPaths = ['/', '/psicologos', '/psicologo/', '/login', '/registro-psicologo', '/como-funciona', '/auth/callback']
 
+interface CspDirective {
+  directive: string
+  sources: string[]
+}
+
+const cspDirectives: CspDirective[] = [
+  { directive: 'default-src', sources: ["'self'"] },
+  { directive: 'script-src', sources: ["'self'", '${nonce}', 'https://js.sentry-cdn.com'] },
+  { directive: 'style-src', sources: ["'self'", "'unsafe-inline'"] },
+  { directive: 'img-src', sources: ["'self'", 'data:', 'blob:', 'https://*.supabase.co'] },
+  { directive: 'font-src', sources: ["'self'"] },
+  { directive: 'connect-src', sources: ["'self'", 'https://*.supabase.co', 'https://*.ingest.sentry.io'] },
+  { directive: 'frame-ancestors', sources: ["'none'"] },
+]
+
+export function buildCspString(directives: CspDirective[], nonce: string): string {
+  return directives
+    .map(({ directive, sources }) => {
+      const resolved = sources.map(s => s.replace('${nonce}', `'nonce-${nonce}'`))
+      return `${directive} ${resolved.join(' ')}`
+    })
+    .join('; ')
+}
+
 function isPublicPath(pathname: string): boolean {
   return publicPaths.some(p => {
     if (p === '/') return pathname === '/'
@@ -13,15 +37,7 @@ export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   const nonce = crypto.randomUUID()
-  const csp = [
-    `default-src 'self'`,
-    `script-src 'self' 'nonce-${nonce}' https://js.sentry-cdn.com`,
-    `style-src 'self' 'unsafe-inline'`,
-    `img-src 'self' data: blob: https://*.supabase.co`,
-    `font-src 'self'`,
-    `connect-src 'self' https://*.supabase.co https://*.ingest.sentry.io`,
-    `frame-ancestors 'none'`,
-  ].join('; ')
+  const csp = buildCspString(cspDirectives, nonce)
 
   const requestHeaders = new Headers(request.headers)
   requestHeaders.set('x-nonce', nonce)
