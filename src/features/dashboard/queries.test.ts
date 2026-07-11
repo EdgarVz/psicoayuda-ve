@@ -8,8 +8,6 @@ import { createServerSupabase } from '@/lib/supabase/server'
 import { getPatientRequests, getPsychologistRequests, getPatientStats, getPsychologistStats } from './queries'
 
 function mockPatientData() {
-  let fromCallCount = 0
-
   const mockOrder = vi.fn().mockResolvedValue({
     data: [
       {
@@ -18,6 +16,10 @@ function mockPatientData() {
         reason: ['ansiedad'],
         created_at: '2026-06-29T12:00:00Z',
         psychologist_id: 'psy-1',
+        profiles: {
+          display_name: 'Dra. María',
+          psychologist_profiles: null,
+        },
       },
       {
         id: 'req-2',
@@ -25,38 +27,18 @@ function mockPatientData() {
         reason: ['duelo'],
         created_at: '2026-06-28T12:00:00Z',
         psychologist_id: 'psy-2',
+        profiles: {
+          display_name: 'Dr. José',
+          psychologist_profiles: { whatsapp_link: 'https://wa.me/584141234567' },
+        },
       },
     ],
     error: null,
   })
 
-  const mockIn = vi.fn().mockResolvedValue({
-    data: [
-      { id: 'psy-1', whatsapp_link: null },
-      { id: 'psy-2', whatsapp_link: 'https://wa.me/584141234567' },
-    ],
-    error: null,
-  })
-
-  const mockInNames = vi.fn().mockResolvedValue({
-    data: [
-      { id: 'psy-1', display_name: 'Dra. María' },
-      { id: 'psy-2', display_name: 'Dr. José' },
-    ],
-    error: null,
-  })
-
-  const mockSelectNames = vi.fn(() => ({ in: mockInNames }))
-  const mockSelectPsychProfiles = vi.fn(() => ({ in: mockIn }))
   const mockEq = vi.fn(() => ({ order: mockOrder }))
-  const mockSelectRequests = vi.fn(() => ({ eq: mockEq }))
-
-  const mockFrom = vi.fn(() => {
-    fromCallCount++
-    if (fromCallCount === 1) return { select: mockSelectRequests }
-    if (fromCallCount === 2) return { select: mockSelectNames }
-    return { select: mockSelectPsychProfiles }
-  })
+  const mockSelect = vi.fn(() => ({ eq: mockEq }))
+  const mockFrom = vi.fn(() => ({ select: mockSelect }))
 
   vi.mocked(createServerSupabase).mockResolvedValue({ from: mockFrom } as never)
 }
