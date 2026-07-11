@@ -90,10 +90,7 @@ Los badges y highlights usan verde primary en versión clara (50-100).
 - **UI/Body**: `Geist Variable` — geométrica sans-serif. Cargada vía `geist/font/sans`.
 
 ### Font Files (self-hosted)
-```
-app/fonts/
-└── Geist-Variable.woff2
-```
+Vía npm package `geist`, importado como `geist/font/sans` en `src/app/layout.tsx`.
 
 ### Hierarchy
 | Role | Size | Weight | Line Height |
@@ -169,10 +166,10 @@ app/fonts/
 - Padding: 12px 14px
 
 ### Badges
-- **Default**: `bg=F5F0EA`, `text=6B5E54`, `radius=20px`
-- **Success (verificado)**: `bg=E8F4F0`, `text=1D6B5F` (peso 600 para contraste)
-- **Pending**: `bg=FDF6E3`, `text=7A6200` (peso 600)
-- **Rejected**: `bg=FDF0F0`, `text=A04040` (peso 600)
+- **Default**: `bg=var(--color-muted)`, `text=var(--color-muted-foreground)`, `radius=20px`
+- **Success (verificado)**: `bg=var(--color-success)`, `text=var(--color-success-text)` (peso 600 para contraste)
+- **Pending**: `bg=var(--color-warning)`, `text=var(--color-warning-text)` (peso 600)
+- **Rejected**: `bg=var(--color-danger)`, `text=var(--color-danger-text)` (peso 600)
 - Font: 12px, weight 600 (garantiza contraste WCAG AA sobre fondos suaves)
 
 ### Navigation Bar
