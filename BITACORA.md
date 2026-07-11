@@ -732,3 +732,29 @@ Al registrar un psicólogo nuevo, el `profiles.display_name` quedaba como "Usuar
 | `npx tsc --noEmit` | ✅ |
 | `npm run build` | ✅ 12 rutas + Proxy |
 | `npm test` | ✅ 171/171 (34 suites) |
+
+## 2026-07-10 — Doc alignment + ADR 003 + CSP refactor (fix/doc-alignment-adr)
+
+### Cambios
+
+| Prioridad | Archivo | Cambio |
+|-----------|---------|--------|
+| A — Auth flow | `ARCHITECTURE.md:57` | Flujo corregido: Magic Link → `/auth/callback` → POST `/api/auth/set-cookie` → `auth_logged_in` → `/dashboard` |
+| A — Robustez | `ARCHITECTURE.md:132` | Nota Phase 11 añadida (notificaciones, RLS, onboarding, E2E) |
+| A — Font path | `DESIGN.md:92-95` | `app/fonts/Geist-Variable.woff2` → `geist/font/sans` (npm) |
+| B — Badge colors | `DESIGN.md:169-176` | Hex hardcodeados reemplazados por `var(--color-*)` (source of truth = globals.css) |
+| C — ADR 003 | `docs/adr/003-rate-limiting-strategy.md` | Nuevo ADR con umbral dual: >1 instancia concurrente O >500 req/min |
+| D — CSP refactor | `src/proxy.ts` | CSP extraído a array `cspDirectives` + función `buildCspString()` exportada |
+| D — CSP test | `src/proxy.test.ts` | 7 tests unitarios para verificar cada directive + nonce |
+
+### Verificación
+| Check | Resultado |
+|-------|-----------|
+| `npm run lint` | ✅ |
+| `npx tsc --noEmit` | ✅ |
+| `npm run build` | ✅ 14 rutas + Proxy |
+| `npm test` | ✅ 217/217 (43 suites, +7 nuevas) |
+
+### Commit
+`8061815` — `docs: align ARCHITECTURE/DESIGN with code, add ADR 003, refactor CSP`
+Branch: `fix/doc-alignment-adr` (worktree local, sin push)
